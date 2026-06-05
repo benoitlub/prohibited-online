@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { canPlayCard, createGame, dispatchGameAction } from './game/engine';
-import type { CardFamily, CardInstance, GameMode, GameState, LongTargetScore, Player } from './game/types';
+import type { CardFamily, CardInstance, GameMode, GameState, LongTargetScore, Player, SetCard } from './game/types';
 
 const longTargets: LongTargetScore[] = [30, 50, 100];
 const familyLabels: Record<CardFamily, string> = {
@@ -13,9 +13,20 @@ const familyLabels: Record<CardFamily, string> = {
   special: 'Special',
 };
 
-function firstTargetFor(state: GameState): string | undefined {
+type AttackTarget = { playerId: string; setIndex: number };
+
+function firstTargetFor(state: GameState): AttackTarget | undefined {
   const activeId = state.players[state.currentPlayerIndex].id;
-  return state.players.find(player => player.id !== activeId && player.set.length > 0)?.id;
+  for (const player of state.players) {
+    if (player.id === activeId) continue;
+    const setIndex = player.sets.findIndex(set => set.length > 0);
+    if (setIndex >= 0) return { playerId: player.id, setIndex };
+  }
+  return undefined;
+}
+
+function setLabel(set: SetCard[], index: number): string {
+  return set.length === 0 ? `Slot ${index + 1}` : `Slot ${index + 1} / ${set.length}`;
 }
 
 function CardButton({ card, disabled, onPlay, onDiscard }: {
@@ -39,18 +50,59 @@ function CardButton({ card, disabled, onPlay, onDiscard }: {
   );
 }
 
-function PlayerPanel({ player, active }: { player: Player; active: boolean }) {
+function SetSlotView({ set, index, selected, selectable, onSelect }: {
+  set: SetCard[];
+  index: number;
+  selected?: boolean;
+  selectable?: boolean;
+  onSelect?: () => void;
+}) {
+  const content = (
+    <>
+      <span className="slot-title">{setLabel(set, index)}</span>
+      <div className="set-row">
+        {set.length === 0 ? <span className="empty-set">Vide</span> : set.map(card => (
+          <span key={card.instanceId} className={`set-card set-${card.family}`}>
+            {card.name}{card.attackMarks > 0 ? ` x${card.attackMarks}` : ''}
+          </span>
+        ))}
+      </div>
+    </>
+  );
+
+  if (!selectable) {
+    return <div className="set-slot">{content}</div>;
+  }
+
+  return (
+    <button type="button" className={`set-slot selectable ${selected ? 'selected' : ''}`} onClick={onSelect}>
+      {content}
+    </button>
+  );
+}
+
+function PlayerPanel({ player, active, selectedOwnSetIndex, onSelectOwnSet }: {
+  player: Player;
+  active: boolean;
+  selectedOwnSetIndex: number;
+  onSelectOwnSet: (setIndex: number) => void;
+}) {
   return (
     <section className={`player-panel ${active ? 'active' : ''}`}>
       <div className="player-heading">
         <h3>{player.name}</h3>
         <span>{player.score} pts</span>
       </div>
-      <div className="set-row">
-        {player.set.length === 0 ? <span className="empty-set">Set vide</span> : player.set.map(card => (
-          <span key={card.instanceId} className={`set-card set-${card.family}`}>
-            {card.name}{card.attackMarks > 0 ? ` x${card.attackMarks}` : ''}
-          </span>
+      <div className="sets-grid">
+        {player.sets.map((set, index) => (
+          <SetSlotView
+            key={`${player.id}-${index}`}
+            set={set}
+            index={index}
+            selectable={active}
+            selected={active && selectedOwnSetIndex === index}
+            onSelect={() => onSelectOwnSet(index)}
+          />
         ))}
       </div>
     </section>
@@ -65,9 +117,9 @@ function ConfigScreen({ onStart }: { onStart: (playerCount: number, mode: GameMo
   return (
     <main className="config-screen">
       <section className="config-hero">
-        <p className="kicker">Prototype local V0</p>
+        <p className="kicker">Prototype local V0.1</p>
         <h1>Pro.Hibited Online</h1>
-        <p>Construis ton set, subis les sabotages, tente le Smoke Me. Le systeme dira non jusqu'a preuve du contraire.</p>
+        <p>Construis plusieurs sets, cible le bon slot, tente le Smoke Me. Le systeme dira non jusqu'a preuve du contraire.</p>
       </section>
 
       <section className="config-panel">
@@ -102,22 +154,25 @@ function ConfigScreen({ onStart }: { onStart: (playerCount: number, mode: GameMo
 
 export default function App() {
   const [game, setGame] = useState<GameState | null>(null);
-  const [selectedTargetId, setSelectedTargetId] = useState<string | undefined>();
+  const [selectedOwnSetIndex, setSelectedOwnSetIndex] = useState(0);
+  const [selectedTarget, setSelectedTarget] = useState<AttackTarget | undefined>();
 
   const activePlayer = game?.players[game.currentPlayerIndex];
-  const availableTargetId = useMemo(() => game ? firstTargetFor(game) : undefined, [game]);
-  const targetId = selectedTargetId ?? availableTargetId;
+  const availableTarget = useMemo(() => game ? firstTargetFor(game) : undefined, [game]);
+  const target = selectedTarget ?? availableTarget;
 
   if (!game || !activePlayer) {
     return <ConfigScreen onStart={(playerCount, mode, targetScore) => {
       const nextGame = createGame({ playerCount, mode, targetScore });
-      setSelectedTargetId(firstTargetFor(nextGame));
+      setSelectedOwnSetIndex(0);
+      setSelectedTarget(firstTargetFor(nextGame));
       setGame(nextGame);
     }} />;
   }
 
   const send = (next: GameState) => {
-    setSelectedTargetId(firstTargetFor(next));
+    setSelectedOwnSetIndex(current => Math.min(current, next.players[next.currentPlayerIndex].sets.length - 1));
+    setSelectedTarget(firstTargetFor(next));
     setGame(next);
   };
 
@@ -144,25 +199,43 @@ export default function App() {
       <section className="board-grid">
         <div className="players-area">
           {game.players.map((player, index) => (
-            <PlayerPanel key={player.id} player={player} active={index === game.currentPlayerIndex} />
+            <PlayerPanel
+              key={player.id}
+              player={player}
+              active={index === game.currentPlayerIndex}
+              selectedOwnSetIndex={selectedOwnSetIndex}
+              onSelectOwnSet={setSelectedOwnSetIndex}
+            />
           ))}
         </div>
 
         <aside className="side-panel">
-          <h2>Cible</h2>
+          <h2>Cible attaque</h2>
           <div className="target-list">
             {game.players.filter(player => player.id !== activePlayer.id).map(player => (
-              <label key={player.id} className={player.id === targetId ? 'target selected' : 'target'}>
-                <input
-                  type="radio"
-                  name="target"
-                  value={player.id}
-                  checked={player.id === targetId}
-                  onChange={() => setSelectedTargetId(player.id)}
-                />
-                <span>{player.name}</span>
-                <small>{player.set.length} cartes</small>
-              </label>
+              <div key={player.id} className="target-player">
+                <strong>{player.name}</strong>
+                <div className="target-slots">
+                  {player.sets.map((set, index) => {
+                    const disabled = set.length === 0;
+                    const checked = target?.playerId === player.id && target.setIndex === index;
+                    return (
+                      <label key={`${player.id}-target-${index}`} className={`target ${checked ? 'selected' : ''} ${disabled ? 'disabled' : ''}`}>
+                        <input
+                          type="radio"
+                          name="target"
+                          value={`${player.id}-${index}`}
+                          checked={checked}
+                          disabled={disabled}
+                          onChange={() => setSelectedTarget({ playerId: player.id, setIndex: index })}
+                        />
+                        <span>Slot {index + 1}</span>
+                        <small>{set.length} cartes</small>
+                      </label>
+                    );
+                  })}
+                </div>
+              </div>
             ))}
           </div>
 
@@ -177,24 +250,30 @@ export default function App() {
         <div className="hand-heading">
           <div>
             <p className="kicker">Joueur actif</p>
-            <h2>{activePlayer.name}</h2>
+            <h2>{activePlayer.name} / Slot {selectedOwnSetIndex + 1}</h2>
           </div>
           <div className="turn-actions">
             <span>{game.discardedThisTurn}/2 defausses</span>
-            <button type="button" onClick={() => send(dispatchGameAction(game, { type: 'try_smoke', playerId: activePlayer.id }))}>Smoke Me</button>
+            <button type="button" onClick={() => send(dispatchGameAction(game, { type: 'try_smoke', playerId: activePlayer.id, targetSetIndex: selectedOwnSetIndex }))}>Smoke Me</button>
             <button type="button" onClick={() => send(dispatchGameAction(game, { type: 'end_turn' }))}>Finir le tour</button>
           </div>
         </div>
 
         <div className="hand-grid">
           {activePlayer.hand.map(card => {
-            const nextTarget = card.family === 'attack' ? targetId : undefined;
+            const nextTargetPlayerId = card.family === 'attack' ? target?.playerId : undefined;
+            const nextTargetSetIndex = card.family === 'attack' ? target?.setIndex ?? 0 : selectedOwnSetIndex;
             return (
               <CardButton
                 key={card.instanceId}
                 card={card}
-                disabled={!canPlayCard(game, card, nextTarget)}
-                onPlay={() => send(dispatchGameAction(game, { type: 'play_card', cardInstanceId: card.instanceId, targetPlayerId: nextTarget }))}
+                disabled={!canPlayCard(game, card, nextTargetPlayerId, nextTargetSetIndex)}
+                onPlay={() => send(dispatchGameAction(game, {
+                  type: 'play_card',
+                  cardInstanceId: card.instanceId,
+                  targetPlayerId: nextTargetPlayerId,
+                  targetSetIndex: nextTargetSetIndex,
+                }))}
                 onDiscard={() => send(dispatchGameAction(game, { type: 'discard_card', cardInstanceId: card.instanceId }))}
               />
             );

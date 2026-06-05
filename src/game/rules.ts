@@ -37,8 +37,9 @@ export function canCopsDestroy(set: SetCard[]): boolean {
   return hasAny(set, ['weed', 'hash']);
 }
 
-export function canPlayerSmoke(player: Player): boolean {
-  return isSetComplete(player.set) && player.hand.some(card => card.cardId === 'smoke_me');
+export function canPlayerSmoke(player: Player, targetSetIndex = 0): boolean {
+  const set = player.sets[targetSetIndex] ?? [];
+  return isSetComplete(set) && player.hand.some(card => card.cardId === 'smoke_me');
 }
 
 export function scoreSet(set: SetCard[], mode: GameState['config']['mode']): number {
@@ -51,8 +52,7 @@ export function scoreSet(set: SetCard[], mode: GameState['config']['mode']): num
   return 0;
 }
 
-export function canAddToOwnSet(card: CardInstance, player: Player): boolean {
-  const set = player.set;
+export function canAddToSet(card: CardInstance, set: SetCard[]): boolean {
   if (isSetComplete(set)) return false;
 
   if (card.family === 'product') return !hasAny(set, PRODUCTS);
@@ -66,19 +66,29 @@ export function canAddToOwnSet(card: CardInstance, player: Player): boolean {
   return false;
 }
 
-export function canPlayCard(state: GameState, card: CardInstance, targetPlayerId?: string): boolean {
+export function canAddToOwnSet(card: CardInstance, player: Player, targetSetIndex = 0): boolean {
+  const set = player.sets[targetSetIndex];
+  if (!set) return false;
+  return canAddToSet(card, set);
+}
+
+export function canPlayCard(state: GameState, card: CardInstance, targetPlayerId?: string, targetSetIndex = 0): boolean {
   if (state.status !== 'playing') return false;
 
   const player = state.players[state.currentPlayerIndex];
   const cardIsInHand = player.hand.some(handCard => handCard.instanceId === card.instanceId);
   if (!cardIsInHand) return false;
 
-  if (card.cardId === 'smoke_me') return isSetComplete(player.set);
+  if (card.cardId === 'smoke_me') {
+    const set = player.sets[targetSetIndex] ?? [];
+    return isSetComplete(set);
+  }
 
   if (card.family === 'attack') {
     const target = state.players.find(item => item.id === targetPlayerId);
-    return Boolean(target && target.id !== player.id && target.set.length > 0);
+    const targetSet = target?.sets[targetSetIndex];
+    return Boolean(target && target.id !== player.id && targetSet && targetSet.length > 0);
   }
 
-  return canAddToOwnSet(card, player);
+  return canAddToOwnSet(card, player, targetSetIndex);
 }
