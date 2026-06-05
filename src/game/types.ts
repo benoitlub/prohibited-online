@@ -6,6 +6,10 @@ export type CardId =
   | 'bong' | 'blunt' | 'smoke_me'
   | 'wind' | 'rain' | 'cops' | 'lost';
 
+export type ProductCardId = 'weed' | 'hash' | 'cbd';
+export type GameMode = 'quick' | 'long';
+export type LongTargetScore = 30 | 50 | 100;
+
 export type CardDefinition = {
   cardId: CardId;
   name: string;
@@ -24,6 +28,8 @@ export type CardInstance = CardDefinition & {
 export type SetCard = {
   instanceId: string;
   cardId: CardId;
+  name: string;
+  family: CardFamily;
   attackMarks: number;
   playedOrder: number;
 };
@@ -37,14 +43,32 @@ export type Player = {
   score: number;
 };
 
+export type GameConfig = {
+  playerCount: number;
+  mode: GameMode;
+  targetScore: number;
+};
+
+export type GameStatus = 'lobby' | 'playing' | 'finished';
+
 export type GameState = {
+  config: GameConfig;
   players: Player[];
   deck: CardInstance[];
   discardPile: CardInstance[];
   currentPlayerIndex: number;
   turnNumber: number;
   playedThisTurn: number;
-  status: 'lobby' | 'playing' | 'finished';
+  discardedThisTurn: number;
+  nextPlayedOrder: number;
+  status: GameStatus;
   winnerId?: string;
   eventLog: string[];
+  tableMessage: string;
 };
+
+export type GameAction =
+  | { type: 'play_card'; cardInstanceId: string; targetPlayerId?: string }
+  | { type: 'discard_card'; cardInstanceId: string }
+  | { type: 'try_smoke'; playerId: string }
+  | { type: 'end_turn' };
