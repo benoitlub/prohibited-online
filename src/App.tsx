@@ -132,9 +132,9 @@ function ConfigScreen({ onStart }: { onStart: (playerCount: number, mode: GameMo
   return (
     <main className="config-screen">
       <section className="config-hero">
-        <p className="kicker">Prototype local V0.5 - SMOKE ME CARD ONLY</p>
+        <p className="kicker">Prototype local V0.6 - END TURN ARROW</p>
         <h1>Pro.Hibited Online</h1>
-        <p>Version visible : plus de bouton Smoke Me global. La validation passe uniquement par la carte Smoke Me, comme dans le vrai paquet.</p>
+        <p>Version visible : le tour se termine avec une petite fleche compacte sur le cote. Le bouton geant est parti rouler ailleurs.</p>
       </section>
 
       <section className="config-panel">
@@ -278,7 +278,7 @@ export default function App() {
           <div className="turn-actions">
             <span>{game.discardedThisTurn}/2 defausses</span>
             {targetingCard && <button type="button" className="cancel-button" onClick={() => setTargetingCard(null)}>Annuler ciblage</button>}
-            <button type="button" onClick={() => send(dispatchGameAction(game, { type: 'end_turn' }))}>Finir le tour</button>
+            <button type="button" className="end-turn-button" aria-label="Finir le tour" title="Finir le tour" onClick={() => send(dispatchGameAction(game, { type: 'end_turn' }))}>→</button>
           </div>
         </div>
 
