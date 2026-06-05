@@ -164,26 +164,26 @@ export function playCard(state: GameState, cardInstanceId: string, targetPlayerI
 
   const activePlayer = state.players[state.currentPlayerIndex];
   const { card } = withoutCard(activePlayer.hand, cardInstanceId);
-  const currentSetIndex = normalizeSetIndex(activePlayer, targetSetIndex);
-  const rulesTargetSetIndex = card?.family === 'attack' ? targetSetIndex : currentSetIndex;
+  const targetPlayer = targetPlayerId ? state.players.find(player => player.id === targetPlayerId) : activePlayer;
+  const targetIndex = targetPlayer ? normalizeSetIndex(targetPlayer, targetSetIndex) : 0;
 
-  if (!card || !canPlayCard(state, card, targetPlayerId, rulesTargetSetIndex)) {
+  if (!card || !targetPlayer || !canPlayCard(state, card, targetPlayer.id, targetIndex)) {
     return prependLog(state, 'Still Pro.Hibited.', 'Still Pro.Hibited.');
   }
 
-  if (card.cardId === 'smoke_me') return trySmoke(state, activePlayer.id, card.instanceId, currentSetIndex);
+  if (card.cardId === 'smoke_me') return trySmoke(state, activePlayer.id, card.instanceId, targetPlayer.id, targetIndex);
 
   const players = clonePlayers(state.players);
   const current = players[state.currentPlayerIndex];
   const removed = withoutCard(current.hand, cardInstanceId);
   current.hand = removed.hand;
 
-  let message = `${current.name} pose ${card.name} sur le slot ${currentSetIndex + 1}. Le plan se complique.`;
+  let message = `${current.name} pose ${card.name} sur son slot ${targetIndex + 1}. Le plan se complique.`;
 
   if (card.family === 'attack') {
-    const target = players.find(player => player.id === targetPlayerId);
+    const target = players.find(player => player.id === targetPlayer.id);
     if (!target) return state;
-    const attackedSetIndex = normalizeSetIndex(target, targetSetIndex);
+    const attackedSetIndex = normalizeSetIndex(target, targetIndex);
     const attackedSet = target.sets[attackedSetIndex];
 
     if (card.cardId === 'wind' || card.cardId === 'rain') {
@@ -207,7 +207,12 @@ export function playCard(state: GameState, cardInstanceId: string, targetPlayerI
         : `${current.name} appelle Cops. Le slot ${attackedSetIndex + 1} de ${target.name} part au poste.`;
     }
   } else {
-    current.sets[currentSetIndex] = [...current.sets[currentSetIndex], toSetCard(card, state.nextPlayedOrder)];
+    const receiver = players.find(player => player.id === targetPlayer.id);
+    if (!receiver) return state;
+    receiver.sets[targetIndex] = [...receiver.sets[targetIndex], toSetCard(card, state.nextPlayedOrder)];
+    message = receiver.id === current.id
+      ? `${current.name} pose ${card.name} sur son slot ${targetIndex + 1}. Le plan se complique.`
+      : `${current.name} le Junky pose ${card.name} chez ${receiver.name} slot ${targetIndex + 1}. Association suspecte.`;
   }
 
   return prependLog({
@@ -239,35 +244,40 @@ export function discardCard(state: GameState, cardInstanceId: string): GameState
   }, `${activePlayer.name} defausse ${removed.card.name}. Choix discutable, donc parfait.`);
 }
 
-export function trySmoke(state: GameState, playerId: string, smokeCardInstanceId?: string, targetSetIndex = 0): GameState {
+export function trySmoke(state: GameState, playerId: string, smokeCardInstanceId?: string, targetPlayerId?: string, targetSetIndex = 0): GameState {
   if (state.status !== 'playing') return state;
 
   const playerIndex = state.players.findIndex(player => player.id === playerId);
   if (playerIndex < 0) return state;
   const player = state.players[playerIndex];
-  const setIndex = normalizeSetIndex(player, targetSetIndex);
-  const selectedSet = player.sets[setIndex];
+  const targetPlayer = targetPlayerId ? state.players.find(item => item.id === targetPlayerId) : player;
+  if (!targetPlayer) return state;
+  const targetPlayerIndex = state.players.findIndex(item => item.id === targetPlayer.id);
+  const setIndex = normalizeSetIndex(targetPlayer, targetSetIndex);
+  const selectedSet = targetPlayer.sets[setIndex];
   const smokeCard = smokeCardInstanceId
     ? player.hand.find(card => card.instanceId === smokeCardInstanceId && card.cardId === 'smoke_me')
     : player.hand.find(card => card.cardId === 'smoke_me');
 
-  if (!smokeCard || !isSetComplete(selectedSet)) {
+  if (!smokeCard || !isSetComplete(selectedSet) || (targetPlayer.id !== player.id && !player.isJunky)) {
     return prependLog(state, 'Still Pro.Hibited.', 'Still Pro.Hibited.');
   }
 
   const points = scoreSet(selectedSet, state.config.mode);
   const players = clonePlayers(state.players);
   const scoringPlayer = players[playerIndex];
+  const receiver = players[targetPlayerIndex];
   const removed = withoutCard(scoringPlayer.hand, smokeCard.instanceId);
-  const validatedSet = scoringPlayer.sets[setIndex];
+  const validatedSet = receiver.sets[setIndex];
   scoringPlayer.hand = removed.hand;
-  scoringPlayer.sets[setIndex] = [];
+  receiver.sets[setIndex] = [];
   scoringPlayer.isJunky = true;
   scoringPlayer.score += points;
 
   const hasWinner = scoringPlayer.score >= state.config.targetScore;
   const product = getSetProduct(validatedSet)?.toUpperCase() ?? 'MYSTERE';
-  const validationMessage = `Exception granted. You became Junky. ${scoringPlayer.name} valide ${product} sur le slot ${setIndex + 1} pour ${points} point${points > 1 ? 's' : ''}.`;
+  const ownerLabel = receiver.id === scoringPlayer.id ? '' : ` chez ${receiver.name}`;
+  const validationMessage = `Exception granted. You became Junky. ${scoringPlayer.name} valide ${product}${ownerLabel} sur le slot ${setIndex + 1} pour ${points} point${points > 1 ? 's' : ''}.`;
 
   return {
     ...state,
@@ -304,7 +314,7 @@ export function nextTurn(state: GameState): GameState {
 export function dispatchGameAction(state: GameState, action: GameAction): GameState {
   if (action.type === 'play_card') return playCard(state, action.cardInstanceId, action.targetPlayerId, action.targetSetIndex);
   if (action.type === 'discard_card') return discardCard(state, action.cardInstanceId);
-  if (action.type === 'try_smoke') return trySmoke(state, action.playerId, undefined, action.targetSetIndex);
+  if (action.type === 'try_smoke') return trySmoke(state, action.playerId, undefined, action.targetPlayerId, action.targetSetIndex);
   if (action.type === 'end_turn') return nextTurn(state);
   return state;
 }
