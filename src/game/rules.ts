@@ -55,6 +55,9 @@ export function scoreSet(set: SetCard[], mode: GameState['config']['mode']): num
 export function canAddToSet(card: CardInstance, set: SetCard[]): boolean {
   if (isSetComplete(set)) return false;
 
+  // Règle physique canonique : un slot vide commence toujours par un Produit.
+  if (set.length === 0) return card.family === 'product';
+
   if (card.family === 'product') return !hasAny(set, PRODUCTS);
   if (card.cardId === 'filter') return !hasAny(set, CONTAINER_CARDS) && !hasCard(set, 'filter');
   if (card.cardId === 'paper') return !hasAny(set, CONTAINER_CARDS) && !hasCard(set, 'paper');
