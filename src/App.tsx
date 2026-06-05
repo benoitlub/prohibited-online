@@ -13,30 +13,32 @@ const familyLabels: Record<CardFamily, string> = {
   special: 'Special',
 };
 
-type AttackTarget = { playerId: string; setIndex: number };
+type SlotTarget = { playerId: string; setIndex: number };
 
 function setLabel(set: SetCard[], index: number): string {
   return set.length === 0 ? `Slot ${index + 1}` : `Slot ${index + 1} / ${set.length}`;
 }
 
-function getAttackTargets(state: GameState): AttackTarget[] {
-  const activeId = state.players[state.currentPlayerIndex].id;
-  return state.players
-    .filter(player => player.id !== activeId)
-    .flatMap(player => player.sets
-      .map((set, setIndex) => ({ playerId: player.id, setIndex, playable: set.length > 0 }))
-      .filter(target => target.playable)
-      .map(({ playerId, setIndex }) => ({ playerId, setIndex })));
+function getPlayableTargets(state: GameState, card: CardInstance): SlotTarget[] {
+  return state.players.flatMap(player => player.sets
+    .map((_, setIndex) => ({ playerId: player.id, setIndex }))
+    .filter(target => canPlayCard(state, card, target.playerId, target.setIndex)));
 }
 
-function CardButton({ card, disabled, pending, onPlay, onDiscard }: {
+function shouldUseTargetMode(activePlayer: Player, card: CardInstance): boolean {
+  if (card.family === 'attack') return true;
+  return activePlayer.isJunky && card.family !== 'special';
+}
+
+function CardButton({ card, disabled, pending, targetMode, onPlay, onDiscard }: {
   card: CardInstance;
   disabled: boolean;
   pending?: boolean;
+  targetMode?: boolean;
   onPlay: () => void;
   onDiscard: () => void;
 }) {
-  const playLabel = card.family === 'attack' ? 'Cibler' : 'Jouer';
+  const playLabel = targetMode ? 'Cibler' : 'Jouer';
   return (
     <article className={`card card-${card.family} ${pending ? 'pending-card' : ''}`}>
       <div className="card-topline">
@@ -86,32 +88,34 @@ function SetSlotView({ set, index, selected, selectable, attackable, onSelect }:
   );
 }
 
-function PlayerPanel({ player, active, selectedOwnSetIndex, onSelectOwnSet, attackMode, onAttackSlot }: {
+function PlayerPanel({ player, active, selectedOwnSetIndex, onSelectOwnSet, targetingCard, validTargets, onTargetSlot }: {
   player: Player;
   active: boolean;
   selectedOwnSetIndex: number;
   onSelectOwnSet: (setIndex: number) => void;
-  attackMode: boolean;
-  onAttackSlot: (playerId: string, setIndex: number) => void;
+  targetingCard: CardInstance | null;
+  validTargets: SlotTarget[];
+  onTargetSlot: (playerId: string, setIndex: number) => void;
 }) {
+  const isTargeting = Boolean(targetingCard);
   return (
-    <section className={`player-panel ${active ? 'active' : ''} ${attackMode && !active ? 'targeting' : ''}`}>
+    <section className={`player-panel ${active ? 'active' : ''} ${isTargeting ? 'targeting' : ''}`}>
       <div className="player-heading">
-        <h3>{player.name}</h3>
+        <h3>{player.name}{player.isJunky ? ' - Junky' : ''}</h3>
         <span>{player.score} pts</span>
       </div>
       <div className="sets-grid">
         {player.sets.map((set, index) => {
-          const canTarget = attackMode && !active && set.length > 0;
+          const canTarget = validTargets.some(target => target.playerId === player.id && target.setIndex === index);
           return (
             <SetSlotView
               key={`${player.id}-${index}`}
               set={set}
               index={index}
-              selectable={active || canTarget}
-              selected={active && selectedOwnSetIndex === index}
+              selectable={(active && !isTargeting) || canTarget}
+              selected={active && !isTargeting && selectedOwnSetIndex === index}
               attackable={canTarget}
-              onSelect={() => canTarget ? onAttackSlot(player.id, index) : onSelectOwnSet(index)}
+              onSelect={() => canTarget ? onTargetSlot(player.id, index) : onSelectOwnSet(index)}
             />
           );
         })}
@@ -128,9 +132,9 @@ function ConfigScreen({ onStart }: { onStart: (playerCount: number, mode: GameMo
   return (
     <main className="config-screen">
       <section className="config-hero">
-        <p className="kicker">Prototype local V0.3 — CACHE CHECK SLOT COLUMNS</p>
+        <p className="kicker">Prototype local V0.4 - JUNKY TARGET MODE</p>
         <h1>Pro.Hibited Online</h1>
-        <p>Version visible : message recopie en bas + slots en colonnes mobiles + main horizontale. Si tu lis V0.3, le cache a perdu contre le Feuch.</p>
+        <p>Version visible : le Junky peut cibler les slots adverses avec ses cartes. Si tu lis V0.4, le cache est retourne dans sa grotte.</p>
       </section>
 
       <section className="config-panel">
@@ -166,39 +170,49 @@ function ConfigScreen({ onStart }: { onStart: (playerCount: number, mode: GameMo
 export default function App() {
   const [game, setGame] = useState<GameState | null>(null);
   const [selectedOwnSetIndex, setSelectedOwnSetIndex] = useState(0);
-  const [pendingAttack, setPendingAttack] = useState<CardInstance | null>(null);
+  const [targetingCard, setTargetingCard] = useState<CardInstance | null>(null);
 
   const activePlayer = game?.players[game.currentPlayerIndex];
-  const attackTargets = game ? getAttackTargets(game) : [];
+  const validTargets = game && targetingCard ? getPlayableTargets(game, targetingCard) : [];
 
   if (!game || !activePlayer) {
     return <ConfigScreen onStart={(playerCount, mode, targetScore) => {
       const nextGame = createGame({ playerCount, mode, targetScore });
       setSelectedOwnSetIndex(0);
-      setPendingAttack(null);
+      setTargetingCard(null);
       setGame(nextGame);
     }} />;
   }
 
   const send = (next: GameState) => {
     setSelectedOwnSetIndex(current => Math.min(current, next.players[next.currentPlayerIndex].sets.length - 1));
-    setPendingAttack(null);
+    setTargetingCard(null);
     setGame(next);
   };
 
-  const attackSlot = (targetPlayerId: string, targetSetIndex: number) => {
-    if (!pendingAttack) return;
+  const targetSlot = (targetPlayerId: string, targetSetIndex: number) => {
+    if (!targetingCard) return;
+    if (targetingCard.cardId === 'smoke_me') {
+      send(dispatchGameAction(game, {
+        type: 'try_smoke',
+        playerId: activePlayer.id,
+        targetPlayerId,
+        targetSetIndex,
+      }));
+      return;
+    }
+
     send(dispatchGameAction(game, {
       type: 'play_card',
-      cardInstanceId: pendingAttack.instanceId,
+      cardInstanceId: targetingCard.instanceId,
       targetPlayerId,
       targetSetIndex,
     }));
   };
 
   const winner = game.winnerId ? game.players.find(player => player.id === game.winnerId) : undefined;
-  const liveMessage = pendingAttack
-    ? `Choisis une cible pour ${pendingAttack.name}. Rien ne part sans cible, c'est presque professionnel.`
+  const liveMessage = targetingCard
+    ? `Choisis un slot pour ${targetingCard.name}. ${activePlayer.isJunky ? 'Le Junky peut jouer chez les autres.' : 'Rien ne part sans cible.'}`
     : game.status === 'finished' && winner ? `${winner.name} gagne. Relance obligatoire.` : game.tableMessage;
 
   return (
@@ -215,7 +229,7 @@ export default function App() {
         </div>
       </header>
 
-      <section className={`table-message ${game.status === 'finished' ? 'winner' : ''} ${pendingAttack ? 'targeting' : ''}`}>
+      <section className={`table-message ${game.status === 'finished' ? 'winner' : ''} ${targetingCard ? 'targeting' : ''}`}>
         {liveMessage}
       </section>
 
@@ -228,22 +242,23 @@ export default function App() {
               active={index === game.currentPlayerIndex}
               selectedOwnSetIndex={selectedOwnSetIndex}
               onSelectOwnSet={setSelectedOwnSetIndex}
-              attackMode={Boolean(pendingAttack)}
-              onAttackSlot={attackSlot}
+              targetingCard={targetingCard}
+              validTargets={validTargets}
+              onTargetSlot={targetSlot}
             />
           ))}
         </div>
 
         <aside className="side-panel">
-          <h2>{pendingAttack ? `Cibles pour ${pendingAttack.name}` : 'Ciblage'}</h2>
-          {pendingAttack ? (
+          <h2>{targetingCard ? `Cibles pour ${targetingCard.name}` : 'Ciblage'}</h2>
+          {targetingCard ? (
             <div className="targeting-help">
-              <p>Tape un slot adverse surligné pour résoudre l'attaque.</p>
-              <button type="button" onClick={() => setPendingAttack(null)}>Annuler attaque</button>
-              {attackTargets.length === 0 && <p>Aucun slot adverse attaquable. Le chaos attendra.</p>}
+              <p>Tape un slot surligne pour jouer la carte.</p>
+              <button type="button" onClick={() => setTargetingCard(null)}>Annuler ciblage</button>
+              {validTargets.length === 0 && <p>Aucun slot valide. Le carton refuse poliment.</p>}
             </div>
           ) : (
-            <p className="muted">Sélectionne une carte d'attaque pour choisir ensuite le joueur et le slot ciblés.</p>
+            <p className="muted">Les attaques et les cartes de Junky se jouent en ciblant un slot.</p>
           )}
 
           <h2>Log</h2>
@@ -254,15 +269,15 @@ export default function App() {
       </section>
 
       <section className="hand-panel">
-        <div className={`hand-status ${pendingAttack ? 'targeting' : ''}`}>{liveMessage}</div>
+        <div className={`hand-status ${targetingCard ? 'targeting' : ''}`}>{liveMessage}</div>
         <div className="hand-heading">
           <div>
-            <p className="kicker">Joueur actif</p>
+            <p className="kicker">Joueur actif{activePlayer.isJunky ? ' - Junky' : ''}</p>
             <h2>{activePlayer.name} / Slot {selectedOwnSetIndex + 1}</h2>
           </div>
           <div className="turn-actions">
             <span>{game.discardedThisTurn}/2 defausses</span>
-            {pendingAttack && <button type="button" className="cancel-button" onClick={() => setPendingAttack(null)}>Annuler attaque</button>}
+            {targetingCard && <button type="button" className="cancel-button" onClick={() => setTargetingCard(null)}>Annuler ciblage</button>}
             <button type="button" onClick={() => send(dispatchGameAction(game, { type: 'try_smoke', playerId: activePlayer.id, targetSetIndex: selectedOwnSetIndex }))}>Smoke Me</button>
             <button type="button" onClick={() => send(dispatchGameAction(game, { type: 'end_turn' }))}>Finir le tour</button>
           </div>
@@ -270,21 +285,24 @@ export default function App() {
 
         <div className="hand-grid">
           {activePlayer.hand.map(card => {
-            const isAttack = card.family === 'attack';
-            const disabled = isAttack
-              ? attackTargets.length === 0 || Boolean(pendingAttack && pendingAttack.instanceId !== card.instanceId)
-              : Boolean(pendingAttack) || !canPlayCard(game, card, undefined, selectedOwnSetIndex);
+            const targetMode = shouldUseTargetMode(activePlayer, card);
+            const targetCount = getPlayableTargets(game, card).length;
+            const disabled = targetMode
+              ? targetCount === 0 || Boolean(targetingCard && targetingCard.instanceId !== card.instanceId)
+              : Boolean(targetingCard) || !canPlayCard(game, card, activePlayer.id, selectedOwnSetIndex);
             return (
               <CardButton
                 key={card.instanceId}
                 card={card}
-                pending={pendingAttack?.instanceId === card.instanceId}
+                targetMode={targetMode}
+                pending={targetingCard?.instanceId === card.instanceId}
                 disabled={disabled}
-                onPlay={() => isAttack
-                  ? setPendingAttack(card)
+                onPlay={() => targetMode
+                  ? setTargetingCard(card)
                   : send(dispatchGameAction(game, {
                     type: 'play_card',
                     cardInstanceId: card.instanceId,
+                    targetPlayerId: activePlayer.id,
                     targetSetIndex: selectedOwnSetIndex,
                   }))}
                 onDiscard={() => send(dispatchGameAction(game, { type: 'discard_card', cardInstanceId: card.instanceId }))}
