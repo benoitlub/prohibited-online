@@ -123,18 +123,19 @@ select {
 .player-heading h3, .side-panel h2, .hand-heading h2 { margin: 0; }
 .player-heading h3 { font-size: 1rem; }
 .player-heading span { color: #ffdc58; font-weight: 950; }
-.sets-grid { display: grid; gap: 8px; margin-top: 8px; }
+.sets-grid { display: grid; grid-template-columns: repeat(3, minmax(92px, 1fr)); gap: 8px; margin-top: 8px; align-items: stretch; }
 .set-slot {
   display: grid;
   gap: 6px;
   width: 100%;
-  min-height: 62px;
+  min-height: 96px;
   border: 1px solid rgba(255, 248, 232, 0.16);
   border-radius: 6px;
   padding: 8px;
   background: rgba(255, 248, 232, 0.06);
   color: inherit;
   text-align: left;
+  align-content: start;
 }
 .set-slot.selectable.selected { border-color: #ffdc58; background: rgba(255, 220, 88, 0.14); }
 .set-slot.attackable {
@@ -160,6 +161,9 @@ select {
   font-weight: 900;
   border: 1px solid rgba(17, 32, 24, 0.2);
   box-shadow: 0 2px 0 rgba(0,0,0,0.18);
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .set-product { background: #46c96f; }
 .set-build { background: #fff8e8; }
@@ -189,6 +193,18 @@ select {
   max-height: 34vh;
   overflow: auto;
 }
+.hand-status {
+  display: none;
+  margin-bottom: 8px;
+  border-radius: 6px;
+  padding: 8px 10px;
+  background: #f23f5f;
+  color: #fff8e8;
+  font-weight: 950;
+  font-size: 0.88rem;
+  line-height: 1.15;
+}
+.hand-status.targeting { background: #ffdc58; color: #112018; }
 .hand-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 10px; }
 .hand-heading h2 { font-size: 1.05rem; }
 .turn-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; align-items: center; }
@@ -231,23 +247,65 @@ select {
 @media (max-width: 900px) {
   .config-screen { grid-template-columns: 1fr; align-items: stretch; }
   .game-screen { height: auto; min-height: 100vh; overflow: visible; }
-  .topbar, .hand-heading { display: grid; grid-template-columns: 1fr; align-items: stretch; }
+  .topbar { display: grid; grid-template-columns: 1fr; align-items: stretch; gap: 8px; }
+  .topbar h1 { font-size: 1.85rem; }
+  .score-strip { justify-content: flex-start; }
+  .score-strip span, .score-strip button { padding: 7px 8px; font-size: 0.9rem; }
+  .table-message { display: none; }
   .board-grid { grid-template-columns: 1fr; overflow: visible; }
   .players-area { overflow: visible; padding-right: 0; }
   .side-panel { max-height: none; }
-  .score-strip, .turn-actions { justify-content: flex-start; }
-  .hand-panel { max-height: 48vh; }
-  .hand-grid { grid-template-columns: repeat(2, minmax(145px, 1fr)); }
+  .side-panel .event-log { max-height: 120px; overflow: auto; }
+  .hand-status { display: block; }
+  .hand-heading { display: grid; grid-template-columns: 1fr; align-items: stretch; }
+  .turn-actions { justify-content: flex-start; }
+  .hand-panel { max-height: 46vh; }
+  .hand-grid {
+    display: flex !important;
+    gap: 8px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 2px 2px 8px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+  .card {
+    min-width: 220px;
+    max-width: 220px;
+    scroll-snap-align: start;
+  }
 }
 
 @media (max-width: 560px) {
   .config-screen, .game-screen { padding: 10px; }
-  .topbar h1 { font-size: 1.8rem; }
-  .table-message { font-size: 0.98rem; }
-  .players-area { grid-template-columns: 1fr; }
+  .config-hero h1 { font-size: 2.5rem; }
+  .config-panel { padding: 18px; }
+  .players-area { grid-template-columns: 1fr; padding-bottom: 220px; }
+  .player-panel { padding: 8px; }
+  .sets-grid {
+    grid-template-columns: repeat(3, minmax(92px, 1fr));
+    gap: 6px;
+  }
+  .set-slot {
+    min-height: 118px;
+    padding: 7px;
+  }
+  .slot-title { font-size: 0.72rem; }
+  .set-card {
+    font-size: 0.72rem;
+    padding: 4px 6px;
+  }
+  .side-panel { display: none; }
   .hand-panel {
-    max-height: 44vh;
+    position: fixed;
+    left: 10px;
+    right: 10px;
+    bottom: 0;
+    max-height: 42vh;
     padding: 8px;
+    overflow: hidden;
+    background: rgba(10, 18, 14, 0.94);
+    backdrop-filter: blur(8px);
   }
   .hand-heading {
     gap: 6px;
@@ -265,7 +323,7 @@ select {
   }
   .turn-actions button, .score-strip button { flex: initial; padding: 9px 8px; }
   .hand-grid {
-    display: flex;
+    display: flex !important;
     gap: 8px;
     overflow-x: auto;
     overflow-y: hidden;
@@ -289,5 +347,4 @@ select {
     padding: 7px 6px;
     font-size: 0.8rem;
   }
-  .set-slot { min-height: 74px; }
 }
