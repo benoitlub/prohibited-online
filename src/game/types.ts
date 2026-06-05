@@ -34,11 +34,13 @@ export type SetCard = {
   playedOrder: number;
 };
 
+export type SetSlot = SetCard[];
+
 export type Player = {
   id: string;
   name: string;
   hand: CardInstance[];
-  set: SetCard[];
+  sets: SetSlot[];
   isJunky: boolean;
   score: number;
 };
@@ -68,7 +70,7 @@ export type GameState = {
 };
 
 export type GameAction =
-  | { type: 'play_card'; cardInstanceId: string; targetPlayerId?: string }
+  | { type: 'play_card'; cardInstanceId: string; targetPlayerId?: string; targetSetIndex?: number }
   | { type: 'discard_card'; cardInstanceId: string }
-  | { type: 'try_smoke'; playerId: string }
+  | { type: 'try_smoke'; playerId: string; targetSetIndex?: number }
   | { type: 'end_turn' };

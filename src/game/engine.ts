@@ -1,9 +1,10 @@
 import { createDeck, dealCards, shuffleDeck } from './deck';
 import { canCopsDestroy, canPlayCard, getSetProduct, isResistant, isSetComplete, scoreSet } from './rules';
-import type { CardInstance, GameAction, GameConfig, GameState, Player, SetCard } from './types';
+import type { CardInstance, GameAction, GameConfig, GameState, Player, SetCard, SetSlot } from './types';
 
 const HAND_SIZE = 5;
 const MAX_DISCARDS_PER_TURN = 2;
+const SET_SLOTS_PER_PLAYER = 3;
 
 function clampPlayerCount(playerCount: number): number {
   return Math.min(5, Math.max(2, playerCount));
@@ -18,14 +19,26 @@ function normalizeConfig(config: Partial<GameConfig>): GameConfig {
   };
 }
 
+function createEmptySets(): SetSlot[] {
+  return Array.from({ length: SET_SLOTS_PER_PLAYER }, () => []);
+}
+
 function createPlayers(playerCount: number): Player[] {
   return Array.from({ length: playerCount }, (_, index) => ({
     id: `player-${index + 1}`,
     name: `Joueur ${index + 1}`,
     hand: [],
-    set: [],
+    sets: createEmptySets(),
     isJunky: false,
     score: 0,
+  }));
+}
+
+function clonePlayers(players: Player[]): Player[] {
+  return players.map(player => ({
+    ...player,
+    hand: [...player.hand],
+    sets: player.sets.map(set => [...set]),
   }));
 }
 
@@ -40,9 +53,25 @@ function toSetCard(card: CardInstance, playedOrder: number): SetCard {
   };
 }
 
+function toDiscardCard(card: SetCard): CardInstance {
+  return {
+    instanceId: card.instanceId,
+    cardId: card.cardId,
+    name: card.name,
+    family: card.family,
+    effect: 'Carte validee dans un set.',
+    countMvp: 1,
+  };
+}
+
 function withoutCard(hand: CardInstance[], cardInstanceId: string): { hand: CardInstance[]; card?: CardInstance } {
   const card = hand.find(item => item.instanceId === cardInstanceId);
   return { card, hand: hand.filter(item => item.instanceId !== cardInstanceId) };
+}
+
+function normalizeSetIndex(player: Player, targetSetIndex = 0): number {
+  if (targetSetIndex < 0 || targetSetIndex >= player.sets.length) return 0;
+  return targetSetIndex;
 }
 
 function drawOne(deck: CardInstance[], discardPile: CardInstance[]): { card?: CardInstance; deck: CardInstance[]; discardPile: CardInstance[] } {
@@ -58,7 +87,7 @@ function drawOne(deck: CardInstance[], discardPile: CardInstance[]): { card?: Ca
 }
 
 function refillHand(player: Player, deck: CardInstance[], discardPile: CardInstance[]): { player: Player; deck: CardInstance[]; discardPile: CardInstance[]; drawn: number } {
-  const nextPlayer = { ...player, hand: [...player.hand] };
+  const nextPlayer = { ...player, hand: [...player.hand], sets: player.sets.map(set => [...set]) };
   let nextDeck = [...deck];
   let nextDiscard = [...discardPile];
   let drawn = 0;
@@ -100,7 +129,7 @@ export function createGame(configInput: Partial<GameConfig>): GameState {
     discardedThisTurn: 0,
     nextPlayedOrder: 1,
     status: 'playing',
-    eventLog: ['La table est ouverte. Premier refus dans 3... 2... 1...'],
+    eventLog: ['La table est ouverte. Trois slots, zero excuse.'],
     tableMessage: 'HERE, WE DON\'T SMOKE. IT\'S PRO.HIBITED.',
   };
 }
@@ -130,50 +159,55 @@ export function applyCops(set: SetCard[]): SetCard[] {
   return canCopsDestroy(set) ? [] : set;
 }
 
-export function playCard(state: GameState, cardInstanceId: string, targetPlayerId?: string): GameState {
+export function playCard(state: GameState, cardInstanceId: string, targetPlayerId?: string, targetSetIndex = 0): GameState {
   if (state.status !== 'playing') return state;
 
   const activePlayer = state.players[state.currentPlayerIndex];
   const { card } = withoutCard(activePlayer.hand, cardInstanceId);
-  if (!card || !canPlayCard(state, card, targetPlayerId)) {
+  const currentSetIndex = normalizeSetIndex(activePlayer, targetSetIndex);
+  const rulesTargetSetIndex = card?.family === 'attack' ? targetSetIndex : currentSetIndex;
+
+  if (!card || !canPlayCard(state, card, targetPlayerId, rulesTargetSetIndex)) {
     return prependLog(state, 'Still Pro.Hibited.', 'Still Pro.Hibited.');
   }
 
-  if (card.cardId === 'smoke_me') return trySmoke(state, activePlayer.id, card.instanceId);
+  if (card.cardId === 'smoke_me') return trySmoke(state, activePlayer.id, card.instanceId, currentSetIndex);
 
-  const players = state.players.map(player => ({ ...player, hand: [...player.hand], set: [...player.set] }));
+  const players = clonePlayers(state.players);
   const current = players[state.currentPlayerIndex];
   const removed = withoutCard(current.hand, cardInstanceId);
   current.hand = removed.hand;
 
-  let message = `${current.name} pose ${card.name}. Le set prend forme.`;
+  let message = `${current.name} pose ${card.name} sur le slot ${currentSetIndex + 1}. Le plan se complique.`;
 
   if (card.family === 'attack') {
     const target = players.find(player => player.id === targetPlayerId);
     if (!target) return state;
+    const attackedSetIndex = normalizeSetIndex(target, targetSetIndex);
+    const attackedSet = target.sets[attackedSetIndex];
 
     if (card.cardId === 'wind' || card.cardId === 'rain') {
-      const before = target.set.length;
-      target.set = applyWindOrRain(target.set);
-      message = before === target.set.length
-        ? `${current.name} envoie ${card.name}. ${target.name} encaisse, mais ca tremble.`
-        : `${current.name} envoie ${card.name}. Derniere carte de ${target.name} ejectee.`;
+      const before = attackedSet.length;
+      target.sets[attackedSetIndex] = applyWindOrRain(attackedSet);
+      message = before === target.sets[attackedSetIndex].length
+        ? `${current.name} envoie ${card.name} sur ${target.name} slot ${attackedSetIndex + 1}. Ca resiste, mais ca tremble.`
+        : `${current.name} envoie ${card.name} sur ${target.name} slot ${attackedSetIndex + 1}. Derniere carte ejectee.`;
     }
 
     if (card.cardId === 'lost') {
-      target.set = applyLost();
-      message = `${current.name} joue Lost. Le set de ${target.name} disparait du plan.`;
+      target.sets[attackedSetIndex] = applyLost();
+      message = `${current.name} joue Lost. ${target.name} perd le slot ${attackedSetIndex + 1}.`;
     }
 
     if (card.cardId === 'cops') {
-      const product = getSetProduct(target.set);
-      target.set = applyCops(target.set);
+      const product = getSetProduct(attackedSet);
+      target.sets[attackedSetIndex] = applyCops(attackedSet);
       message = product === 'cbd'
-        ? `${current.name} appelle Cops. CBD presente ses papiers, aucun effet.`
-        : `${current.name} appelle Cops. Le set de ${target.name} part au poste.`;
+        ? `${current.name} appelle Cops sur le slot ${attackedSetIndex + 1}. CBD presente ses papiers, aucun effet.`
+        : `${current.name} appelle Cops. Le slot ${attackedSetIndex + 1} de ${target.name} part au poste.`;
     }
   } else {
-    current.set = [...current.set, toSetCard(card, state.nextPlayedOrder)];
+    current.sets[currentSetIndex] = [...current.sets[currentSetIndex], toSetCard(card, state.nextPlayedOrder)];
   }
 
   return prependLog({
@@ -191,7 +225,7 @@ export function discardCard(state: GameState, cardInstanceId: string): GameState
     return prependLog(state, 'Deux defausses maximum. Le systeme a dit non.', 'Still Pro.Hibited.');
   }
 
-  const players = state.players.map(player => ({ ...player, hand: [...player.hand], set: [...player.set] }));
+  const players = clonePlayers(state.players);
   const activePlayer = players[state.currentPlayerIndex];
   const removed = withoutCard(activePlayer.hand, cardInstanceId);
   if (!removed.card) return state;
@@ -205,45 +239,40 @@ export function discardCard(state: GameState, cardInstanceId: string): GameState
   }, `${activePlayer.name} defausse ${removed.card.name}. Choix discutable, donc parfait.`);
 }
 
-export function trySmoke(state: GameState, playerId: string, smokeCardInstanceId?: string): GameState {
+export function trySmoke(state: GameState, playerId: string, smokeCardInstanceId?: string, targetSetIndex = 0): GameState {
   if (state.status !== 'playing') return state;
 
   const playerIndex = state.players.findIndex(player => player.id === playerId);
   if (playerIndex < 0) return state;
   const player = state.players[playerIndex];
+  const setIndex = normalizeSetIndex(player, targetSetIndex);
+  const selectedSet = player.sets[setIndex];
   const smokeCard = smokeCardInstanceId
     ? player.hand.find(card => card.instanceId === smokeCardInstanceId && card.cardId === 'smoke_me')
     : player.hand.find(card => card.cardId === 'smoke_me');
 
-  if (!smokeCard || !isSetComplete(player.set)) {
+  if (!smokeCard || !isSetComplete(selectedSet)) {
     return prependLog(state, 'Still Pro.Hibited.', 'Still Pro.Hibited.');
   }
 
-  const points = scoreSet(player.set, state.config.mode);
-  const players = state.players.map(item => ({ ...item, hand: [...item.hand], set: [...item.set] }));
+  const points = scoreSet(selectedSet, state.config.mode);
+  const players = clonePlayers(state.players);
   const scoringPlayer = players[playerIndex];
   const removed = withoutCard(scoringPlayer.hand, smokeCard.instanceId);
-  const validatedSet = scoringPlayer.set;
+  const validatedSet = scoringPlayer.sets[setIndex];
   scoringPlayer.hand = removed.hand;
-  scoringPlayer.set = [];
+  scoringPlayer.sets[setIndex] = [];
   scoringPlayer.isJunky = true;
   scoringPlayer.score += points;
 
   const hasWinner = scoringPlayer.score >= state.config.targetScore;
   const product = getSetProduct(validatedSet)?.toUpperCase() ?? 'MYSTERE';
-  const validationMessage = `Exception granted. You became Junky. ${scoringPlayer.name} valide ${product} pour ${points} point${points > 1 ? 's' : ''}.`;
+  const validationMessage = `Exception granted. You became Junky. ${scoringPlayer.name} valide ${product} sur le slot ${setIndex + 1} pour ${points} point${points > 1 ? 's' : ''}.`;
 
   return {
     ...state,
     players,
-    discardPile: [smokeCard, ...validatedSet.map(card => ({
-      instanceId: card.instanceId,
-      cardId: card.cardId,
-      name: card.name,
-      family: card.family,
-      effect: 'Carte validee dans un set.',
-      countMvp: 1,
-    })), ...state.discardPile],
+    discardPile: [smokeCard, ...validatedSet.map(toDiscardCard), ...state.discardPile],
     status: hasWinner ? 'finished' : 'playing',
     winnerId: hasWinner ? scoringPlayer.id : undefined,
     tableMessage: hasWinner ? `${scoringPlayer.name} gagne la partie.` : 'Exception granted. You became Junky.',
@@ -254,7 +283,7 @@ export function trySmoke(state: GameState, playerId: string, smokeCardInstanceId
 export function nextTurn(state: GameState): GameState {
   if (state.status !== 'playing') return state;
 
-  const players = state.players.map(player => ({ ...player, hand: [...player.hand], set: [...player.set] }));
+  const players = clonePlayers(state.players);
   const activePlayer = players[state.currentPlayerIndex];
   const refill = refillHand(activePlayer, state.deck, state.discardPile);
   players[state.currentPlayerIndex] = refill.player;
@@ -273,9 +302,9 @@ export function nextTurn(state: GameState): GameState {
 }
 
 export function dispatchGameAction(state: GameState, action: GameAction): GameState {
-  if (action.type === 'play_card') return playCard(state, action.cardInstanceId, action.targetPlayerId);
+  if (action.type === 'play_card') return playCard(state, action.cardInstanceId, action.targetPlayerId, action.targetSetIndex);
   if (action.type === 'discard_card') return discardCard(state, action.cardInstanceId);
-  if (action.type === 'try_smoke') return trySmoke(state, action.playerId);
+  if (action.type === 'try_smoke') return trySmoke(state, action.playerId, undefined, action.targetSetIndex);
   if (action.type === 'end_turn') return nextTurn(state);
   return state;
 }
