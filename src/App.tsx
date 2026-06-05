@@ -128,9 +128,9 @@ function ConfigScreen({ onStart }: { onStart: (playerCount: number, mode: GameMo
   return (
     <main className="config-screen">
       <section className="config-hero">
-        <p className="kicker">Prototype local V0.2</p>
+        <p className="kicker">Prototype local V0.2 — CACHE CHECK FEUCH</p>
         <h1>Pro.Hibited Online</h1>
-        <p>Construis plusieurs sets, cible le bon slot, tente le Smoke Me. Le systeme dira non jusqu'a preuve du contraire.</p>
+        <p>Version visible : main horizontale mobile + slots verticaux. Si tu lis cette phrase, le navigateur a bien rechargé le nouveau paquet.</p>
       </section>
 
       <section className="config-panel">
