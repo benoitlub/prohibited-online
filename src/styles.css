@@ -63,7 +63,7 @@ select {
 }
 .segmented button.selected, .start-button { background: #f23f5f; color: white; }
 .cancel-button, .targeting-help button { background: #f23f5f !important; color: #fff8e8 !important; }
-.end-turn-button {
+.end-turn-button, .undo-button {
   width: 46px;
   min-width: 46px;
   height: 46px;
@@ -74,6 +74,7 @@ select {
   font-size: 1.6rem;
   line-height: 1;
 }
+.undo-button { background: #fff8e8 !important; }
 
 .game-screen {
   display: grid;
@@ -369,7 +370,7 @@ select {
     text-align: right;
   }
   .turn-actions button, .score-strip button { flex: initial; }
-  .end-turn-button {
+  .end-turn-button, .undo-button {
     width: 42px;
     min-width: 42px;
     height: 42px;
