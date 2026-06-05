@@ -63,6 +63,17 @@ select {
 }
 .segmented button.selected, .start-button { background: #f23f5f; color: white; }
 .cancel-button, .targeting-help button { background: #f23f5f !important; color: #fff8e8 !important; }
+.end-turn-button {
+  width: 46px;
+  min-width: 46px;
+  height: 46px;
+  padding: 0 !important;
+  border-radius: 999px !important;
+  display: inline-grid;
+  place-items: center;
+  font-size: 1.6rem;
+  line-height: 1;
+}
 
 .game-screen {
   display: grid;
@@ -257,8 +268,8 @@ select {
   .side-panel { max-height: none; }
   .side-panel .event-log { max-height: 120px; overflow: auto; }
   .hand-status { display: block; }
-  .hand-heading { display: grid; grid-template-columns: 1fr; align-items: stretch; }
-  .turn-actions { justify-content: flex-start; }
+  .hand-heading { display: grid; grid-template-columns: 1fr auto; align-items: center; }
+  .turn-actions { justify-content: flex-end; }
   .hand-panel { max-height: 46vh; }
   .hand-grid {
     display: flex !important;
@@ -308,20 +319,30 @@ select {
     backdrop-filter: blur(8px);
   }
   .hand-heading {
-    gap: 6px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+    align-items: center;
     margin-bottom: 8px;
   }
   .hand-heading h2 { font-size: 0.95rem; }
   .turn-actions {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: auto;
+    justify-items: end;
     gap: 6px;
   }
   .turn-actions span {
-    grid-column: 1 / -1;
-    font-size: 0.85rem;
+    font-size: 0.78rem;
+    text-align: right;
   }
-  .turn-actions button, .score-strip button { flex: initial; padding: 9px 8px; }
+  .turn-actions button, .score-strip button { flex: initial; }
+  .end-turn-button {
+    width: 42px;
+    min-width: 42px;
+    height: 42px;
+    font-size: 1.55rem;
+  }
   .hand-grid {
     display: flex !important;
     gap: 8px;
