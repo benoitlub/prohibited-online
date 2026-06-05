@@ -1,0 +1,28 @@
+{
+  "smoke_denied": [
+    "HERE, WE DON’T SMOKE. IT’S PRO.HIBITED.",
+    "Still Pro.Hibited.",
+    "Nice try. The table says no."
+  ],
+  "smoke_success": [
+    "Exception granted. You became Junky.",
+    "The system looked away for one second.",
+    "Prohibition breached. Junky unlocked."
+  ],
+  "wind": [
+    "A tragic breeze entered the chat.",
+    "Wind removed the last card. Nature has opinions."
+  ],
+  "rain": [
+    "Rain washed away the last hope.",
+    "Fire met weather. Weather won."
+  ],
+  "cops": [
+    "Cops found contraband. The whole set left quietly.",
+    "CBD showed paperwork. Cops moved on."
+  ],
+  "lost": [
+    "Lost swallowed the entire set. No witnesses.",
+    "The set has left the dimension."
+  ]
+}
