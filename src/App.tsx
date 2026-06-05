@@ -128,9 +128,9 @@ function ConfigScreen({ onStart }: { onStart: (playerCount: number, mode: GameMo
   return (
     <main className="config-screen">
       <section className="config-hero">
-        <p className="kicker">Prototype local V0.2 — CACHE CHECK FEUCH</p>
+        <p className="kicker">Prototype local V0.3 — CACHE CHECK SLOT COLUMNS</p>
         <h1>Pro.Hibited Online</h1>
-        <p>Version visible : main horizontale mobile + slots verticaux. Si tu lis cette phrase, le navigateur a bien rechargé le nouveau paquet.</p>
+        <p>Version visible : message recopie en bas + slots en colonnes mobiles + main horizontale. Si tu lis V0.3, le cache a perdu contre le Feuch.</p>
       </section>
 
       <section className="config-panel">
@@ -197,6 +197,9 @@ export default function App() {
   };
 
   const winner = game.winnerId ? game.players.find(player => player.id === game.winnerId) : undefined;
+  const liveMessage = pendingAttack
+    ? `Choisis une cible pour ${pendingAttack.name}. Rien ne part sans cible, c'est presque professionnel.`
+    : game.status === 'finished' && winner ? `${winner.name} gagne. Relance obligatoire.` : game.tableMessage;
 
   return (
     <main className="game-screen">
@@ -213,9 +216,7 @@ export default function App() {
       </header>
 
       <section className={`table-message ${game.status === 'finished' ? 'winner' : ''} ${pendingAttack ? 'targeting' : ''}`}>
-        {pendingAttack
-          ? `Choisis une cible pour ${pendingAttack.name}. Rien ne part sans cible, c'est presque professionnel.`
-          : game.status === 'finished' && winner ? `${winner.name} gagne. Relance obligatoire.` : game.tableMessage}
+        {liveMessage}
       </section>
 
       <section className="board-grid">
@@ -253,6 +254,7 @@ export default function App() {
       </section>
 
       <section className="hand-panel">
+        <div className={`hand-status ${pendingAttack ? 'targeting' : ''}`}>{liveMessage}</div>
         <div className="hand-heading">
           <div>
             <p className="kicker">Joueur actif</p>
