@@ -72,5 +72,5 @@ export type GameState = {
 export type GameAction =
   | { type: 'play_card'; cardInstanceId: string; targetPlayerId?: string; targetSetIndex?: number }
   | { type: 'discard_card'; cardInstanceId: string }
-  | { type: 'try_smoke'; playerId: string; targetSetIndex?: number }
+  | { type: 'try_smoke'; playerId: string; targetPlayerId?: string; targetSetIndex?: number }
   | { type: 'end_turn' };
