@@ -82,16 +82,22 @@ export function canPlayCard(state: GameState, card: CardInstance, targetPlayerId
   const cardIsInHand = player.hand.some(handCard => handCard.instanceId === card.instanceId);
   if (!cardIsInHand) return false;
 
+  const target = targetPlayerId ? state.players.find(item => item.id === targetPlayerId) : player;
+  if (!target) return false;
+
   if (card.cardId === 'smoke_me') {
-    const set = player.sets[targetSetIndex] ?? [];
-    return isSetComplete(set);
+    const set = target.sets[targetSetIndex] ?? [];
+    return (target.id === player.id || player.isJunky) && isSetComplete(set);
   }
 
   if (card.family === 'attack') {
-    const target = state.players.find(item => item.id === targetPlayerId);
-    const targetSet = target?.sets[targetSetIndex];
-    return Boolean(target && target.id !== player.id && targetSet && targetSet.length > 0);
+    const targetSet = target.sets[targetSetIndex];
+    return Boolean(target.id !== player.id && targetSet && targetSet.length > 0);
   }
 
-  return canAddToOwnSet(card, player, targetSetIndex);
+  if (target.id !== player.id && !player.isJunky) return false;
+
+  const targetSet = target.sets[targetSetIndex];
+  if (!targetSet) return false;
+  return canAddToSet(card, targetSet);
 }
