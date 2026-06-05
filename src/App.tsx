@@ -132,9 +132,9 @@ function ConfigScreen({ onStart }: { onStart: (playerCount: number, mode: GameMo
   return (
     <main className="config-screen">
       <section className="config-hero">
-        <p className="kicker">Prototype local V0.6 - END TURN ARROW</p>
+        <p className="kicker">Prototype local V0.7 - VICTORY BANNER</p>
         <h1>Pro.Hibited Online</h1>
-        <p>Version visible : le tour se termine avec une petite fleche compacte sur le cote. Le bouton geant est parti rouler ailleurs.</p>
+        <p>Version visible : la victoire declenche maintenant un gros panneau impossible a rater. Le Junky porte enfin sa couronne en carton.</p>
       </section>
 
       <section className="config-panel">
@@ -190,6 +190,12 @@ export default function App() {
     setGame(next);
   };
 
+  const restartGame = () => {
+    setGame(createGame(game.config));
+    setSelectedOwnSetIndex(0);
+    setTargetingCard(null);
+  };
+
   const targetSlot = (targetPlayerId: string, targetSetIndex: number) => {
     if (!targetingCard) return;
     if (targetingCard.cardId === 'smoke_me') {
@@ -216,7 +222,7 @@ export default function App() {
     : game.status === 'finished' && winner ? `${winner.name} gagne. Relance obligatoire.` : game.tableMessage;
 
   return (
-    <main className="game-screen">
+    <main className={`game-screen ${winner ? 'has-winner' : ''}`}>
       <header className="topbar">
         <div>
           <p className="kicker">HERE, WE DON'T SMOKE. IT'S PRO.HIBITED.</p>
@@ -228,6 +234,18 @@ export default function App() {
           <button type="button" onClick={() => setGame(null)}>Nouvelle partie</button>
         </div>
       </header>
+
+      {winner && (
+        <section className="victory-banner" role="status" aria-live="polite">
+          <div className="victory-badge">🏆</div>
+          <div>
+            <p>Victoire interdite</p>
+            <h2>{winner.name} devient Junky supreme</h2>
+            <span>{winner.score} pts — la table demande une revanche.</span>
+          </div>
+          <button type="button" onClick={restartGame}>Revanche</button>
+        </section>
+      )}
 
       <section className={`table-message ${game.status === 'finished' ? 'winner' : ''} ${targetingCard ? 'targeting' : ''}`}>
         {liveMessage}
