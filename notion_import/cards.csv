@@ -1,0 +1,15 @@
+Name,Card ID,Family,Effect,Core,Rarity,MVP Count,Status
+Weed,weed,product,Produit. Vulnérable à Cops.,True,core,6,Canon
+Hash,hash,product,Produit. Vulnérable à Cops.,True,core,4,Canon
+CBD,cbd,product,Produit. Protégé contre Cops.,True,core,4,Canon
+Filter,filter,build,Nécessaire au combo classique.,True,core,8,Canon
+Paper,paper,build,Nécessaire au combo classique.,True,core,8,Canon
+Fire,fire,fire,Allumage standard.,True,core,7,Canon
+BBQ,bbq,fire,Remplace Fire. Résiste à deux attaques Wind/Rain.,True,core,2,Canon
+Bong,bong,container,Remplace Filter + Paper. Résiste à deux attaques Wind/Rain.,True,core,3,Canon
+Blunt,blunt,container,Remplace Filter + Paper. Résiste à deux attaques Wind/Rain.,True,core,4,Canon
+Smoke Me,smoke_me,smoke,Valide un set complet. Sinon : Still Pro.Hibited.,True,core,5,Canon
+Wind,wind,attack,Retire la dernière carte posée du set ciblé. Marque Bong/Blunt/BBQ.,True,core,4,Canon
+Rain,rain,attack,Retire la dernière carte posée du set ciblé. Marque Bong/Blunt/BBQ.,True,core,4,Canon
+Cops,cops,attack,Détruit un set contenant Weed ou Hash. Aucun effet sur CBD.,True,core,4,Canon
+Lost,lost,attack,Détruit entièrement le set ciblé.,True,core,3,Canon
