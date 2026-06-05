@@ -132,9 +132,9 @@ function ConfigScreen({ onStart }: { onStart: (playerCount: number, mode: GameMo
   return (
     <main className="config-screen">
       <section className="config-hero">
-        <p className="kicker">Prototype local V0.4 - JUNKY TARGET MODE</p>
+        <p className="kicker">Prototype local V0.5 - SMOKE ME CARD ONLY</p>
         <h1>Pro.Hibited Online</h1>
-        <p>Version visible : le Junky peut cibler les slots adverses avec ses cartes. Si tu lis V0.4, le cache est retourne dans sa grotte.</p>
+        <p>Version visible : plus de bouton Smoke Me global. La validation passe uniquement par la carte Smoke Me, comme dans le vrai paquet.</p>
       </section>
 
       <section className="config-panel">
@@ -278,7 +278,6 @@ export default function App() {
           <div className="turn-actions">
             <span>{game.discardedThisTurn}/2 defausses</span>
             {targetingCard && <button type="button" className="cancel-button" onClick={() => setTargetingCard(null)}>Annuler ciblage</button>}
-            <button type="button" onClick={() => send(dispatchGameAction(game, { type: 'try_smoke', playerId: activePlayer.id, targetSetIndex: selectedOwnSetIndex }))}>Smoke Me</button>
             <button type="button" onClick={() => send(dispatchGameAction(game, { type: 'end_turn' }))}>Finir le tour</button>
           </div>
         </div>
