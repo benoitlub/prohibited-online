@@ -245,8 +245,49 @@ select {
   .topbar h1 { font-size: 1.8rem; }
   .table-message { font-size: 0.98rem; }
   .players-area { grid-template-columns: 1fr; }
-  .hand-grid { grid-template-columns: 1fr; }
-  .card { min-height: 118px; }
-  .turn-actions button, .score-strip button { flex: 1 1 140px; }
+  .hand-panel {
+    max-height: 44vh;
+    padding: 8px;
+  }
+  .hand-heading {
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+  .hand-heading h2 { font-size: 0.95rem; }
+  .turn-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+  .turn-actions span {
+    grid-column: 1 / -1;
+    font-size: 0.85rem;
+  }
+  .turn-actions button, .score-strip button { flex: initial; padding: 9px 8px; }
+  .hand-grid {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 2px 2px 8px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+  .card {
+    min-width: 218px;
+    max-width: 218px;
+    min-height: 108px;
+    scroll-snap-align: start;
+    padding: 8px;
+    gap: 6px;
+  }
+  .card p {
+    font-size: 0.76rem;
+    max-height: 2.3em;
+  }
+  .card-actions button {
+    padding: 7px 6px;
+    font-size: 0.8rem;
+  }
   .set-slot { min-height: 74px; }
 }
