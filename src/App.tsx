@@ -132,9 +132,9 @@ function ConfigScreen({ onStart }: { onStart: (playerCount: number, mode: GameMo
   return (
     <main className="config-screen">
       <section className="config-hero">
-        <p className="kicker">Prototype local V0.7 - VICTORY BANNER</p>
+        <p className="kicker">Prototype local V0.8 - UNDO LAST ACTION</p>
         <h1>Pro.Hibited Online</h1>
-        <p>Version visible : la victoire declenche maintenant un gros panneau impossible a rater. Le Junky porte enfin sa couronne en carton.</p>
+        <p>Version visible : un bouton annule la derniere action. La defausse accidentelle peut rentrer a la maison, honteuse mais vivante.</p>
       </section>
 
       <section className="config-panel">
@@ -169,6 +169,7 @@ function ConfigScreen({ onStart }: { onStart: (playerCount: number, mode: GameMo
 
 export default function App() {
   const [game, setGame] = useState<GameState | null>(null);
+  const [history, setHistory] = useState<GameState[]>([]);
   const [selectedOwnSetIndex, setSelectedOwnSetIndex] = useState(0);
   const [targetingCard, setTargetingCard] = useState<CardInstance | null>(null);
 
@@ -178,20 +179,32 @@ export default function App() {
   if (!game || !activePlayer) {
     return <ConfigScreen onStart={(playerCount, mode, targetScore) => {
       const nextGame = createGame({ playerCount, mode, targetScore });
+      setHistory([]);
       setSelectedOwnSetIndex(0);
       setTargetingCard(null);
       setGame(nextGame);
     }} />;
   }
 
-  const send = (next: GameState) => {
+  const commitGameAction = (next: GameState) => {
+    setHistory(previous => [game, ...previous].slice(0, 12));
     setSelectedOwnSetIndex(current => Math.min(current, next.players[next.currentPlayerIndex].sets.length - 1));
     setTargetingCard(null);
     setGame(next);
   };
 
+  const undoLastAction = () => {
+    const previousGame = history[0];
+    if (!previousGame) return;
+    setGame(previousGame);
+    setSelectedOwnSetIndex(current => Math.min(current, previousGame.players[previousGame.currentPlayerIndex].sets.length - 1));
+    setTargetingCard(null);
+    setHistory(history.slice(1));
+  };
+
   const restartGame = () => {
     setGame(createGame(game.config));
+    setHistory([]);
     setSelectedOwnSetIndex(0);
     setTargetingCard(null);
   };
@@ -199,7 +212,7 @@ export default function App() {
   const targetSlot = (targetPlayerId: string, targetSetIndex: number) => {
     if (!targetingCard) return;
     if (targetingCard.cardId === 'smoke_me') {
-      send(dispatchGameAction(game, {
+      commitGameAction(dispatchGameAction(game, {
         type: 'try_smoke',
         playerId: activePlayer.id,
         targetPlayerId,
@@ -208,7 +221,7 @@ export default function App() {
       return;
     }
 
-    send(dispatchGameAction(game, {
+    commitGameAction(dispatchGameAction(game, {
       type: 'play_card',
       cardInstanceId: targetingCard.instanceId,
       targetPlayerId,
@@ -231,7 +244,10 @@ export default function App() {
         <div className="score-strip">
           <span>Tour {game.turnNumber}</span>
           <span>{game.config.mode === 'quick' ? 'Rapide' : 'Longue'} / {game.config.targetScore} pts</span>
-          <button type="button" onClick={() => setGame(null)}>Nouvelle partie</button>
+          <button type="button" onClick={() => {
+            setHistory([]);
+            setGame(null);
+          }}>Nouvelle partie</button>
         </div>
       </header>
 
@@ -296,7 +312,8 @@ export default function App() {
           <div className="turn-actions">
             <span>{game.discardedThisTurn}/2 defausses</span>
             {targetingCard && <button type="button" className="cancel-button" onClick={() => setTargetingCard(null)}>Annuler ciblage</button>}
-            <button type="button" className="end-turn-button" aria-label="Finir le tour" title="Finir le tour" onClick={() => send(dispatchGameAction(game, { type: 'end_turn' }))}>→</button>
+            <button type="button" className="undo-button" aria-label="Annuler la derniere action" title="Annuler la derniere action" onClick={undoLastAction} disabled={history.length === 0}>↶</button>
+            <button type="button" className="end-turn-button" aria-label="Finir le tour" title="Finir le tour" onClick={() => commitGameAction(dispatchGameAction(game, { type: 'end_turn' }))}>→</button>
           </div>
         </div>
 
@@ -316,13 +333,13 @@ export default function App() {
                 disabled={disabled}
                 onPlay={() => targetMode
                   ? setTargetingCard(card)
-                  : send(dispatchGameAction(game, {
+                  : commitGameAction(dispatchGameAction(game, {
                     type: 'play_card',
                     cardInstanceId: card.instanceId,
                     targetPlayerId: activePlayer.id,
                     targetSetIndex: selectedOwnSetIndex,
                   }))}
-                onDiscard={() => send(dispatchGameAction(game, { type: 'discard_card', cardInstanceId: card.instanceId }))}
+                onDiscard={() => commitGameAction(dispatchGameAction(game, { type: 'discard_card', cardInstanceId: card.instanceId }))}
               />
             );
           })}
