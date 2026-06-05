@@ -1,0 +1,8 @@
+Rule,Category,Description,Status
+Combo classique,Combo,Produit + Filter + Paper + Fire ou BBQ + Smoke Me,Canon
+Combo contenant,Combo,Produit + Bong ou Blunt + Fire ou BBQ + Smoke Me,Canon
+Wind/Rain,Attack,Retire la dernière carte posée du set ciblé,Canon
+Résistance,Defense,"Bong, Blunt et BBQ nécessitent deux attaques Wind/Rain",Canon
+Lost,Attack,Détruit entièrement le set ciblé,Canon
+Cops,Attack,"Détruit les sets Weed/Hash, aucun effet sur CBD",Canon
+Smoke Me,Validation,Jouable uniquement sur set complet,Canon
