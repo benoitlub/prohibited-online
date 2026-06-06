@@ -14,3 +14,4 @@ export type RoomSnapshot = {
   isHost: boolean;
   updatedAt: number;
 };
+
