@@ -12,3 +12,5 @@ export type RoomSnapshot = {
   localSeatId: SeatId;
   connectedSeats: SeatId[];
   isHost: boolean;
+  updatedAt: number;
+};
