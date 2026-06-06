@@ -10,15 +10,4 @@ export type RoomSnapshot = {
   kind: ConnectorKind;
   state: GameState;
   localSeatId: SeatId;
-  connectedSeats: SeatId[];
-  isHost: boolean;
-  updatedAt: number;
-};
-
-export type ConnectorActionResult = {
-  snapshot: RoomSnapshot;
-  accepted: boolean;
-  reason?: string;
-};
-
-export type GameConnector
+  connected
