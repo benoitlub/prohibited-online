@@ -15,6 +15,17 @@ const familyLabels: Record<CardFamily, string> = {
 
 type SlotTarget = { playerId: string; setIndex: number };
 
+const seatLayouts: Record<number, string[]> = {
+  2: ['seat-bottom', 'seat-top'],
+  3: ['seat-bottom', 'seat-top-left', 'seat-top-right'],
+  4: ['seat-bottom', 'seat-left', 'seat-top', 'seat-right'],
+  5: ['seat-bottom', 'seat-left', 'seat-top-left', 'seat-top-right', 'seat-right'],
+};
+
+function getSeatClass(index: number, playerCount: number): string {
+  return seatLayouts[playerCount]?.[index] ?? `seat-${index}`;
+}
+
 function setLabel(set: SetCard[], index: number): string {
   return set.length === 0 ? `Slot ${index + 1}` : `Slot ${index + 1} / ${set.length}`;
 }
@@ -88,9 +99,10 @@ function SetSlotView({ set, index, selected, selectable, attackable, onSelect }:
   );
 }
 
-function PlayerPanel({ player, active, selectedOwnSetIndex, onSelectOwnSet, targetingCard, validTargets, onTargetSlot }: {
+function PlayerPanel({ player, active, seatClass, selectedOwnSetIndex, onSelectOwnSet, targetingCard, validTargets, onTargetSlot }: {
   player: Player;
   active: boolean;
+  seatClass: string;
   selectedOwnSetIndex: number;
   onSelectOwnSet: (setIndex: number) => void;
   targetingCard: CardInstance | null;
@@ -99,7 +111,7 @@ function PlayerPanel({ player, active, selectedOwnSetIndex, onSelectOwnSet, targ
 }) {
   const isTargeting = Boolean(targetingCard);
   return (
-    <section className={`player-panel ${active ? 'active' : ''} ${isTargeting ? 'targeting' : ''}`}>
+    <section className={`player-panel player-seat ${seatClass} ${active ? 'active' : ''} ${isTargeting ? 'targeting' : ''}`}>
       <div className="player-heading">
         <h3>{player.name}{player.isJunky ? ' - Junky' : ''}</h3>
         <span>{player.score} pts</span>
@@ -132,9 +144,9 @@ function ConfigScreen({ onStart }: { onStart: (playerCount: number, mode: GameMo
   return (
     <main className="config-screen">
       <section className="config-hero">
-        <p className="kicker">Prototype local V0.8 - UNDO LAST ACTION</p>
+        <p className="kicker">Prototype local V0.9 - TABLE SEATS</p>
         <h1>Pro.Hibited Online</h1>
-        <p>Version visible : un bouton annule la derniere action. La defausse accidentelle peut rentrer a la maison, honteuse mais vivante.</p>
+        <p>Version visible : les joueurs sont maintenant places autour de la table. Le moteur reste intact, le carton prend la pose.</p>
       </section>
 
       <section className="config-panel">
@@ -185,6 +197,8 @@ export default function App() {
       setGame(nextGame);
     }} />;
   }
+
+  const tablePlayers = [activePlayer, ...game.players.filter(player => player.id !== activePlayer.id)];
 
   const commitGameAction = (next: GameState) => {
     setHistory(previous => [game, ...previous].slice(0, 12));
@@ -267,13 +281,15 @@ export default function App() {
         {liveMessage}
       </section>
 
-      <section className="board-grid">
-        <div className="players-area">
-          {game.players.map((player, index) => (
+      <section className="board-grid table-layout">
+        <div className={`players-area table-surface players-${game.players.length}`}>
+          <div className="table-emblem" aria-hidden="true">PRO.HIBITED</div>
+          {tablePlayers.map((player, index) => (
             <PlayerPanel
               key={player.id}
               player={player}
-              active={index === game.currentPlayerIndex}
+              active={player.id === activePlayer.id}
+              seatClass={getSeatClass(index, game.players.length)}
               selectedOwnSetIndex={selectedOwnSetIndex}
               onSelectOwnSet={setSelectedOwnSetIndex}
               targetingCard={targetingCard}
