@@ -1,6 +1,15 @@
 import { useState } from 'react';
+import type { CSSProperties } from 'react';
 import { canPlayCard, createGame, dispatchGameAction } from './game/engine';
-import type { CardFamily, CardInstance, GameMode, GameState, LongTargetScore, Player, SetCard } from './game/types';
+import type { CardFamily, CardId, CardInstance, GameMode, GameState, LongTargetScore, Player, SetCard } from './game/types';
+
+const cardImageModules = import.meta.glob<string>('./assets/cards2025/*.png', { eager: true, import: 'default' });
+const CARD_IMAGES_BY_ID = Object.entries(cardImageModules).reduce<Record<string, string[]>>((images, [path, url]) => {
+  const match = path.match(/\/([a-z_]+)-\d+\.png$/);
+  if (!match) return images;
+  images[match[1]] = [...(images[match[1]] ?? []), url];
+  return images;
+}, {});
 
 const longTargets: LongTargetScore[] = [30, 50, 100];
 const familyLabels: Record<CardFamily, string> = {
@@ -14,16 +23,13 @@ const familyLabels: Record<CardFamily, string> = {
 };
 
 type SlotTarget = { playerId: string; setIndex: number };
+type SeatedPlayer = { player: Player; playerIndex: number; seatClass: string };
 
-const seatLayouts: Record<number, string[]> = {
-  2: ['seat-bottom', 'seat-top'],
-  3: ['seat-bottom', 'seat-top-left', 'seat-top-right'],
-  4: ['seat-bottom', 'seat-left', 'seat-top', 'seat-right'],
-  5: ['seat-bottom', 'seat-left', 'seat-top-left', 'seat-top-right', 'seat-right'],
-};
-
-function getSeatClass(index: number, playerCount: number): string {
-  return seatLayouts[playerCount]?.[index] ?? `seat-${index}`;
+function getCardImage(cardId: CardId, instanceId: string): string | undefined {
+  const images = CARD_IMAGES_BY_ID[cardId];
+  if (!images?.length) return undefined;
+  const hash = [...instanceId].reduce((sum, char) => sum + char.charCodeAt(0), 0);
+  return images[hash % images.length];
 }
 
 function setLabel(set: SetCard[], index: number): string {
@@ -41,6 +47,34 @@ function shouldUseTargetMode(activePlayer: Player, card: CardInstance): boolean 
   return activePlayer.isJunky && card.family !== 'special';
 }
 
+function getOpponentSeatClass(opponentIndex: number, playerCount: number): string {
+  const seatsByCount: Record<number, string[]> = {
+    2: ['seat-top'],
+    3: ['seat-top-left', 'seat-top-right'],
+    4: ['seat-left', 'seat-top', 'seat-right'],
+    5: ['seat-left', 'seat-top-left', 'seat-top-right', 'seat-right'],
+  };
+
+  return seatsByCount[playerCount]?.[opponentIndex] ?? 'seat-top';
+}
+
+function getSeatedPlayers(players: Player[], activePlayerIndex: number): SeatedPlayer[] {
+  const activeSeat: SeatedPlayer = {
+    player: players[activePlayerIndex],
+    playerIndex: activePlayerIndex,
+    seatClass: 'seat-bottom',
+  };
+  const opponents = players
+    .map((player, playerIndex) => ({ player, playerIndex }))
+    .filter(({ playerIndex }) => playerIndex !== activePlayerIndex)
+    .map((entry, opponentIndex) => ({
+      ...entry,
+      seatClass: getOpponentSeatClass(opponentIndex, players.length),
+    }));
+
+  return [activeSeat, ...opponents];
+}
+
 function CardButton({ card, disabled, pending, targetMode, onPlay, onDiscard }: {
   card: CardInstance;
   disabled: boolean;
@@ -50,16 +84,23 @@ function CardButton({ card, disabled, pending, targetMode, onPlay, onDiscard }: 
   onDiscard: () => void;
 }) {
   const playLabel = targetMode ? 'Cibler' : 'Jouer';
+  const playIcon = targetMode ? '◎' : '▶';
+  const image = getCardImage(card.cardId, card.instanceId);
   return (
     <article className={`card card-${card.family} ${pending ? 'pending-card' : ''}`}>
+      {image && <img className="card-face" src={image} alt={card.name} draggable={false} />}
       <div className="card-topline">
         <span>{familyLabels[card.family]}</span>
         <strong>{card.name}</strong>
       </div>
       <p>{card.effect}</p>
       <div className="card-actions">
-        <button type="button" onClick={onPlay} disabled={disabled}>{playLabel}</button>
-        <button type="button" className="ghost" onClick={onDiscard}>Defausser</button>
+        <button type="button" className="icon-action play-action" onClick={onPlay} disabled={disabled} aria-label={`${playLabel} ${card.name}`} title={playLabel}>
+          <span aria-hidden="true">{playIcon}</span>
+        </button>
+        <button type="button" className="icon-action discard-action ghost" onClick={onDiscard} aria-label={`Defausser ${card.name}`} title="Defausser">
+          <span aria-hidden="true">×</span>
+        </button>
       </div>
     </article>
   );
@@ -80,8 +121,13 @@ function SetSlotView({ set, index, selected, selectable, attackable, onSelect }:
         {set.length === 0 ? <span className="empty-set">Vide</span> : [...set]
           .sort((a, b) => a.playedOrder - b.playedOrder)
           .map((card, cardIndex) => (
-            <span key={card.instanceId} className={`set-card set-${card.family}`} style={{ marginTop: cardIndex === 0 ? 0 : -2 }}>
-              {card.name}{card.attackMarks > 0 ? ` x${card.attackMarks}` : ''}
+            <span key={card.instanceId} className={`set-card set-${card.family}`} style={{ '--stack-index': cardIndex } as CSSProperties}>
+              {getCardImage(card.cardId, card.instanceId) ? (
+                <img src={getCardImage(card.cardId, card.instanceId)} alt={card.name} draggable={false} />
+              ) : (
+                <span>{card.name}</span>
+              )}
+              {card.attackMarks > 0 && <em>x{card.attackMarks}</em>}
             </span>
           ))}
       </div>
@@ -99,10 +145,9 @@ function SetSlotView({ set, index, selected, selectable, attackable, onSelect }:
   );
 }
 
-function PlayerPanel({ player, active, seatClass, selectedOwnSetIndex, onSelectOwnSet, targetingCard, validTargets, onTargetSlot }: {
+function PlayerPanel({ player, active, selectedOwnSetIndex, onSelectOwnSet, targetingCard, validTargets, onTargetSlot }: {
   player: Player;
   active: boolean;
-  seatClass: string;
   selectedOwnSetIndex: number;
   onSelectOwnSet: (setIndex: number) => void;
   targetingCard: CardInstance | null;
@@ -111,7 +156,7 @@ function PlayerPanel({ player, active, seatClass, selectedOwnSetIndex, onSelectO
 }) {
   const isTargeting = Boolean(targetingCard);
   return (
-    <section className={`player-panel player-seat ${seatClass} ${active ? 'active' : ''} ${isTargeting ? 'targeting' : ''}`}>
+    <section className={`player-panel ${active ? 'active' : ''} ${isTargeting ? 'targeting' : ''}`}>
       <div className="player-heading">
         <h3>{player.name}{player.isJunky ? ' - Junky' : ''}</h3>
         <span>{player.score} pts</span>
@@ -144,9 +189,9 @@ function ConfigScreen({ onStart }: { onStart: (playerCount: number, mode: GameMo
   return (
     <main className="config-screen">
       <section className="config-hero">
-        <p className="kicker">Prototype local V0.9 - TABLE SEATS</p>
+        <p className="kicker">Prototype local V0.8 - UNDO LAST ACTION</p>
         <h1>Pro.Hibited Online</h1>
-        <p>Version visible : les joueurs sont maintenant places autour de la table. Le moteur reste intact, le carton prend la pose.</p>
+        <p>Version visible : un bouton annule la derniere action. La defausse accidentelle peut rentrer a la maison, honteuse mais vivante.</p>
       </section>
 
       <section className="config-panel">
@@ -198,8 +243,6 @@ export default function App() {
     }} />;
   }
 
-  const tablePlayers = [activePlayer, ...game.players.filter(player => player.id !== activePlayer.id)];
-
   const commitGameAction = (next: GameState) => {
     setHistory(previous => [game, ...previous].slice(0, 12));
     setSelectedOwnSetIndex(current => Math.min(current, next.players[next.currentPlayerIndex].sets.length - 1));
@@ -244,6 +287,7 @@ export default function App() {
   };
 
   const winner = game.winnerId ? game.players.find(player => player.id === game.winnerId) : undefined;
+  const seatedPlayers = getSeatedPlayers(game.players, game.currentPlayerIndex);
   const liveMessage = targetingCard
     ? `Choisis un slot pour ${targetingCard.name}. ${activePlayer.isJunky ? 'Le Junky peut jouer chez les autres.' : 'Rien ne part sans cible.'}`
     : game.status === 'finished' && winner ? `${winner.name} gagne. Relance obligatoire.` : game.tableMessage;
@@ -281,22 +325,56 @@ export default function App() {
         {liveMessage}
       </section>
 
-      <section className="board-grid table-layout">
-        <div className={`players-area table-surface players-${game.players.length}`}>
-          <div className="table-emblem" aria-hidden="true">PRO.HIBITED</div>
-          {tablePlayers.map((player, index) => (
-            <PlayerPanel
-              key={player.id}
-              player={player}
-              active={player.id === activePlayer.id}
-              seatClass={getSeatClass(index, game.players.length)}
-              selectedOwnSetIndex={selectedOwnSetIndex}
-              onSelectOwnSet={setSelectedOwnSetIndex}
-              targetingCard={targetingCard}
-              validTargets={validTargets}
-              onTargetSlot={targetSlot}
-            />
-          ))}
+      <section className="board-grid">
+        <div className="players-area table-layout">
+          <div className="table-surface" aria-label="Table de jeu">
+            <div className="table-hud" aria-label="Infos de partie">
+              <span>
+                <small>Mode</small>
+                {game.config.mode === 'quick' ? 'Rapide' : 'Longue'}
+              </span>
+              <span>
+                <small>Tour</small>
+                {game.turnNumber}
+              </span>
+              <span>
+                <small>Objectif</small>
+                {game.config.targetScore} pts
+              </span>
+            </div>
+            <div className={`table-callout ${game.status === 'finished' ? 'winner' : ''} ${targetingCard ? 'targeting' : ''}`}>
+              {liveMessage}
+            </div>
+            <div className="table-decks" aria-label="Pioches">
+              <div className="table-deck draw-deck">
+                <span>Draw</span>
+                <div className="card-back" />
+                <small>{game.deck.length}</small>
+              </div>
+              <div className="table-deck discard-deck">
+                <span>Discard</span>
+                {game.discardPile[0] ? (
+                  <img src={getCardImage(game.discardPile[0].cardId, game.discardPile[0].instanceId)} alt={game.discardPile[0].name} draggable={false} />
+                ) : (
+                  <div className="discard-empty" />
+                )}
+                <small>{game.discardPile.length}</small>
+              </div>
+            </div>
+            {seatedPlayers.map(({ player, playerIndex, seatClass }) => (
+              <div key={player.id} className={`player-seat ${seatClass}`}>
+                <PlayerPanel
+                  player={player}
+                  active={playerIndex === game.currentPlayerIndex}
+                  selectedOwnSetIndex={selectedOwnSetIndex}
+                  onSelectOwnSet={setSelectedOwnSetIndex}
+                  targetingCard={targetingCard}
+                  validTargets={validTargets}
+                  onTargetSlot={targetSlot}
+                />
+              </div>
+            ))}
+          </div>
         </div>
 
         <aside className="side-panel">
