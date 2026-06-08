@@ -1,0 +1,165 @@
+/* Focused overrides after styles.css: keep opponent labels above cards and anchored. */
+
+.player-seat {
+  isolation: isolate;
+}
+
+.player-seat .player-heading {
+  position: relative !important;
+  z-index: 80 !important;
+  margin: 0 auto 16px !important;
+  transform: translateY(-6px);
+  backdrop-filter: blur(6px);
+}
+
+.player-seat .sets-grid {
+  position: relative !important;
+  z-index: 20 !important;
+  margin-top: 0 !important;
+}
+
+.player-seat:not(.seat-bottom) .player-heading {
+  transform: translateY(-14px);
+  margin-bottom: 20px !important;
+}
+
+.player-seat:not(.seat-bottom) .set-card {
+  top: calc(14px + var(--stack-index, 0) * 13px) !important;
+}
+
+.seat-top {
+  top: 23% !important;
+}
+
+.seat-top-left,
+.seat-top-right {
+  top: 24% !important;
+}
+
+.seat-right {
+  right: 12% !important;
+}
+
+.seat-left {
+  left: 12% !important;
+}
+
+.seat-bottom .player-heading {
+  transform: translateY(-4px);
+  margin-bottom: 12px !important;
+}
+
+.seat-bottom .set-card {
+  top: calc(10px + var(--stack-index, 0) * 12px) !important;
+}
+
+.table-hud {
+  z-index: 70 !important;
+}
+
+.score-strip {
+  max-width: 42vw;
+}
+
+.score-strip button {
+  position: relative;
+  z-index: 90;
+}
+
+@media (max-width: 720px), (max-height: 560px) {
+  .table-hud {
+    top: 18px !important;
+    left: 73% !important;
+    width: min(270px, 44vw) !important;
+    z-index: 70 !important;
+  }
+
+  .score-strip {
+    max-width: 34vw;
+  }
+
+  .score-strip button {
+    padding: 7px 11px !important;
+    font-size: .78rem !important;
+    line-height: 1.05;
+  }
+
+  .player-seat .player-heading {
+    z-index: 80 !important;
+    padding: 5px 9px !important;
+    margin-bottom: 12px !important;
+    transform: translateY(-10px);
+  }
+
+  .player-seat:not(.seat-bottom) .set-card {
+    top: calc(16px + var(--stack-index, 0) * 9px) !important;
+  }
+
+  .seat-top {
+    top: 25% !important;
+    left: 69% !important;
+  }
+
+  .seat-top-left {
+    top: 29% !important;
+    left: 26% !important;
+  }
+
+  .seat-top-right {
+    top: 29% !important;
+    right: 13% !important;
+  }
+
+  .seat-right {
+    right: 14% !important;
+    top: 47% !important;
+  }
+
+  .seat-left {
+    left: 14% !important;
+    top: 47% !important;
+  }
+
+  .seat-bottom {
+    bottom: 15.2% !important;
+  }
+
+  .seat-bottom .player-heading {
+    transform: translateY(-8px);
+  }
+
+  .seat-bottom .set-card {
+    top: calc(8px + var(--stack-index, 0) * 8px) !important;
+  }
+
+  .hand-heading {
+    top: 48px !important;
+  }
+
+  .hand-grid {
+    bottom: -30px !important;
+  }
+}
+
+@media (max-height: 560px) and (orientation: landscape) {
+  .seat-top {
+    top: 25% !important;
+  }
+
+  .seat-top-left,
+  .seat-top-right {
+    top: 28% !important;
+  }
+
+  .seat-bottom {
+    bottom: 12.5% !important;
+  }
+
+  .player-seat:not(.seat-bottom) .player-heading {
+    transform: translateY(-12px);
+  }
+
+  .player-seat:not(.seat-bottom) .set-card {
+    top: calc(14px + var(--stack-index, 0) * 8px) !important;
+  }
+}
