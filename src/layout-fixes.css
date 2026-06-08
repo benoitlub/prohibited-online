@@ -1,6 +1,41 @@
 /* Final positioning layer: no gameplay changes, only stable table coordinates. */
 
-/* Keep action buttons out of the table slots. */
+/* Keep the title, HUD and new game button separated. */
+.topbar {
+  display: grid !important;
+  grid-template-columns: minmax(180px, 34vw) minmax(260px, 34vw) minmax(150px, 22vw) !important;
+  align-items: start !important;
+  gap: 10px !important;
+}
+
+.topbar > div:first-child { grid-column: 1; }
+.score-strip {
+  grid-column: 2 / 4;
+  display: grid !important;
+  grid-template-columns: minmax(220px, 1fr) auto !important;
+  justify-items: end !important;
+  align-items: start !important;
+  max-width: none !important;
+}
+.score-strip button {
+  grid-column: 2;
+  position: relative;
+  z-index: 120 !important;
+  padding: 10px 18px !important;
+  line-height: 1.05;
+}
+
+.table-hud {
+  top: 18px !important;
+  left: 58% !important;
+  transform: translateX(-50%) !important;
+  width: min(420px, 36vw) !important;
+  min-width: 260px !important;
+  z-index: 90 !important;
+}
+.table-hud span { padding: 8px 12px !important; }
+
+/* Keep action buttons near the hand on desktop, sides on phone. */
 .hand-panel .turn-actions {
   position: fixed !important;
   left: 50% !important;
@@ -10,8 +45,8 @@
   justify-content: center !important;
   gap: 16px !important;
   pointer-events: auto !important;
+  z-index: 120 !important;
 }
-
 .undo-button,
 .end-turn-button {
   width: 52px !important;
@@ -19,235 +54,159 @@
   height: 52px !important;
 }
 
-/* Player labels float above their own slots, never on the cards. */
-.player-seat {
-  isolation: isolate;
-}
-
+/* Player labels: above slot frames, never on top of the cards. */
+.player-seat { isolation: isolate; }
 .player-seat .player-heading {
-  position: relative !important;
-  z-index: 90 !important;
-  margin: 0 auto 18px !important;
-  transform: none !important;
+  position: absolute !important;
+  z-index: 110 !important;
+  left: 50% !important;
+  bottom: calc(100% + 12px) !important;
+  transform: translateX(-50%) !important;
+  margin: 0 !important;
+  width: max-content !important;
+  max-width: 180px !important;
+  padding: 7px 15px !important;
   backdrop-filter: blur(8px);
   pointer-events: none;
 }
-
 .player-seat .sets-grid {
   position: relative !important;
-  z-index: 20 !important;
+  z-index: 30 !important;
   margin-top: 0 !important;
 }
-
 .player-seat:not(.seat-bottom) .set-card {
-  top: calc(16px + var(--stack-index, 0) * 13px) !important;
+  top: calc(18px + var(--stack-index, 0) * 13px) !important;
 }
-
 .seat-bottom .set-card {
   top: calc(10px + var(--stack-index, 0) * 12px) !important;
 }
 
-/* Desktop and wide screens */
-.table-hud {
-  z-index: 70 !important;
-  top: 18px !important;
-}
-
-.score-strip {
-  max-width: 30vw !important;
-}
-
-.score-strip button {
-  position: relative;
-  z-index: 92;
-}
-
+/* Wide screens */
 .seat-top {
-  top: 16.5% !important;
+  top: 32% !important;
   left: 50% !important;
   transform: translateX(-50%) !important;
   width: clamp(190px, 18vw, 300px) !important;
 }
-
 .seat-top-left {
-  top: 30% !important;
-  left: 26% !important;
+  top: 35% !important;
+  left: 27% !important;
   transform: translateX(-50%) !important;
 }
-
 .seat-top-right {
-  top: 30% !important;
-  right: 20% !important;
+  top: 35% !important;
+  right: 22% !important;
   transform: translateX(50%) !important;
 }
-
 .seat-left {
-  left: 16% !important;
-  top: 50% !important;
+  left: 17% !important;
+  top: 52% !important;
   transform: translate(-50%, -50%) !important;
 }
-
 .seat-right {
-  right: 16% !important;
-  top: 50% !important;
+  right: 17% !important;
+  top: 52% !important;
   transform: translate(50%, -50%) !important;
 }
-
 .seat-bottom {
-  bottom: 13.5% !important;
+  bottom: 14.5% !important;
   left: 50% !important;
   transform: translateX(-50%) !important;
   width: clamp(240px, 25vw, 380px) !important;
 }
-
 .seat-bottom .player-heading {
-  margin-bottom: 12px !important;
+  bottom: calc(100% + 10px) !important;
 }
 
 .hand-heading {
-  z-index: 50 !important;
+  z-index: 80 !important;
   top: 18px !important;
   pointer-events: none;
 }
+.hand-grid { bottom: -42px !important; }
+.table-callout { display: none !important; }
 
-.hand-grid {
-  bottom: -42px !important;
-}
-
-.table-callout {
-  z-index: 9 !important;
-  top: 55% !important;
-  opacity: .78;
-}
-
-/* Medium / narrow desktop: avoid HUD, title and new-game pileups. */
+/* Medium desktop: prevent HUD/New game collision. */
 @media (max-width: 1200px) {
-  .topbar h1 {
-    font-size: clamp(2rem, 4.3vw, 3.3rem) !important;
+  .topbar {
+    grid-template-columns: minmax(170px, 32vw) minmax(230px, 34vw) minmax(130px, 22vw) !important;
   }
-
+  .topbar h1 { font-size: clamp(1.8rem, 4vw, 3.1rem) !important; }
   .table-hud {
-    top: 22px !important;
-    width: min(420px, 38vw) !important;
-    min-width: 0 !important;
+    top: 20px !important;
+    left: 58% !important;
+    width: min(370px, 34vw) !important;
+    min-width: 230px !important;
   }
-
-  .table-hud span {
-    padding: 7px 10px !important;
-  }
-
-  .score-strip {
-    max-width: 25vw !important;
-  }
-
-  .score-strip button {
-    padding: 9px 16px !important;
-  }
-
-  .seat-top {
-    top: 18.5% !important;
-  }
-
-  .seat-top-left,
-  .seat-top-right {
-    top: 31% !important;
-  }
-
-  .seat-bottom {
-    bottom: 15% !important;
-  }
-
-  .hand-panel .turn-actions {
-    bottom: clamp(142px, 22dvh, 220px) !important;
-  }
+  .table-hud span { padding: 7px 9px !important; }
+  .score-strip button { padding: 8px 14px !important; }
+  .seat-top { top: 34% !important; }
+  .seat-top-left, .seat-top-right { top: 37% !important; }
+  .seat-bottom { bottom: 15.5% !important; }
+  .hand-panel .turn-actions { bottom: clamp(142px, 22dvh, 220px) !important; }
 }
 
-/* Portrait phones: make it a readable vertical composition. */
+/* Portrait phones: readable vertical composition. */
 @media (max-width: 720px) and (orientation: portrait) {
   .topbar {
     top: 10px !important;
     left: 14px !important;
     right: 14px !important;
+    grid-template-columns: 45vw 1fr !important;
   }
-
-  .topbar h1 {
-    font-size: clamp(2rem, 10vw, 3rem) !important;
-  }
-
-  .table-hud {
-    top: 18px !important;
-    left: 76% !important;
-    width: min(245px, 42vw) !important;
-    min-width: 0 !important;
-  }
-
-  .table-hud span {
-    padding: 6px 5px !important;
-    font-size: .66rem !important;
-  }
-
+  .topbar h1 { font-size: clamp(2rem, 9vw, 2.85rem) !important; }
   .score-strip {
-    max-width: 33vw !important;
+    grid-column: 2 !important;
+    grid-template-columns: 1fr !important;
+    justify-items: end !important;
   }
-
   .score-strip button {
     padding: 7px 10px !important;
-    font-size: .78rem !important;
-    line-height: 1.02;
+    font-size: .76rem !important;
+    max-width: 118px !important;
+    white-space: normal !important;
   }
-
+  .table-hud {
+    top: 16px !important;
+    left: 73% !important;
+    width: min(230px, 39vw) !important;
+    min-width: 0 !important;
+  }
+  .table-hud span { padding: 6px 4px !important; font-size: .62rem !important; }
+  .table-hud small { font-size: .5rem !important; }
   .player-seat .player-heading {
+    bottom: calc(100% + 9px) !important;
     padding: 5px 9px !important;
-    margin-bottom: 12px !important;
+    max-width: 150px !important;
   }
-
+  .player-seat .player-heading h3 { font-size: .78rem !important; }
+  .player-seat .player-heading span { font-size: .62rem !important; }
   .player-seat:not(.seat-bottom) .set-card {
-    top: calc(16px + var(--stack-index, 0) * 8px) !important;
+    top: calc(18px + var(--stack-index, 0) * 8px) !important;
   }
-
   .seat-top {
-    top: 25.5% !important;
-    left: 70% !important;
+    top: 35% !important;
+    left: 68% !important;
     width: 132px !important;
   }
-
   .seat-top-left {
-    top: 30% !important;
+    top: 36% !important;
     left: 27% !important;
     width: 124px !important;
   }
-
   .seat-top-right {
-    top: 30% !important;
+    top: 36% !important;
     right: 14% !important;
     width: 124px !important;
   }
-
-  .seat-left {
-    left: 15% !important;
-    top: 47% !important;
-    width: 112px !important;
-  }
-
-  .seat-right {
-    right: 15% !important;
-    top: 47% !important;
-    width: 112px !important;
-  }
-
+  .seat-left { left: 15% !important; top: 49% !important; width: 112px !important; }
+  .seat-right { right: 15% !important; top: 49% !important; width: 112px !important; }
   .seat-bottom {
-    bottom: 16.2% !important;
+    bottom: 17% !important;
     width: 182px !important;
   }
-
-  .seat-bottom .set-card {
-    top: calc(8px + var(--stack-index, 0) * 8px) !important;
-  }
-
-  .hand-heading {
-    top: 48px !important;
-  }
-
+  .seat-bottom .set-card { top: calc(8px + var(--stack-index, 0) * 8px) !important; }
+  .hand-heading { top: 48px !important; }
   .hand-panel .turn-actions {
     bottom: calc(34dvh - 74px) !important;
     left: 50% !important;
@@ -255,11 +214,7 @@
     justify-content: space-between !important;
     pointer-events: none !important;
   }
-
-  .hand-panel .turn-actions button {
-    pointer-events: auto !important;
-  }
-
+  .hand-panel .turn-actions button { pointer-events: auto !important; }
   .cancel-button {
     position: fixed !important;
     left: 50% !important;
@@ -267,97 +222,54 @@
     transform: translateX(-50%) !important;
     max-width: 48vw !important;
   }
-
-  .hand-grid {
-    bottom: -34px !important;
-  }
+  .hand-grid { bottom: -34px !important; }
 }
 
-/* Landscape phones / low height: hide non-essential overlap, table first. */
+/* Landscape phones / low height: compact and non-overlapping. */
 @media (max-height: 560px) and (orientation: landscape) {
-  .topbar h1 {
-    font-size: clamp(1.45rem, 4vw, 2.25rem) !important;
+  .topbar {
+    top: 8px !important;
+    left: 16px !important;
+    right: 16px !important;
+    grid-template-columns: 32vw 36vw 22vw !important;
   }
-
-  .table-hud {
-    top: 10px !important;
-    left: 57% !important;
-    width: min(360px, 40vw) !important;
-    min-width: 0 !important;
-  }
-
-  .table-hud span {
-    padding: 5px 8px !important;
-    font-size: .7rem !important;
-  }
-
+  .topbar h1 { font-size: clamp(1.35rem, 3.7vw, 2.1rem) !important; }
   .score-strip {
-    max-width: 26vw !important;
+    grid-column: 2 / 4 !important;
+    grid-template-columns: 1fr auto !important;
   }
-
-  .score-strip button {
-    padding: 7px 14px !important;
-    font-size: .82rem !important;
+  .score-strip button { padding: 7px 13px !important; font-size: .8rem !important; max-width: 154px !important; }
+  .table-hud {
+    top: 9px !important;
+    left: 56% !important;
+    width: min(330px, 34vw) !important;
+    min-width: 220px !important;
   }
-
-  .table-decks {
-    top: 39% !important;
-  }
-
+  .table-hud span { padding: 5px 7px !important; font-size: .66rem !important; }
+  .table-decks { top: 40% !important; }
   .seat-top {
-    top: 20.5% !important;
+    top: 33% !important;
     left: 50% !important;
     width: 136px !important;
   }
-
-  .seat-top-left {
-    top: 29% !important;
-    left: 27% !important;
-    width: 120px !important;
-  }
-
-  .seat-top-right {
-    top: 29% !important;
-    right: 18% !important;
-    width: 120px !important;
-  }
-
-  .seat-left {
-    left: 15% !important;
-    top: 50% !important;
-    width: 108px !important;
-  }
-
-  .seat-right {
-    right: 15% !important;
-    top: 50% !important;
-    width: 108px !important;
-  }
-
+  .seat-top-left { top: 36% !important; left: 27% !important; width: 120px !important; }
+  .seat-top-right { top: 36% !important; right: 18% !important; width: 120px !important; }
+  .seat-left { left: 15% !important; top: 52% !important; width: 108px !important; }
+  .seat-right { right: 15% !important; top: 52% !important; width: 108px !important; }
   .seat-bottom {
-    bottom: 14.5% !important;
+    bottom: 15.5% !important;
     width: 178px !important;
   }
-
   .player-seat .player-heading {
+    bottom: calc(100% + 8px) !important;
     padding: 4px 9px !important;
-    margin-bottom: 9px !important;
+    max-width: 150px !important;
   }
-
   .player-seat:not(.seat-bottom) .set-card {
-    top: calc(12px + var(--stack-index, 0) * 7px) !important;
+    top: calc(14px + var(--stack-index, 0) * 7px) !important;
   }
-
-  .hand-panel {
-    height: 29dvh !important;
-    min-height: 132px !important;
-  }
-
-  .hand-heading {
-    top: 14px !important;
-    opacity: .78;
-  }
-
+  .hand-panel { height: 29dvh !important; min-height: 132px !important; }
+  .hand-heading { top: 14px !important; opacity: .78; }
   .hand-panel .turn-actions {
     bottom: calc(29dvh - 66px) !important;
     left: 50% !important;
@@ -365,24 +277,13 @@
     justify-content: space-between !important;
     pointer-events: none !important;
   }
-
-  .hand-panel .turn-actions button {
-    pointer-events: auto !important;
-  }
-
+  .hand-panel .turn-actions button { pointer-events: auto !important; }
   .cancel-button {
     position: fixed !important;
     left: 50% !important;
     bottom: calc(29dvh - 64px) !important;
     transform: translateX(-50%) !important;
   }
-
-  .hand-grid {
-    bottom: -48px !important;
-    height: 80% !important;
-  }
-
-  .card {
-    --hand-card-w: clamp(68px, 11vw, 104px) !important;
-  }
+  .hand-grid { bottom: -48px !important; height: 80% !important; }
+  .card { --hand-card-w: clamp(68px, 11vw, 104px) !important; }
 }
