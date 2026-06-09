@@ -1,0 +1,27 @@
+/* Visible deployment marker for the current mobile decor build. */
+.config-screen > .config-hero::after {
+  content: 'FEUCH INSTITUT • PRO.HIBITED ONLINE • TABLE BUILD v0.8.5 — DÉCOR MOBILE' !important;
+}
+
+.config-screen > .config-panel::after {
+  content: 'Feuch Institut • Mobile Decor Background • Live UI Slots • Main Branch • BUILD v0.8.5' !important;
+}
+
+.feuch-header em {
+  font-size: 0 !important;
+}
+
+.feuch-header em::before {
+  content: 'TABLE BUILD v0.8.5 — DÉCOR MOBILE';
+  font-size: clamp(.72rem, 1vw, .9rem);
+}
+
+.topbar .kicker {
+  display: block !important;
+  font-size: 0 !important;
+}
+
+.topbar .kicker::before {
+  content: 'FEUCH INSTITUT // PRO.HIBITED ONLINE // v0.8.5 DÉCOR MOBILE';
+  font-size: clamp(.62rem, .88vw, .86rem);
+}
