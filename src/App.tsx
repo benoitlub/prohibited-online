@@ -188,38 +188,92 @@ function ConfigScreen({ onStart }: { onStart: (playerCount: number, mode: GameMo
 
   return (
     <main className="config-screen">
+      <header className="feuch-header">
+        <strong>FEUCH INSTITUT</strong>
+        <span>Pro.Hibited Online</span>
+        <em>TABLE BUILD v0.8.3</em>
+      </header>
+
       <section className="config-hero">
-        <p className="kicker">Prototype local V0.8 - UNDO LAST ACTION</p>
+        <p className="kicker">Prototype local - table console</p>
         <h1>Pro.Hibited Online</h1>
-        <p>Version visible : un bouton annule la derniere action. La defausse accidentelle peut rentrer a la maison, honteuse mais vivante.</p>
+        <p>Installe les joueurs, choisis le rythme, puis ouvre la table. Le paquet fait semblant d'être innocent.</p>
       </section>
 
-      <section className="config-panel">
-        <label>
-          Nombre de joueurs
-          <select value={playerCount} onChange={event => setPlayerCount(Number(event.target.value))}>
-            {[2, 3, 4, 5].map(value => <option key={value} value={value}>{value} joueurs</option>)}
-          </select>
-        </label>
+      <section className="config-panel" aria-label="Console de configuration">
+        <div className="config-group">
+          <p className="config-label">Nombre de joueurs</p>
+          <div className="option-grid players-grid">
+            {[
+              { value: 2, icon: '🎭', label: 'Duel', detail: 'Face à face' },
+              { value: 3, icon: '🍄', label: 'Trio', detail: 'Petit chaos' },
+              { value: 4, icon: '🌴', label: 'Table 4', detail: 'Salon complet' },
+              { value: 5, icon: '🎪', label: 'Table 5', detail: 'Cirque officiel' },
+            ].map(option => (
+              <button
+                key={option.value}
+                type="button"
+                className={`table-option ${playerCount === option.value ? 'selected' : ''}`}
+                onClick={() => setPlayerCount(option.value)}
+              >
+                <span>{option.icon}</span>
+                <strong>{option.label}</strong>
+                <small>{option.detail}</small>
+              </button>
+            ))}
+          </div>
+        </div>
 
-        <div className="segmented">
-          <button type="button" className={mode === 'quick' ? 'selected' : ''} onClick={() => setMode('quick')}>Rapide</button>
-          <button type="button" className={mode === 'long' ? 'selected' : ''} onClick={() => setMode('long')}>Longue</button>
+        <div className="config-group">
+          <p className="config-label">Mode de partie</p>
+          <div className="option-grid mode-grid">
+            {[
+              { value: 'quick' as GameMode, icon: '⚡', label: 'Rapide', detail: '3 points, carnage express' },
+              { value: 'long' as GameMode, icon: '🏆', label: 'Longue', detail: 'Objectif réglable' },
+            ].map(option => (
+              <button
+                key={option.value}
+                type="button"
+                className={`table-option ${mode === option.value ? 'selected' : ''}`}
+                onClick={() => setMode(option.value)}
+              >
+                <span>{option.icon}</span>
+                <strong>{option.label}</strong>
+                <small>{option.detail}</small>
+              </button>
+            ))}
+          </div>
         </div>
 
         {mode === 'long' && (
-          <label>
-            Objectif
-            <select value={targetScore} onChange={event => setTargetScore(Number(event.target.value) as LongTargetScore)}>
-              {longTargets.map(value => <option key={value} value={value}>{value} points</option>)}
-            </select>
-          </label>
+          <div className="config-group score-group">
+            <p className="config-label">Objectif</p>
+            <div className="score-tokens">
+              {longTargets.map(value => (
+                <button
+                  key={value}
+                  type="button"
+                  className={`score-token ${targetScore === value ? 'selected' : ''}`}
+                  onClick={() => setTargetScore(value)}
+                >
+                  {value} pts
+                </button>
+              ))}
+            </div>
+          </div>
         )}
 
         <button type="button" className="start-button" onClick={() => onStart(playerCount, mode, mode === 'quick' ? 3 : targetScore)}>
-          Lancer la partie
+          Ouvrir la table
         </button>
       </section>
+
+      <footer className="feuch-footer">
+        <strong>Feuch Institut</strong>
+        <span>Experimental Table Layout</span>
+        <span>Undo Last Action Enabled</span>
+        <span>Main Branch</span>
+      </footer>
     </main>
   );
 }
