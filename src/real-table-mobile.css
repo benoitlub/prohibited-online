@@ -64,6 +64,33 @@
 .seat-left .set-slot,
 .seat-right .set-slot { min-height: clamp(42px, 5vw, 58px) !important; }
 
+/* Official visible build name. */
+.config-screen > .config-hero::after {
+  content: 'FEUCH INSTITUT • PRO.HIBITED ONLINE • TABLE BUILD v0.8.4 — VRAIE TABLE' !important;
+}
+
+.config-screen > .config-panel::after {
+  content: 'Feuch Institut • Real Table Mobile Layout • Undo Last Action Enabled • Main Branch • BUILD v0.8.4' !important;
+}
+
+.feuch-header em {
+  font-size: 0 !important;
+}
+
+.feuch-header em::before {
+  content: 'TABLE BUILD v0.8.4 — VRAIE TABLE';
+  font-size: clamp(.72rem, 1vw, .9rem);
+}
+
+.topbar .kicker {
+  font-size: 0 !important;
+}
+
+.topbar .kicker::before {
+  content: 'FEUCH INSTITUT // PRO.HIBITED ONLINE // v0.8.4 VRAIE TABLE';
+  font-size: clamp(.62rem, .88vw, .86rem);
+}
+
 @media (max-width: 720px) and (orientation: portrait) {
   .table-surface {
     top: 88px !important;
