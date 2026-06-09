@@ -1,4 +1,4 @@
-/* Last-mile table polish: hand lower, title centered, player area visible. */
+/* Last-mile table polish: uploaded mobile background, aligned live UI. */
 
 @media (max-width: 720px) and (orientation: portrait) {
   .topbar {
@@ -39,18 +39,26 @@
   }
 
   .topbar h1 {
-    margin-top: 4px !important;
+    margin-top: 8px !important;
     width: 100% !important;
+    max-width: 92vw !important;
     text-align: center !important;
-    font-size: clamp(2rem, 8.6vw, 2.75rem) !important;
-    line-height: .88 !important;
+    font-size: clamp(2.4rem, 12vw, 4rem) !important;
+    line-height: .82 !important;
     transform: none !important;
+    white-space: normal !important;
+    text-shadow:
+      -34px 0 38px rgba(0,0,0,.92),
+      34px 0 38px rgba(0,0,0,.92),
+      0 0 22px rgba(255,232,164,.34) !important;
   }
+
+  .topbar h1::first-line { font-size: 1em; }
 
   .score-strip {
     position: absolute !important;
     right: 2px !important;
-    top: 48px !important;
+    top: 52px !important;
     width: auto !important;
     pointer-events: auto !important;
   }
@@ -62,13 +70,67 @@
   }
 
   .table-surface {
-    top: 144px !important;
-    height: 55dvh !important;
-    min-height: 430px !important;
+    top: 188px !important;
+    width: 100vw !important;
+    height: 59dvh !important;
+    min-height: 470px !important;
+    background-image: url('./assets/feuch-mobile-table.png') !important;
+    background-size: 100% 100% !important;
+    background-position: center top !important;
+    background-repeat: no-repeat !important;
   }
 
-  .seat-top { top: 17.5% !important; }
-  .seat-bottom { bottom: 20% !important; }
+  .table-surface::before,
+  .table-surface::after { display: none !important; }
+
+  .table-decks {
+    top: 48% !important;
+    gap: 18px !important;
+  }
+
+  .table-deck img,
+  .card-back,
+  .discard-empty { width: 38px !important; }
+
+  .seat-top {
+    top: 18% !important;
+    left: 50% !important;
+    width: 150px !important;
+  }
+
+  .seat-top-left {
+    top: 22% !important;
+    left: 32% !important;
+    width: 120px !important;
+  }
+
+  .seat-top-right {
+    top: 22% !important;
+    right: 32% !important;
+    width: 120px !important;
+  }
+
+  .seat-left {
+    left: 16% !important;
+    top: 52% !important;
+    width: 54px !important;
+  }
+
+  .seat-right {
+    right: 16% !important;
+    top: 52% !important;
+    width: 54px !important;
+  }
+
+  .seat-bottom {
+    bottom: 17% !important;
+    width: 205px !important;
+  }
+
+  .sets-grid { gap: 7px !important; }
+  .set-slot { min-height: 50px !important; border-radius: 9px !important; }
+  .seat-bottom .set-slot { min-height: 58px !important; }
+  .set-card { width: 39px !important; }
 
   .hand-panel {
     position: fixed !important;
@@ -76,20 +138,20 @@
     right: 0 !important;
     bottom: 0 !important;
     width: 100vw !important;
-    height: 185px !important;
-    min-height: 185px !important;
+    height: 205px !important;
+    min-height: 205px !important;
     transform: none !important;
     border-radius: 24px 24px 0 0 !important;
     overflow: visible !important;
-    background: radial-gradient(ellipse at center top, rgba(132,255,53,.12), rgba(0,0,0,.82) 58%, rgba(0,0,0,.96)) !important;
+    background: radial-gradient(ellipse at center top, rgba(132,255,53,.16), rgba(0,0,0,.82) 54%, rgba(0,0,0,.96)) !important;
   }
 
   .hand-heading {
     position: absolute !important;
     left: 50% !important;
-    top: 10px !important;
+    top: 8px !important;
     transform: translateX(-50%) !important;
-    min-height: 54px !important;
+    min-height: 52px !important;
     padding: 8px 64px !important;
     width: max-content !important;
     max-width: calc(100vw - 120px) !important;
@@ -97,15 +159,15 @@
     z-index: 12 !important;
   }
 
-  .hand-heading h2 { font-size: .96rem !important; }
+  .hand-heading h2 { font-size: 1rem !important; }
 
   .hand-panel .turn-actions {
     position: fixed !important;
     left: 0 !important;
     right: 0 !important;
-    bottom: calc(12px + env(safe-area-inset-bottom)) !important;
+    bottom: calc(14px + env(safe-area-inset-bottom)) !important;
     width: 100% !important;
-    height: 48px !important;
+    height: 50px !important;
     padding: 0 14px !important;
     margin: 0 !important;
     transform: none !important;
@@ -120,28 +182,28 @@
     position: fixed !important;
     top: auto !important;
     transform: none !important;
-    width: 46px !important;
-    min-width: 46px !important;
-    height: 46px !important;
+    width: 48px !important;
+    min-width: 48px !important;
+    height: 48px !important;
     pointer-events: auto !important;
-    opacity: .9 !important;
+    opacity: .92 !important;
     z-index: 31 !important;
   }
 
   .undo-button {
     left: 14px !important;
-    bottom: calc(12px + env(safe-area-inset-bottom)) !important;
+    bottom: calc(14px + env(safe-area-inset-bottom)) !important;
   }
 
   .end-turn-button {
     right: 14px !important;
-    bottom: calc(12px + env(safe-area-inset-bottom)) !important;
+    bottom: calc(14px + env(safe-area-inset-bottom)) !important;
   }
 
   .cancel-button {
     position: fixed !important;
     left: 50% !important;
-    bottom: calc(12px + env(safe-area-inset-bottom)) !important;
+    bottom: calc(14px + env(safe-area-inset-bottom)) !important;
     top: auto !important;
     transform: translateX(-50%) !important;
     z-index: 32 !important;
@@ -151,37 +213,37 @@
   .hand-grid {
     position: absolute !important;
     left: 50% !important;
-    bottom: -8px !important;
+    bottom: -4px !important;
     width: 100% !important;
-    height: 125px !important;
+    height: 145px !important;
     padding-top: 0 !important;
-    transform: translateX(-50%) scale(.78) !important;
+    transform: translateX(-50%) scale(.92) !important;
     transform-origin: 50% 100% !important;
     z-index: 11 !important;
   }
 
   .card {
-    --hand-card-w: clamp(72px, 20vw, 88px) !important;
-    margin-left: clamp(-30px, -7vw, -18px) !important;
+    --hand-card-w: clamp(82px, 24vw, 104px) !important;
+    margin-left: clamp(-34px, -8vw, -20px) !important;
   }
 
   .card-actions {
-    top: -20px !important;
+    top: -22px !important;
     gap: 5px !important;
   }
 
   .icon-action,
   .card-actions button {
-    width: 31px !important;
-    height: 26px !important;
-    font-size: .86rem !important;
+    width: 32px !important;
+    height: 27px !important;
+    font-size: .88rem !important;
   }
 
-  .hand-grid .card:nth-child(1) { transform: rotate(-13deg) translateY(18px) !important; }
-  .hand-grid .card:nth-child(2) { transform: rotate(-7deg) translateY(7px) !important; }
+  .hand-grid .card:nth-child(1) { transform: rotate(-13deg) translateY(20px) !important; }
+  .hand-grid .card:nth-child(2) { transform: rotate(-7deg) translateY(8px) !important; }
   .hand-grid .card:nth-child(3) { transform: rotate(0deg) translateY(0) !important; }
-  .hand-grid .card:nth-child(4) { transform: rotate(7deg) translateY(7px) !important; }
-  .hand-grid .card:nth-child(5) { transform: rotate(13deg) translateY(18px) !important; }
+  .hand-grid .card:nth-child(4) { transform: rotate(7deg) translateY(8px) !important; }
+  .hand-grid .card:nth-child(5) { transform: rotate(13deg) translateY(20px) !important; }
 }
 
 @media (orientation: landscape) {
@@ -200,6 +262,10 @@
   .topbar h1 {
     text-align: center !important;
     font-size: clamp(1.45rem, 4vw, 2.4rem) !important;
+    text-shadow:
+      -26px 0 30px rgba(0,0,0,.9),
+      26px 0 30px rgba(0,0,0,.9),
+      0 0 18px rgba(255,232,164,.28) !important;
   }
 
   .score-strip {
@@ -208,14 +274,21 @@
     top: 0 !important;
   }
 
+  .table-surface {
+    background-image: url('./assets/feuch-mobile-table.png') !important;
+    background-size: 100% 100% !important;
+    background-position: center top !important;
+    background-repeat: no-repeat !important;
+  }
+
   .hand-panel {
     position: fixed !important;
     left: 0 !important;
     right: 0 !important;
     bottom: 0 !important;
     width: 100vw !important;
-    height: 140px !important;
-    min-height: 140px !important;
+    height: 150px !important;
+    min-height: 150px !important;
     transform: none !important;
     overflow: visible !important;
   }
@@ -276,14 +349,14 @@
   }
 
   .hand-grid {
-    bottom: -10px !important;
-    height: 98px !important;
-    transform: translateX(-50%) scale(.72) !important;
+    bottom: -8px !important;
+    height: 112px !important;
+    transform: translateX(-50%) scale(.84) !important;
     transform-origin: 50% 100% !important;
   }
 
   .card {
-    --hand-card-w: clamp(62px, 10vw, 84px) !important;
-    margin-left: clamp(-28px, -4vw, -16px) !important;
+    --hand-card-w: clamp(70px, 11vw, 96px) !important;
+    margin-left: clamp(-30px, -4vw, -16px) !important;
   }
 }
