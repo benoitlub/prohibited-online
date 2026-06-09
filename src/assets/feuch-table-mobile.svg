@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="1500" viewBox="0 0 900 1500" role="img" aria-label="Feuch Institut mobile game table">
+  <defs>
+    <radialGradient id="feltGlow" cx="50%" cy="45%" r="70%">
+      <stop offset="0%" stop-color="#243b1b"/>
+      <stop offset="45%" stop-color="#172713"/>
+      <stop offset="100%" stop-color="#07100a"/>
+    </radialGradient>
+    <linearGradient id="wood" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#120905"/>
+      <stop offset=".35" stop-color="#4b2612"/>
+      <stop offset=".7" stop-color="#1b0c06"/>
+      <stop offset="1" stop-color="#6b3919"/>
+    </linearGradient>
+    <linearGradient id="brass" x1="0" x2="1">
+      <stop offset="0" stop-color="#684218"/>
+      <stop offset=".45" stop-color="#f2be55"/>
+      <stop offset="1" stop-color="#6e4216"/>
+    </linearGradient>
+    <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="feltNoise">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" seed="8"/>
+      <feColorMatrix type="saturate" values="0"/>
+      <feComponentTransfer>
+        <feFuncA type="table" tableValues="0 .16"/>
+      </feComponentTransfer>
+      <feBlend mode="soft-light" in2="SourceGraphic"/>
+    </filter>
+    <pattern id="leafPattern" width="38" height="38" patternUnits="userSpaceOnUse">
+      <path d="M19 6 C11 14 12 24 19 32 C26 24 27 14 19 6Z" fill="none" stroke="#3f6f31" stroke-width="1.2" opacity=".22"/>
+      <path d="M19 9 L19 30" stroke="#3f6f31" stroke-width=".8" opacity=".18"/>
+    </pattern>
+  </defs>
+
+  <rect width="900" height="1500" fill="#020604"/>
+  <rect x="0" y="0" width="900" height="1500" fill="url(#leafPattern)" opacity=".13"/>
+
+  <!-- warm room props -->
+  <g opacity=".88">
+    <circle cx="82" cy="112" r="45" fill="#10240f" stroke="#5f411d" stroke-width="4"/>
+    <circle cx="82" cy="112" r="25" fill="#1f3518" stroke="#c5852b" stroke-width="2" opacity=".75"/>
+    <path d="M58 72 C33 56 28 34 52 20 C69 34 67 54 58 72Z" fill="#24481d" opacity=".85"/>
+    <path d="M108 74 C138 53 147 31 122 18 C101 34 99 55 108 74Z" fill="#2d5723" opacity=".72"/>
+    <rect x="724" y="80" width="88" height="110" rx="18" fill="#10160d" stroke="#5f411d" stroke-width="3"/>
+    <ellipse cx="768" cy="95" rx="35" ry="12" fill="#1e2b18" stroke="#c5852b" stroke-width="2"/>
+    <circle cx="802" cy="146" r="22" fill="#e6a13c" opacity=".18" filter="url(#softGlow)"/>
+    <path d="M801 112 C819 139 810 158 800 174 C790 154 784 139 801 112Z" fill="#f4c85c" opacity=".72"/>
+  </g>
+
+  <!-- table outer octagon -->
+  <path d="M112 190 L788 190 L862 270 L862 1065 L788 1155 L112 1155 L38 1065 L38 270 Z" fill="url(#wood)" stroke="#120805" stroke-width="18"/>
+  <path d="M126 215 L774 215 L835 285 L835 1048 L774 1128 L126 1128 L65 1048 L65 285 Z" fill="#150a05" stroke="url(#brass)" stroke-width="4" opacity=".98"/>
+  <path d="M145 240 L755 240 L808 303 L808 1028 L755 1098 L145 1098 L92 1028 L92 303 Z" fill="url(#feltGlow)" stroke="#5c3516" stroke-width="6" filter="url(#feltNoise)"/>
+
+  <!-- inner felt vignette -->
+  <ellipse cx="450" cy="640" rx="285" ry="440" fill="#84ff35" opacity=".035" filter="url(#softGlow)"/>
+  <ellipse cx="450" cy="640" rx="210" ry="290" fill="#f4c85c" opacity=".025" filter="url(#softGlow)"/>
+
+  <!-- central engraved geometry -->
+  <g opacity=".26" stroke="#c5852b" fill="none" stroke-width="2">
+    <path d="M450 335 L642 535 L568 820 L450 960 L332 820 L258 535 Z"/>
+    <path d="M450 395 L590 550 L540 770 L450 890 L360 770 L310 550 Z"/>
+    <circle cx="450" cy="645" r="178"/>
+    <circle cx="450" cy="645" r="102" opacity=".6"/>
+    <path d="M450 412 L450 890 M285 540 L616 755 M616 540 L285 755" opacity=".55"/>
+    <path d="M450 548 C393 606 396 725 450 801 C504 725 507 606 450 548Z" opacity=".85"/>
+    <path d="M450 570 L450 794" opacity=".6"/>
+    <path d="M405 670 C370 642 344 599 333 552 C389 575 425 610 450 650" opacity=".42"/>
+    <path d="M495 670 C530 642 556 599 567 552 C511 575 475 610 450 650" opacity=".42"/>
+  </g>
+
+  <!-- empty player zones guides -->
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round" opacity=".9">
+    <g stroke="#ef52d4" filter="url(#softGlow)">
+      <rect x="300" y="252" width="72" height="94" rx="11" opacity=".62"/>
+      <rect x="388" y="252" width="72" height="94" rx="11" opacity=".62"/>
+      <rect x="476" y="252" width="72" height="94" rx="11" opacity=".62"/>
+      <rect x="564" y="252" width="72" height="94" rx="11" opacity=".62"/>
+    </g>
+    <g stroke="#f4c85c" filter="url(#softGlow)">
+      <rect x="115" y="470" width="70" height="94" rx="10" opacity=".62"/>
+      <rect x="115" y="585" width="70" height="94" rx="10" opacity=".62"/>
+      <rect x="115" y="700" width="70" height="94" rx="10" opacity=".62"/>
+      <rect x="115" y="815" width="70" height="94" rx="10" opacity=".62"/>
+    </g>
+    <g stroke="#84ff35" filter="url(#softGlow)">
+      <rect x="715" y="470" width="70" height="94" rx="10" opacity=".62"/>
+      <rect x="715" y="585" width="70" height="94" rx="10" opacity=".62"/>
+      <rect x="715" y="700" width="70" height="94" rx="10" opacity=".62"/>
+      <rect x="715" y="815" width="70" height="94" rx="10" opacity=".62"/>
+    </g>
+    <g stroke="#35cfff" filter="url(#softGlow)">
+      <rect x="270" y="940" width="76" height="96" rx="12" opacity=".62"/>
+      <rect x="370" y="940" width="76" height="96" rx="12" opacity=".62"/>
+      <rect x="470" y="940" width="76" height="96" rx="12" opacity=".62"/>
+      <rect x="570" y="940" width="76" height="96" rx="12" opacity=".62"/>
+    </g>
+  </g>
+
+  <!-- deck landing pad -->
+  <g opacity=".95">
+    <rect x="385" y="553" width="130" height="190" rx="18" fill="#081008" stroke="#84ff35" stroke-width="2" opacity=".28"/>
+    <rect x="404" y="758" width="92" height="42" rx="12" fill="#070907" stroke="#c5852b" stroke-width="2" opacity=".76"/>
+  </g>
+
+  <!-- bottom communication shell placeholder -->
+  <path d="M32 1190 L868 1190 L868 1410 L32 1410 Z" fill="#050805" stroke="#7a4a1a" stroke-width="3" opacity=".88"/>
+  <path d="M52 1220 L848 1220" stroke="#c5852b" stroke-width="2" opacity=".28"/>
+  <rect x="58" y="1328" width="690" height="54" rx="9" fill="#0b0b08" stroke="#6a4419" stroke-width="2" opacity=".95"/>
+  <rect x="768" y="1328" width="74" height="54" rx="9" fill="#0d160a" stroke="#84ff35" stroke-width="2" opacity=".85"/>
+
+  <!-- common footer bar -->
+  <rect x="32" y="1430" width="836" height="48" rx="14" fill="#040704" stroke="#7a4a1a" stroke-width="2" opacity=".94"/>
+</svg>
