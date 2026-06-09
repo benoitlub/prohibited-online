@@ -1,0 +1,205 @@
+/* ---------- Home / table welcome ---------- */
+.config-screen {
+  position: relative;
+  isolation: isolate;
+  min-height: 100dvh;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 430px);
+  gap: clamp(22px, 4vw, 58px);
+  align-items: center;
+  padding: clamp(20px, 4vw, 54px);
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(132,255,53,.18), transparent 0 22%, rgba(0,0,0,0) 42%),
+    radial-gradient(circle at 18% 18%, rgba(242,63,116,.34), transparent 34%),
+    radial-gradient(circle at 88% 12%, rgba(244,200,92,.22), transparent 30%),
+    linear-gradient(135deg, #041008 0%, #102616 48%, #2b1021 100%);
+}
+
+.config-screen::before {
+  content: '';
+  position: absolute;
+  z-index: -2;
+  left: 50%;
+  top: 50%;
+  width: min(980px, 118vw);
+  height: min(590px, 72vh);
+  transform: translate(-50%, -50%) rotate(-2deg);
+  border-radius: 48% 52% 45% 55% / 42% 44% 56% 58%;
+  background:
+    linear-gradient(to bottom, rgba(0,0,0,.08), rgba(0,0,0,.34)),
+    url('./assets/empty-table.png') center / contain no-repeat;
+  opacity: .56;
+  filter: drop-shadow(0 28px 80px rgba(0,0,0,.62));
+}
+
+.config-screen::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(2,6,4,.88), rgba(2,6,4,.28) 44%, rgba(2,6,4,.72)),
+    radial-gradient(circle at 48% 52%, transparent 0 24%, rgba(2,6,4,.74) 73%);
+  pointer-events: none;
+}
+
+.config-hero {
+  position: relative;
+  max-width: 760px;
+  padding: clamp(18px, 3vw, 34px);
+  border: 1px solid rgba(244, 200, 92, .28);
+  border-radius: 28px;
+  background: linear-gradient(135deg, rgba(4, 8, 5, .72), rgba(18, 40, 22, .52));
+  box-shadow: 0 24px 70px rgba(0,0,0,.38), inset 0 0 34px rgba(244,200,92,.06);
+  backdrop-filter: blur(10px);
+}
+
+.config-hero::before {
+  content: '🎴 table de jeu ouverte';
+  display: inline-grid;
+  width: max-content;
+  max-width: 100%;
+  margin-bottom: 12px;
+  border: 1px solid rgba(132,255,53,.42);
+  border-radius: 999px;
+  padding: 7px 13px;
+  background: rgba(4, 8, 5, .72);
+  color: #b9ff79;
+  font-size: .78rem;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  box-shadow: 0 0 18px rgba(132,255,53,.16);
+}
+
+.config-hero .kicker {
+  color: #ffdc58;
+  font-size: clamp(.74rem, 1vw, .92rem);
+  letter-spacing: .06em;
+}
+
+.config-hero h1 {
+  max-width: 8ch;
+  margin: 0;
+  color: #fff8e8;
+  font-size: clamp(3rem, 8.4vw, 6.6rem);
+  line-height: .84;
+  text-shadow: 0 3px 28px rgba(0,0,0,.78), 0 0 22px rgba(242,63,116,.28);
+}
+
+.config-hero p:not(.kicker) {
+  max-width: 620px;
+  margin: 18px 0 0;
+  color: #ffe9a7;
+  font-size: clamp(1rem, 1.35vw, 1.2rem);
+  line-height: 1.6;
+}
+
+.config-hero p:not(.kicker)::after {
+  content: ' Installe les joueurs, choisis le rythme, puis fais claquer les cartes sur le tapis. Le salon est prêt, les slots sont cirés, le paquet fait semblant d’être innocent.';
+}
+
+.config-panel {
+  position: relative;
+  gap: 18px;
+  padding: clamp(20px, 3vw, 30px);
+  border: 1px solid rgba(244, 200, 92, .52);
+  border-radius: 26px;
+  background: linear-gradient(180deg, rgba(4, 8, 5, .88), rgba(10, 24, 14, .82));
+  box-shadow: 0 26px 80px rgba(0,0,0,.48), 0 0 26px rgba(244,200,92,.08);
+  backdrop-filter: blur(12px);
+}
+
+.config-panel::before {
+  content: 'Nouvelle partie';
+  color: #fff8e8;
+  font-size: clamp(1.32rem, 2.4vw, 1.85rem);
+  font-weight: 950;
+  line-height: 1;
+}
+
+.config-panel::after {
+  content: 'Mode salon : 2 à 5 joueurs';
+  order: -1;
+  width: max-content;
+  max-width: 100%;
+  border-radius: 999px;
+  padding: 7px 12px;
+  background: rgba(242,63,95,.18);
+  color: #ff9fb6;
+  font-size: .72rem;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+
+.config-panel label {
+  color: #ffe9a7;
+  font-weight: 950;
+}
+
+.config-panel select {
+  border: 1px solid rgba(244, 200, 92, .82);
+  border-radius: 16px;
+  background: #fff8e8;
+  color: #102016;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.05);
+}
+
+.segmented button,
+.start-button {
+  border-radius: 999px;
+  box-shadow: 0 12px 24px rgba(0,0,0,.2);
+  transition: transform .16s ease, box-shadow .16s ease, filter .16s ease;
+}
+
+.segmented button:hover,
+.start-button:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.06);
+}
+
+.segmented button {
+  border: 1px solid rgba(244, 200, 92, .42);
+  background: rgba(255, 248, 232, .92);
+  color: #102016;
+}
+
+.segmented button.selected,
+.start-button {
+  background: linear-gradient(135deg, #f23f5f, #ff7a42);
+  color: white;
+}
+
+.start-button {
+  min-height: 56px;
+  font-size: 1.08rem;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+}
+
+@media (max-width: 840px) {
+  .config-screen {
+    grid-template-columns: 1fr;
+    align-content: center;
+  }
+
+  .config-screen::before {
+    top: 36%;
+    opacity: .35;
+  }
+
+  .config-hero h1 { max-width: none; }
+}
+
+@media (max-width: 560px) {
+  .config-hero,
+  .config-panel {
+    border-radius: 20px;
+  }
+
+  .config-hero p:not(.kicker)::after {
+    content: ' Choisis les joueurs, pose les coudes imaginaires, lance la partie.';
+  }
+}
