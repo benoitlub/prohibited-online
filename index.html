@@ -4,8 +4,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Pro.Hibited Online</title>
+    <style>
+      .feuch-build-marker,.feuch-build-footer{position:fixed;left:10px;right:10px;z-index:9999;pointer-events:none;text-align:center;font-family:system-ui,sans-serif;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#fff;text-shadow:0 0 12px rgba(255,122,0,.5)}
+      .feuch-build-marker{top:8px}.feuch-build-footer{bottom:8px;font-size:10px;color:rgba(255,255,255,.72)}
+      .feuch-build-marker span,.feuch-build-footer span{display:inline-block;padding:7px 12px;border-radius:999px;background:rgba(8,7,19,.82);border:1px solid rgba(255,122,0,.45)}
+    </style>
   </head>
   <body>
+    <div class="feuch-build-marker"><span>FEUCH INSTITUTE // PRO.HIBITED ONLINE // BUILD VISIBLE</span></div>
+    <div class="feuch-build-footer"><span>DEPLOYMENT MARKER // 2026-06-09</span></div>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
