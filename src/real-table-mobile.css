@@ -1,0 +1,111 @@
+/* Real Feuch table layer: portrait and landscape support. */
+.table-surface {
+  top: 0 !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: min(100vw, 72dvh) !important;
+  height: min(100dvh, 166vw) !important;
+  min-height: min(100dvh, 680px) !important;
+  max-height: none !important;
+  background-image: url('./assets/feuch-table-mobile.svg') !important;
+  background-repeat: no-repeat !important;
+  background-position: center top !important;
+  background-size: 100% 100% !important;
+}
+
+.table-surface::after { display: none !important; }
+
+.table-decks {
+  top: 54% !important;
+  gap: clamp(18px, 3.2vw, 44px) !important;
+}
+
+.table-deck img,
+.card-back,
+.discard-empty { width: clamp(34px, 3.8vw, 56px) !important; }
+.table-deck { font-size: clamp(.52rem, .62vw, .72rem) !important; }
+
+.player-seat .player-heading {
+  display: flex !important;
+  flex-direction: column-reverse !important;
+  align-items: center !important;
+  gap: 1px !important;
+  padding: 6px 13px !important;
+}
+
+.player-seat .player-heading h3 {
+  font-size: clamp(.72rem, .95vw, 1rem) !important;
+  opacity: .9;
+}
+
+.player-seat .player-heading span {
+  color: #ffdc58 !important;
+  font-size: clamp(.8rem, 1.05vw, 1.12rem) !important;
+  text-transform: uppercase;
+}
+
+.seat-top { top: 25% !important; }
+.seat-top-left,
+.seat-top-right { top: 28% !important; }
+.seat-left,
+.seat-right { top: 47% !important; }
+.seat-bottom { bottom: 26% !important; }
+
+@media (max-width: 720px) and (orientation: portrait) {
+  .table-surface {
+    width: 100vw !important;
+    height: 72dvh !important;
+    min-height: 520px !important;
+  }
+
+  .table-decks { top: 55% !important; gap: 22px !important; }
+  .table-deck img,
+  .card-back,
+  .discard-empty { width: 40px !important; }
+
+  .player-seat .player-heading h3 { font-size: .66rem !important; }
+  .player-seat .player-heading span { font-size: .74rem !important; }
+
+  .seat-top { top: 23% !important; }
+  .seat-top-left,
+  .seat-top-right { top: 27% !important; }
+  .seat-left,
+  .seat-right { top: 43% !important; }
+  .seat-bottom { bottom: 31% !important; }
+}
+
+@media (orientation: landscape) {
+  .table-surface {
+    width: min(76vw, 112dvh) !important;
+    height: min(98dvh, 126vw) !important;
+    min-height: 390px !important;
+    top: 0 !important;
+  }
+
+  .table-decks { top: 53% !important; gap: clamp(14px, 2.6vw, 38px) !important; }
+  .table-deck img,
+  .card-back,
+  .discard-empty { width: clamp(30px, 3vw, 48px) !important; }
+
+  .seat-top { top: 22% !important; left: 50% !important; }
+  .seat-top-left { top: 27% !important; left: 32% !important; }
+  .seat-top-right { top: 27% !important; right: 32% !important; }
+  .seat-left { left: 25% !important; top: 46% !important; }
+  .seat-right { right: 25% !important; top: 46% !important; }
+  .seat-bottom { bottom: 23% !important; }
+}
+
+@media (max-height: 560px) and (orientation: landscape) {
+  .table-surface {
+    width: min(70vw, 118dvh) !important;
+    height: 96dvh !important;
+  }
+
+  .table-decks { top: 54% !important; }
+  .seat-top { top: 23% !important; }
+  .seat-top-left,
+  .seat-top-right { top: 28% !important; }
+  .seat-left,
+  .seat-right { top: 45% !important; }
+  .seat-bottom { bottom: 24% !important; }
+}
