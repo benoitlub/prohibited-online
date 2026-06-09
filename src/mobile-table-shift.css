@@ -1,0 +1,154 @@
+/* v0.8.8 — table up, player 2 held, visible edge controls. */
+
+.config-screen > .config-hero::after {
+  content: 'FEUCH INSTITUT • PRO.HIBITED ONLINE • TABLE BUILD v0.8.8 — TABLE REMONTÉE' !important;
+}
+
+.config-screen > .config-panel::after {
+  content: 'Feuch Institut • Mobile Decor Background • Table Up • Player 2 Held • Edge Controls • BUILD v0.8.8' !important;
+}
+
+.feuch-header em::before {
+  content: 'TABLE BUILD v0.8.8 — TABLE REMONTÉE' !important;
+}
+
+.topbar .kicker::before {
+  content: 'FEUCH INSTITUT // PRO.HIBITED ONLINE // v0.8.8 TABLE REMONTÉE' !important;
+}
+
+@media (max-width: 720px) and (orientation: portrait) {
+  /* Move the play table up, without moving the hand dock. */
+  .table-surface {
+    top: 154px !important;
+    height: 58dvh !important;
+    min-height: 452px !important;
+  }
+
+  /* Keep player 2 visually where it was, despite the table moving up. */
+  .seat-top {
+    top: calc(20.8% + 34px) !important;
+  }
+  .seat-top-left,
+  .seat-top-right {
+    top: calc(24.4% + 34px) !important;
+  }
+
+  /* Lift table content with the table: deck and player 1 remain on the felt. */
+  .table-decks {
+    top: 47.5% !important;
+  }
+
+  .seat-bottom {
+    bottom: 19.5% !important;
+  }
+
+  /* Hand remains at the bottom but better centered. */
+  .hand-grid {
+    left: 50% !important;
+    width: 100vw !important;
+    justify-content: center !important;
+    bottom: -7px !important;
+    transform: translateX(-50%) scale(.9) !important;
+    transform-origin: 50% 100% !important;
+  }
+
+  /* Make next/back unmistakably visible on top of everything, on the screen edges. */
+  .hand-panel .turn-actions {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: fixed !important;
+    inset: auto 0 calc(126px + env(safe-area-inset-bottom)) 0 !important;
+    width: 100vw !important;
+    height: 60px !important;
+    pointer-events: none !important;
+    z-index: 9998 !important;
+  }
+
+  .hand-panel .turn-actions > span {
+    display: none !important;
+  }
+
+  .undo-button,
+  .end-turn-button {
+    display: grid !important;
+    visibility: visible !important;
+    opacity: .98 !important;
+    position: fixed !important;
+    top: auto !important;
+    transform: none !important;
+    width: 58px !important;
+    min-width: 58px !important;
+    height: 58px !important;
+    border-radius: 999px !important;
+    pointer-events: auto !important;
+    z-index: 9999 !important;
+    backdrop-filter: blur(12px) !important;
+  }
+
+  .undo-button {
+    left: 6px !important;
+    bottom: calc(126px + env(safe-area-inset-bottom)) !important;
+  }
+
+  .end-turn-button {
+    right: 6px !important;
+    bottom: calc(126px + env(safe-area-inset-bottom)) !important;
+  }
+
+  .cancel-button {
+    display: inline-flex !important;
+    visibility: visible !important;
+    position: fixed !important;
+    left: 50% !important;
+    top: auto !important;
+    bottom: calc(130px + env(safe-area-inset-bottom)) !important;
+    transform: translateX(-50%) !important;
+    z-index: 9999 !important;
+    pointer-events: auto !important;
+  }
+}
+
+@media (orientation: landscape) {
+  .table-surface {
+    top: 24px !important;
+  }
+
+  .seat-top {
+    top: calc(19.5% + 18px) !important;
+  }
+
+  .hand-panel .turn-actions {
+    display: block !important;
+    visibility: visible !important;
+    position: fixed !important;
+    inset: auto 0 82px 0 !important;
+    width: 100vw !important;
+    height: 54px !important;
+    pointer-events: none !important;
+    z-index: 9998 !important;
+  }
+
+  .undo-button,
+  .end-turn-button {
+    display: grid !important;
+    visibility: visible !important;
+    position: fixed !important;
+    top: auto !important;
+    width: 52px !important;
+    min-width: 52px !important;
+    height: 52px !important;
+    pointer-events: auto !important;
+    z-index: 9999 !important;
+  }
+
+  .undo-button {
+    left: 8px !important;
+    bottom: 82px !important;
+  }
+
+  .end-turn-button {
+    right: 8px !important;
+    bottom: 82px !important;
+  }
+}
