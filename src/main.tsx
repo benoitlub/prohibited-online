@@ -7,6 +7,7 @@ import './home-table.css';
 import './real-table-mobile.css';
 import './table-polish.css';
 import './header-marker.css';
+import './mobile-final-tune.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
