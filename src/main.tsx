@@ -9,6 +9,7 @@ import './table-polish.css';
 import './header-marker.css';
 import './mobile-final-tune.css';
 import './mobile-hand-controls.css';
+import './mobile-table-shift.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
