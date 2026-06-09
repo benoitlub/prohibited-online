@@ -5,6 +5,7 @@ import './styles.css';
 import './layout-fixes.css';
 import './home-table.css';
 import './real-table-mobile.css';
+import './table-polish.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
