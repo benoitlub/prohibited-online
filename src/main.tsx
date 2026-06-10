@@ -14,6 +14,7 @@ import './mobile-title-next.css';
 import './mobile-turn-buttons.css';
 import './mobile-decks-edge.css';
 import './mobile-polish-final.css';
+import './mobile-final-pass.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
