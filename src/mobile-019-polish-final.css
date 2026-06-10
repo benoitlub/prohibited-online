@@ -1,0 +1,165 @@
+/* v0.8.19 — final mobile polish: centered hand, cleaner controls, calmer solo UI. */
+
+body::before {
+  content: 'v0.8.19 • MOBILE POLISH • SOLO IA' !important;
+  top: max(9px, env(safe-area-inset-top)) !important;
+  right: 8px !important;
+  max-width: 50vw !important;
+  padding: 5px 8px !important;
+  font-size: .52rem !important;
+  letter-spacing: .07em !important;
+}
+
+/* Definitive cleanup: no secondary build bubbles. */
+.topbar .kicker::before,
+.feuch-header em::before,
+.config-screen > .config-hero::after,
+.config-screen > .config-panel::after,
+.feuch-build-marker,
+.feuch-build-footer,
+.deployment-marker,
+.build-marker,
+[class*='deployment-marker'],
+[class*='build-marker'] {
+  display: none !important;
+  content: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.solo-ai-native-button {
+  margin-top: 12px !important;
+  background: linear-gradient(180deg, rgba(18, 42, 17, .95), rgba(5, 12, 5, .98)) !important;
+  border-color: rgba(129, 255, 84, .78) !important;
+  color: #e6ffd2 !important;
+}
+
+.solo-ai-mode .table-callout {
+  max-width: 58vw !important;
+  font-size: .7rem !important;
+  line-height: 1.1 !important;
+  opacity: .92 !important;
+}
+
+.ai-hidden-hand {
+  min-height: 70px !important;
+  width: min(78vw, 380px) !important;
+  bottom: calc(30px + env(safe-area-inset-bottom)) !important;
+}
+
+@media (max-width: 720px) and (orientation: portrait) {
+  .hand-panel {
+    height: 150px !important;
+    min-height: 150px !important;
+    overflow: visible !important;
+  }
+
+  .hand-grid {
+    bottom: 26px !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: 154px !important;
+    transform: translateX(-50%) scale(.985) !important;
+    padding-inline: 10px !important;
+  }
+
+  .card {
+    --hand-card-w: clamp(90px, 25.2vw, 112px) !important;
+    margin-left: clamp(-24px, -6.2vw, -15px) !important;
+    border-radius: 11px !important;
+  }
+
+  .hand-grid .card:nth-child(1) { transform: rotate(-11deg) translateY(12px) !important; }
+  .hand-grid .card:nth-child(2) { transform: rotate(-5deg) translateY(5px) !important; }
+  .hand-grid .card:nth-child(3) { transform: rotate(0deg) translateY(0) !important; }
+  .hand-grid .card:nth-child(4) { transform: rotate(5deg) translateY(5px) !important; }
+  .hand-grid .card:nth-child(5) { transform: rotate(11deg) translateY(12px) !important; }
+
+  .card-actions {
+    top: -36px !important;
+    gap: 9px !important;
+    padding: 0 !important;
+  }
+
+  .icon-action,
+  .play-action,
+  .discard-action {
+    width: 34px !important;
+    min-width: 34px !important;
+    height: 34px !important;
+    border-radius: 7px !important;
+    font-size: 1rem !important;
+  }
+
+  .card-reorder {
+    bottom: 11px !important;
+    gap: 8px !important;
+  }
+
+  .card-reorder button {
+    width: 25px !important;
+    height: 21px !important;
+    border-radius: 7px !important;
+    background: rgba(6, 10, 6, .9) !important;
+  }
+
+  .card p {
+    padding-bottom: 24px !important;
+  }
+
+  .undo-button,
+  .end-turn-button {
+    bottom: calc(172px + env(safe-area-inset-bottom)) !important;
+    width: 58px !important;
+    min-width: 58px !important;
+    height: 58px !important;
+    opacity: .94 !important;
+  }
+
+  .undo-button {
+    left: -12px !important;
+  }
+
+  .end-turn-button {
+    right: -12px !important;
+  }
+
+  .hand-panel .turn-actions,
+  .hand-heading .turn-actions {
+    inset: auto 0 calc(166px + env(safe-area-inset-bottom)) 0 !important;
+  }
+
+  .score-strip {
+    top: 150px !important;
+  }
+
+  .table-decks {
+    top: 43.2% !important;
+  }
+
+  .solo-ai-mode .seat-top {
+    top: 24.8% !important;
+  }
+
+  .solo-ai-mode .seat-bottom {
+    bottom: 23% !important;
+  }
+
+  .ai-hidden-hand {
+    bottom: calc(34px + env(safe-area-inset-bottom)) !important;
+  }
+}
+
+@media (orientation: landscape) {
+  body::before {
+    top: 8px !important;
+    right: 8px !important;
+    max-width: 42vw !important;
+  }
+
+  .undo-button,
+  .end-turn-button {
+    bottom: 128px !important;
+  }
+}
