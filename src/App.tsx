@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { CSSProperties } from 'react';
 import { canPlayCard, createGame, dispatchGameAction } from './game/engine';
+import { createSoloAiGame, runSoloAiTurn } from './game/soloAi';
 import type { CardFamily, CardId, CardInstance, GameMode, GameState, LongTargetScore, Player, SetCard } from './game/types';
 
 const cardImageModules = import.meta.glob<string>('./assets/cards2025/*.png', { eager: true, import: 'default' });
@@ -65,21 +66,22 @@ function getOpponentSeatClass(opponentIndex: number, playerCount: number): strin
   return seatsByCount[playerCount]?.[opponentIndex] ?? 'seat-top';
 }
 
-function getSeatedPlayers(players: Player[], activePlayerIndex: number): SeatedPlayer[] {
-  const activeSeat: SeatedPlayer = {
-    player: players[activePlayerIndex],
-    playerIndex: activePlayerIndex,
+function getSeatedPlayers(players: Player[], activePlayerIndex: number, lockLocalSeat = false): SeatedPlayer[] {
+  const bottomPlayerIndex = lockLocalSeat ? 0 : activePlayerIndex;
+  const bottomSeat: SeatedPlayer = {
+    player: players[bottomPlayerIndex],
+    playerIndex: bottomPlayerIndex,
     seatClass: 'seat-bottom',
   };
   const opponents = players
     .map((player, playerIndex) => ({ player, playerIndex }))
-    .filter(({ playerIndex }) => playerIndex !== activePlayerIndex)
+    .filter(({ playerIndex }) => playerIndex !== bottomPlayerIndex)
     .map((entry, opponentIndex) => ({
       ...entry,
       seatClass: getOpponentSeatClass(opponentIndex, players.length),
     }));
 
-  return [activeSeat, ...opponents];
+  return [bottomSeat, ...opponents];
 }
 
 function CardButton({ card, disabled, pending, targetMode, canMoveLeft, canMoveRight, onPlay, onDiscard, onMoveLeft, onMoveRight }: {
@@ -201,17 +203,21 @@ function PlayerPanel({ player, active, selectedOwnSetIndex, autoSelectedSetIndex
   );
 }
 
-function ConfigScreen({ onStart }: { onStart: (playerCount: number, mode: GameMode, targetScore: number) => void }) {
+function ConfigScreen({ onStart, onStartSolo }: {
+  onStart: (playerCount: number, mode: GameMode, targetScore: number) => void;
+  onStartSolo: (mode: GameMode, targetScore: number) => void;
+}) {
   const [playerCount, setPlayerCount] = useState(2);
   const [mode, setMode] = useState<GameMode>('quick');
   const [targetScore, setTargetScore] = useState<LongTargetScore>(30);
+  const effectiveTargetScore = mode === 'quick' ? 3 : targetScore;
 
   return (
     <main className="config-screen">
       <header className="feuch-header">
         <strong>FEUCH INSTITUT</strong>
         <span>Pro.Hibited Online</span>
-        <em>TABLE BUILD v0.8.3</em>
+        <em>TABLE BUILD v0.8.17</em>
       </header>
 
       <section className="config-hero">
@@ -283,15 +289,18 @@ function ConfigScreen({ onStart }: { onStart: (playerCount: number, mode: GameMo
           </div>
         )}
 
-        <button type="button" className="start-button" onClick={() => onStart(playerCount, mode, mode === 'quick' ? 3 : targetScore)}>
+        <button type="button" className="start-button" onClick={() => onStart(playerCount, mode, effectiveTargetScore)}>
           Ouvrir la table
+        </button>
+        <button type="button" className="start-button solo-ai-native-button" onClick={() => onStartSolo(mode, effectiveTargetScore)}>
+          Solo vs IA
         </button>
       </section>
 
       <footer className="feuch-footer">
         <strong>Feuch Institut</strong>
         <span>Experimental Table Layout</span>
-        <span>Undo Last Action Enabled</span>
+        <span>Solo IA v0.8.17</span>
         <span>Main Branch</span>
       </footer>
     </main>
@@ -304,19 +313,51 @@ export default function App() {
   const [selectedOwnSetIndex, setSelectedOwnSetIndex] = useState(0);
   const [autoSelectedSetIndex, setAutoSelectedSetIndex] = useState<number | null>(null);
   const [targetingCard, setTargetingCard] = useState<CardInstance | null>(null);
+  const [soloAiEnabled, setSoloAiEnabled] = useState(false);
 
   const activePlayer = game?.players[game.currentPlayerIndex];
+  const isSoloAiMode = Boolean(game?.players.some(player => player.id.includes('ai')) || soloAiEnabled);
+  const isSoloAiTurn = Boolean(game && activePlayer?.id.includes('ai'));
   const validTargets = game && targetingCard ? getPlayableTargets(game, targetingCard) : [];
 
-  if (!game || !activePlayer) {
-    return <ConfigScreen onStart={(playerCount, mode, targetScore) => {
-      const nextGame = createGame({ playerCount, mode, targetScore });
-      setHistory([]);
+  useEffect(() => {
+    if (!game || !soloAiEnabled || game.status !== 'playing') return;
+    const current = game.players[game.currentPlayerIndex];
+    if (!current?.id.includes('ai')) return;
+
+    const timer = window.setTimeout(() => {
+      const next = runSoloAiTurn(game);
+      setHistory(previous => [game, ...previous].slice(0, 12));
       setSelectedOwnSetIndex(0);
       setAutoSelectedSetIndex(null);
       setTargetingCard(null);
-      setGame(nextGame);
-    }} />;
+      setGame(next);
+    }, 850);
+
+    return () => window.clearTimeout(timer);
+  }, [game, soloAiEnabled]);
+
+  if (!game || !activePlayer) {
+    return <ConfigScreen
+      onStart={(playerCount, mode, targetScore) => {
+        const nextGame = createGame({ playerCount, mode, targetScore });
+        setHistory([]);
+        setSelectedOwnSetIndex(0);
+        setAutoSelectedSetIndex(null);
+        setTargetingCard(null);
+        setSoloAiEnabled(false);
+        setGame(nextGame);
+      }}
+      onStartSolo={(mode, targetScore) => {
+        const nextGame = createSoloAiGame(mode, targetScore);
+        setHistory([]);
+        setSelectedOwnSetIndex(0);
+        setAutoSelectedSetIndex(null);
+        setTargetingCard(null);
+        setSoloAiEnabled(true);
+        setGame(nextGame);
+      }}
+    />;
   }
 
   const commitGameAction = (next: GameState) => {
@@ -338,7 +379,10 @@ export default function App() {
   };
 
   const restartGame = () => {
-    setGame(createGame(game.config));
+    const nextGame = soloAiEnabled
+      ? createSoloAiGame(game.config.mode, game.config.targetScore)
+      : createGame(game.config);
+    setGame(nextGame);
     setHistory([]);
     setSelectedOwnSetIndex(0);
     setAutoSelectedSetIndex(null);
@@ -352,7 +396,7 @@ export default function App() {
 
   const moveHandCard = (cardIndex: number, direction: -1 | 1) => {
     const targetIndex = cardIndex + direction;
-    if (targetIndex < 0 || targetIndex >= activePlayer.hand.length) return;
+    if (isSoloAiTurn || targetIndex < 0 || targetIndex >= activePlayer.hand.length) return;
     setGame(current => {
       if (!current) return current;
       return {
@@ -368,7 +412,7 @@ export default function App() {
   };
 
   const targetSlot = (targetPlayerId: string, targetSetIndex: number) => {
-    if (!targetingCard) return;
+    if (!targetingCard || isSoloAiTurn) return;
     if (targetingCard.cardId === 'smoke_me') {
       commitGameAction(dispatchGameAction(game, {
         type: 'try_smoke',
@@ -388,13 +432,15 @@ export default function App() {
   };
 
   const winner = game.winnerId ? game.players.find(player => player.id === game.winnerId) : undefined;
-  const seatedPlayers = getSeatedPlayers(game.players, game.currentPlayerIndex);
-  const liveMessage = targetingCard
-    ? `Choisis un slot pour ${targetingCard.name}. ${activePlayer.isJunky ? 'Le Junky peut jouer chez les autres.' : 'Rien ne part sans cible.'}`
-    : game.status === 'finished' && winner ? `${winner.name} gagne. Relance obligatoire.` : game.tableMessage;
+  const seatedPlayers = getSeatedPlayers(game.players, game.currentPlayerIndex, isSoloAiMode);
+  const liveMessage = isSoloAiTurn
+    ? 'Feuch Bot joue son tour. Cartes adverses masquees.'
+    : targetingCard
+      ? `Choisis un slot pour ${targetingCard.name}. ${activePlayer.isJunky ? 'Le Junky peut jouer chez les autres.' : 'Rien ne part sans cible.'}`
+      : game.status === 'finished' && winner ? `${winner.name} gagne. Relance obligatoire.` : game.tableMessage;
 
   return (
-    <main className={`game-screen ${winner ? 'has-winner' : ''}`}>
+    <main className={`game-screen ${winner ? 'has-winner' : ''} ${isSoloAiMode ? 'solo-ai-mode' : ''} ${isSoloAiTurn ? 'solo-ai-thinking' : ''}`}>
       <header className="topbar">
         <div>
           <p className="kicker">HERE, WE DON'T SMOKE. IT'S PRO.HIBITED.</p>
@@ -405,6 +451,7 @@ export default function App() {
           <span>{game.config.mode === 'quick' ? 'Rapide' : 'Longue'} / {game.config.targetScore} pts</span>
           <button type="button" onClick={() => {
             setHistory([]);
+            setSoloAiEnabled(false);
             setGame(null);
           }}>Nouvelle partie</button>
         </div>
@@ -429,7 +476,7 @@ export default function App() {
       <section className="board-grid">
         <div className="players-area table-layout">
           <div className="table-surface" aria-label="Table de jeu">
-            {targetingCard && activePlayer.isJunky && (
+            {targetingCard && activePlayer.isJunky && !isSoloAiTurn && (
               <svg className="junky-target-curve" viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true">
                 <path d="M 500 940 C 420 720, 610 580, 720 380" />
               </svg>
@@ -437,7 +484,7 @@ export default function App() {
             <div className="table-hud" aria-label="Infos de partie">
               <span>
                 <small>Mode</small>
-                {game.config.mode === 'quick' ? 'Rapide' : 'Longue'}
+                {isSoloAiMode ? 'Solo IA' : game.config.mode === 'quick' ? 'Rapide' : 'Longue'}
               </span>
               <span>
                 <small>Tour</small>
@@ -471,7 +518,7 @@ export default function App() {
               <div key={player.id} className={`player-seat ${seatClass}`}>
                 <PlayerPanel
                   player={player}
-                  active={playerIndex === game.currentPlayerIndex}
+                  active={playerIndex === game.currentPlayerIndex && !isSoloAiTurn}
                   selectedOwnSetIndex={selectedOwnSetIndex}
                   autoSelectedSetIndex={playerIndex === game.currentPlayerIndex ? autoSelectedSetIndex : null}
                   onSelectOwnSet={selectOwnSet}
@@ -485,8 +532,10 @@ export default function App() {
         </div>
 
         <aside className="side-panel">
-          <h2>{targetingCard ? `Cibles pour ${targetingCard.name}` : 'Ciblage'}</h2>
-          {targetingCard ? (
+          <h2>{targetingCard ? `Cibles pour ${targetingCard.name}` : isSoloAiMode ? 'Solo IA' : 'Ciblage'}</h2>
+          {isSoloAiTurn ? (
+            <p className="muted">Feuch Bot joue automatiquement. Sa main reste cachee.</p>
+          ) : targetingCard ? (
             <div className="targeting-help">
               <p>Tape un slot surligne pour jouer la carte.</p>
               <button type="button" onClick={() => setTargetingCard(null)}>Annuler ciblage</button>
@@ -507,55 +556,62 @@ export default function App() {
         <div className={`hand-status ${targetingCard ? 'targeting' : ''}`}>{liveMessage}</div>
         <div className="hand-heading">
           <div>
-            <p className="kicker">Joueur actif{activePlayer.isJunky ? ' - Junky' : ''}</p>
-            <h2>{activePlayer.name} / Slot {selectedOwnSetIndex + 1}</h2>
+            <p className="kicker">{isSoloAiTurn ? 'Tour IA' : `Joueur actif${activePlayer.isJunky ? ' - Junky' : ''}`}</p>
+            <h2>{isSoloAiTurn ? 'Feuch Bot / main cachee' : `${activePlayer.name} / Slot ${selectedOwnSetIndex + 1}`}</h2>
           </div>
           <div className="turn-actions">
-            <span>{game.discardedThisTurn}/2 defausses</span>
-            {targetingCard && <button type="button" className="cancel-button" onClick={() => setTargetingCard(null)}>Annuler ciblage</button>}
-            <button type="button" className="undo-button" aria-label="Annuler la derniere action" title="Annuler la derniere action" onClick={undoLastAction} disabled={history.length === 0}>↶</button>
-            <button type="button" className="end-turn-button" aria-label="Finir le tour" title="Finir le tour" onClick={() => commitGameAction(dispatchGameAction(game, { type: 'end_turn' }))}>→</button>
+            {!isSoloAiTurn && <span>{game.discardedThisTurn}/2 defausses</span>}
+            {targetingCard && !isSoloAiTurn && <button type="button" className="cancel-button" onClick={() => setTargetingCard(null)}>Annuler ciblage</button>}
+            {!isSoloAiTurn && <button type="button" className="undo-button" aria-label="Annuler la derniere action" title="Annuler la derniere action" onClick={undoLastAction} disabled={history.length === 0}>↶</button>}
+            {!isSoloAiTurn && <button type="button" className="end-turn-button" aria-label="Finir le tour" title="Finir le tour" onClick={() => commitGameAction(dispatchGameAction(game, { type: 'end_turn' }))}>→</button>}
           </div>
         </div>
 
-        <div className="hand-grid">
-          {activePlayer.hand.map((card, index) => {
-            const targetMode = shouldUseTargetMode(activePlayer, card);
-            const targetCount = getPlayableTargets(game, card).length;
-            const preferredSetIndex = getPreferredOwnSetIndex(activePlayer, selectedOwnSetIndex, card);
-            const disabled = targetMode
-              ? targetCount === 0 || Boolean(targetingCard && targetingCard.instanceId !== card.instanceId)
-              : Boolean(targetingCard) || !canPlayCard(game, card, activePlayer.id, preferredSetIndex);
-            return (
-              <CardButton
-                key={card.instanceId}
-                card={card}
-                targetMode={targetMode}
-                pending={targetingCard?.instanceId === card.instanceId}
-                disabled={disabled}
-                canMoveLeft={index > 0}
-                canMoveRight={index < activePlayer.hand.length - 1}
-                onMoveLeft={() => moveHandCard(index, -1)}
-                onMoveRight={() => moveHandCard(index, 1)}
-                onPlay={() => {
-                  if (targetMode) {
-                    setTargetingCard(card);
-                    return;
-                  }
-                  setSelectedOwnSetIndex(preferredSetIndex);
-                  setAutoSelectedSetIndex(card.family === 'product' && preferredSetIndex !== selectedOwnSetIndex ? preferredSetIndex : null);
-                  commitGameAction(dispatchGameAction(game, {
-                    type: 'play_card',
-                    cardInstanceId: card.instanceId,
-                    targetPlayerId: activePlayer.id,
-                    targetSetIndex: preferredSetIndex,
-                  }));
-                }}
-                onDiscard={() => commitGameAction(dispatchGameAction(game, { type: 'discard_card', cardInstanceId: card.instanceId }))}
-              />
-            );
-          })}
-        </div>
+        {isSoloAiTurn ? (
+          <div className="ai-hidden-hand" role="status" aria-live="polite">
+            <strong>Feuch Bot joue...</strong>
+            <span>Main adverse masquee. Retour a Joueur 1 automatique.</span>
+          </div>
+        ) : (
+          <div className="hand-grid">
+            {activePlayer.hand.map((card, index) => {
+              const targetMode = shouldUseTargetMode(activePlayer, card);
+              const targetCount = getPlayableTargets(game, card).length;
+              const preferredSetIndex = getPreferredOwnSetIndex(activePlayer, selectedOwnSetIndex, card);
+              const disabled = targetMode
+                ? targetCount === 0 || Boolean(targetingCard && targetingCard.instanceId !== card.instanceId)
+                : Boolean(targetingCard) || !canPlayCard(game, card, activePlayer.id, preferredSetIndex);
+              return (
+                <CardButton
+                  key={card.instanceId}
+                  card={card}
+                  targetMode={targetMode}
+                  pending={targetingCard?.instanceId === card.instanceId}
+                  disabled={disabled}
+                  canMoveLeft={index > 0}
+                  canMoveRight={index < activePlayer.hand.length - 1}
+                  onMoveLeft={() => moveHandCard(index, -1)}
+                  onMoveRight={() => moveHandCard(index, 1)}
+                  onPlay={() => {
+                    if (targetMode) {
+                      setTargetingCard(card);
+                      return;
+                    }
+                    setSelectedOwnSetIndex(preferredSetIndex);
+                    setAutoSelectedSetIndex(card.family === 'product' && preferredSetIndex !== selectedOwnSetIndex ? preferredSetIndex : null);
+                    commitGameAction(dispatchGameAction(game, {
+                      type: 'play_card',
+                      cardInstanceId: card.instanceId,
+                      targetPlayerId: activePlayer.id,
+                      targetSetIndex: preferredSetIndex,
+                    }));
+                  }}
+                  onDiscard={() => commitGameAction(dispatchGameAction(game, { type: 'discard_card', cardInstanceId: card.instanceId }))}
+                />
+              );
+            })}
+          </div>
+        )}
       </section>
     </main>
   );
