@@ -37,6 +37,24 @@ body::before {
   opacity: 1 !important;
 }
 
+.hand-grid .card {
+  overflow: visible !important;
+}
+
+.hand-grid .card-actions {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  z-index: 100 !important;
+}
+
+.hand-grid .icon-action,
+.hand-grid .play-action,
+.hand-grid .discard-action {
+  pointer-events: auto !important;
+}
+
 @media (max-width: 720px) and (orientation: portrait) {
   body::before {
     top: max(6px, env(safe-area-inset-top)) !important;
