@@ -1,0 +1,226 @@
+/* v0.8.13 — final mobile pass: no black band, soft cards, reorder arrows, junky curve. */
+
+.config-screen > .config-hero::after {
+  content: 'FEUCH INSTITUT • PRO.HIBITED ONLINE • TABLE BUILD v0.8.13 — PASSE UX MOBILE' !important;
+}
+
+.config-screen > .config-panel::after {
+  content: 'Feuch Institut • Mobile UX Final Pass • No Black Band • Reorder Hand • Junky Curve • BUILD v0.8.13' !important;
+}
+
+.feuch-header em::before {
+  content: 'TABLE BUILD v0.8.13 — PASSE UX MOBILE' !important;
+}
+
+.topbar .kicker::before {
+  content: 'FEUCH INSTITUT // PRO.HIBITED ONLINE // v0.8.13 PASSE UX MOBILE' !important;
+}
+
+@media (max-width: 720px) and (orientation: portrait) {
+  .table-surface {
+    top: 140px !important;
+    height: 60dvh !important;
+    min-height: 472px !important;
+  }
+
+  .seat-top { top: 22% !important; }
+  .seat-top-left,
+  .seat-top-right { top: 25.2% !important; }
+  .seat-bottom { bottom: 22.4% !important; }
+
+  .set-slot {
+    border-radius: 12px !important;
+  }
+
+  .hand-panel {
+    height: 118px !important;
+    min-height: 118px !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    border: 0 !important;
+    backdrop-filter: none !important;
+  }
+
+  .hand-panel::before,
+  .hand-panel::after {
+    display: none !important;
+    content: none !important;
+  }
+
+  .hand-grid {
+    left: 50% !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    justify-content: center !important;
+    align-items: flex-end !important;
+    bottom: -2px !important;
+    height: 132px !important;
+    transform: translateX(-50%) scale(.97) !important;
+    transform-origin: 50% 100% !important;
+    overflow: visible !important;
+    padding: 0 !important;
+  }
+
+  .card {
+    --hand-card-w: clamp(90px, 26vw, 112px) !important;
+    margin-left: clamp(-26px, -6.5vw, -16px) !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
+  }
+
+  .hand-grid .card:first-child { margin-left: 0 !important; }
+  .hand-grid .card:nth-child(1) { transform: rotate(-13deg) translateY(12px) !important; }
+  .hand-grid .card:nth-child(2) { transform: rotate(-6deg) translateY(5px) !important; }
+  .hand-grid .card:nth-child(3) { transform: rotate(0deg) translateY(0) !important; }
+  .hand-grid .card:nth-child(4) { transform: rotate(6deg) translateY(5px) !important; }
+  .hand-grid .card:nth-child(5) { transform: rotate(13deg) translateY(12px) !important; }
+
+  .card p,
+  .card small,
+  .card .card-topline span {
+    color: #fff5cf !important;
+    text-shadow: 0 1px 0 rgba(0,0,0,.96), 0 0 8px rgba(0,0,0,.88) !important;
+  }
+
+  .card p {
+    font-size: .68rem !important;
+    line-height: 1.08 !important;
+    letter-spacing: .01em !important;
+  }
+
+  .table-decks {
+    top: 47% !important;
+    height: 94px !important;
+    z-index: 70 !important;
+  }
+
+  .draw-deck {
+    left: 19% !important;
+    transform: translateX(-50%) !important;
+  }
+
+  .discard-deck {
+    right: 19% !important;
+    transform: translateX(50%) !important;
+  }
+
+  .table-deck img,
+  .card-back,
+  .discard-empty { width: 40px !important; }
+
+  .table-deck span {
+    font-size: .64rem !important;
+    font-weight: 700 !important;
+    letter-spacing: .03em !important;
+  }
+
+  .table-deck small { font-size: .68rem !important; }
+
+  .hand-panel .turn-actions,
+  .hand-heading .turn-actions {
+    display: block !important;
+    position: fixed !important;
+    inset: auto 0 calc(92px + env(safe-area-inset-bottom)) 0 !important;
+    width: 100vw !important;
+    height: 64px !important;
+    pointer-events: none !important;
+    z-index: 9998 !important;
+  }
+
+  .hand-panel .turn-actions > span,
+  .hand-heading .turn-actions > span { display: none !important; }
+
+  .undo-button,
+  .end-turn-button {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    position: fixed !important;
+    top: auto !important;
+    width: 58px !important;
+    min-width: 58px !important;
+    height: 58px !important;
+    background: radial-gradient(circle at 35% 30%, rgba(255,255,255,.10), rgba(255,255,255,0) 35%), linear-gradient(180deg, rgba(18,20,16,.94), rgba(8,10,8,.98)) !important;
+    box-shadow: 0 0 18px rgba(0,0,0,.65), 0 0 12px rgba(244,200,92,.20) !important;
+    backdrop-filter: blur(8px) !important;
+    pointer-events: auto !important;
+    z-index: 10000 !important;
+    border: 2px solid rgba(244,200,92,.52) !important;
+  }
+
+  .undo-button {
+    left: -10px !important;
+    bottom: calc(96px + env(safe-area-inset-bottom)) !important;
+    border-radius: 0 999px 999px 0 !important;
+    padding-left: 14px !important;
+    color: #f3dfa2 !important;
+  }
+
+  .end-turn-button {
+    right: -10px !important;
+    bottom: calc(96px + env(safe-area-inset-bottom)) !important;
+    border-radius: 999px 0 0 999px !important;
+    padding-right: 14px !important;
+    color: #9cff72 !important;
+    border-color: rgba(129,255,84,.52) !important;
+    box-shadow: 0 0 18px rgba(0,0,0,.65), 0 0 12px rgba(129,255,84,.22) !important;
+  }
+
+  .score-strip {
+    position: absolute !important;
+    left: 16px !important;
+    right: auto !important;
+    top: 176px !important;
+    z-index: 120 !important;
+  }
+
+  .score-strip button { min-width: 120px !important; }
+
+  .card-reorder {
+    position: absolute !important;
+    left: 50% !important;
+    bottom: 4px !important;
+    transform: translateX(-50%) !important;
+    display: flex !important;
+    gap: 6px !important;
+    z-index: 30 !important;
+  }
+
+  .card-reorder button {
+    width: 22px !important;
+    height: 18px !important;
+    border-radius: 999px !important;
+    border: 1px solid rgba(244,200,92,.35) !important;
+    background: rgba(5,8,6,.84) !important;
+    color: #f3dfa2 !important;
+    font-size: .72rem !important;
+    line-height: 1 !important;
+    padding: 0 !important;
+  }
+
+  .card-reorder button:disabled {
+    opacity: .28 !important;
+  }
+
+  .junky-target-curve {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    pointer-events: none !important;
+    z-index: 90 !important;
+  }
+
+  .junky-target-curve path {
+    fill: none !important;
+    stroke: rgba(155,255,118,.92) !important;
+    stroke-width: 3 !important;
+    stroke-linecap: round !important;
+    stroke-dasharray: 8 8 !important;
+    filter: drop-shadow(0 0 8px rgba(155,255,118,.45)) !important;
+  }
+
+  .auto-selected-slot {
+    box-shadow: 0 0 0 2px rgba(255,255,255,.14) inset, 0 0 14px rgba(155,255,118,.42), 0 0 24px rgba(155,255,118,.22) !important;
+  }
+}
