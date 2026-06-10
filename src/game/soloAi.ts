@@ -85,15 +85,20 @@ export function runSoloAiTurn(state: GameState): GameState {
   return dispatchGameAction(next, { type: 'end_turn' });
 }
 
-export function createSoloAiGame(mode: GameMode, targetScore: number): GameState {
-  const game = createGame({ playerCount: 2, mode, targetScore: mode === 'quick' ? 3 : targetScore });
+export function createAiTableGame(playerCount: number, mode: GameMode, targetScore: number): GameState {
+  const game = createGame({ playerCount, mode, targetScore: mode === 'quick' ? 3 : targetScore });
+  const aiCount = Math.max(1, game.players.length - 1);
   return {
     ...game,
-    config: { ...game.config, playerCount: 2 },
-    players: game.players.map((player, index) => index === 1
-      ? { ...player, id: 'ai-player-2', name: 'Feuch Bot' }
-      : { ...player, name: 'Joueur 1' }),
-    tableMessage: 'Mode solo IA actif. Feuch Bot prend la chaise adverse.',
-    eventLog: ['Mode solo IA actif. Feuch Bot prend la chaise adverse.', ...game.eventLog].slice(0, 12),
+    config: { ...game.config, playerCount: game.players.length },
+    players: game.players.map((player, index) => index === 0
+      ? { ...player, name: 'Joueur 1' }
+      : { ...player, id: `ai-player-${index + 1}`, name: aiCount === 1 ? 'Feuch Bot' : `Feuch Bot ${index}` }),
+    tableMessage: `Table IA ${game.players.length} seats active. Joueur 1 reste en bas, les seats vacants sont pilotes par le Feuch Bot.`,
+    eventLog: [`Table IA ${game.players.length} seats active. Bots installes autour de la table.`, ...game.eventLog].slice(0, 12),
   };
+}
+
+export function createSoloAiGame(mode: GameMode, targetScore: number): GameState {
+  return createAiTableGame(2, mode, targetScore);
 }
