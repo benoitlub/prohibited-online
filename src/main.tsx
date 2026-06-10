@@ -21,6 +21,8 @@ import './mobile-016-version-marker.css';
 import './mobile-017-native-solo.css';
 import './mobile-018-overlap-fix.css';
 import './mobile-019-polish-final.css';
+import './mobile-020-home-return.css';
+import './home-return';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
