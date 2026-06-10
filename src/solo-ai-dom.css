@@ -1,0 +1,35 @@
+/* v0.8.16 — solo IA test overlay. */
+
+.solo-ai-button {
+  margin-top: 10px !important;
+  border-color: rgba(129, 255, 84, .7) !important;
+  color: #dfffbd !important;
+  box-shadow: 0 0 20px rgba(129,255,84,.18), 0 0 34px rgba(0,0,0,.5) !important;
+}
+
+.solo-ai-badge {
+  position: fixed;
+  left: 50%;
+  top: 82px;
+  transform: translateX(-50%);
+  z-index: 20000;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(129, 255, 84, .55);
+  background: rgba(5, 10, 6, .76);
+  color: #dfffbd;
+  font-size: .68rem;
+  font-weight: 900;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  pointer-events: none;
+  box-shadow: 0 0 18px rgba(129,255,84,.2), 0 0 30px rgba(0,0,0,.72);
+  backdrop-filter: blur(10px);
+}
+
+@media (max-width: 720px) and (orientation: portrait) {
+  .solo-ai-badge {
+    top: 72px;
+    font-size: .6rem;
+  }
+}
