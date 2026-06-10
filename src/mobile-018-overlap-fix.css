@@ -1,0 +1,156 @@
+/* v0.8.18 — overlap cleanup: single badge, no bottom marker, raised nav controls and hand. */
+
+/* Keep only one version badge. Older header capsules are hidden. */
+.topbar .kicker::before,
+.feuch-header em::before,
+.config-screen > .config-hero::after,
+.config-screen > .config-panel::after {
+  display: none !important;
+  content: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+/* The old hard-coded deployment marker in index.html sits over the hand. Hide it. */
+.feuch-build-marker,
+.feuch-build-footer,
+.deployment-marker,
+.build-marker,
+[class*='deployment-marker'],
+[class*='build-marker'] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+body::before {
+  content: 'v0.8.18 • SOLO IA NATIVE • OVERLAP FIX' !important;
+  position: fixed !important;
+  top: max(10px, env(safe-area-inset-top)) !important;
+  right: 10px !important;
+  left: auto !important;
+  z-index: 30000 !important;
+  display: inline-flex !important;
+  width: auto !important;
+  max-width: 58vw !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 5px 9px !important;
+  border-radius: 999px !important;
+  border: 1px solid rgba(129, 255, 84, .68) !important;
+  background: rgba(3, 8, 5, .86) !important;
+  color: #dfffbd !important;
+  font-size: .56rem !important;
+  line-height: 1 !important;
+  font-weight: 950 !important;
+  letter-spacing: .08em !important;
+  text-transform: uppercase !important;
+  pointer-events: none !important;
+  white-space: nowrap !important;
+  box-shadow: 0 0 0 1px rgba(129,255,84,.12) inset, 0 0 18px rgba(129,255,84,.24), 0 0 32px rgba(0,0,0,.78) !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+@media (max-width: 720px) and (orientation: portrait) {
+  .hand-panel {
+    height: 142px !important;
+    min-height: 142px !important;
+    bottom: 0 !important;
+    padding-bottom: calc(8px + env(safe-area-inset-bottom)) !important;
+  }
+
+  .hand-grid {
+    bottom: 20px !important;
+    height: 148px !important;
+    transform: translateX(-50%) scale(.98) !important;
+    transform-origin: 50% 100% !important;
+    overflow: visible !important;
+  }
+
+  .card {
+    --hand-card-w: clamp(92px, 26vw, 114px) !important;
+  }
+
+  .card-actions {
+    top: -34px !important;
+    gap: 10px !important;
+    z-index: 42 !important;
+  }
+
+  .icon-action,
+  .play-action,
+  .discard-action {
+    width: 36px !important;
+    min-width: 36px !important;
+    height: 36px !important;
+    border-radius: 8px !important;
+  }
+
+  .card-reorder {
+    bottom: 9px !important;
+    gap: 8px !important;
+    z-index: 45 !important;
+  }
+
+  .card-reorder button {
+    width: 24px !important;
+    height: 20px !important;
+    font-size: .8rem !important;
+  }
+
+  .undo-button {
+    left: -8px !important;
+    bottom: calc(150px + env(safe-area-inset-bottom)) !important;
+    width: 60px !important;
+    min-width: 60px !important;
+    height: 60px !important;
+    z-index: 10010 !important;
+  }
+
+  .end-turn-button {
+    right: -8px !important;
+    bottom: calc(150px + env(safe-area-inset-bottom)) !important;
+    width: 60px !important;
+    min-width: 60px !important;
+    height: 60px !important;
+    z-index: 10010 !important;
+  }
+
+  .hand-panel .turn-actions,
+  .hand-heading .turn-actions {
+    inset: auto 0 calc(146px + env(safe-area-inset-bottom)) 0 !important;
+    height: 66px !important;
+  }
+
+  body::before {
+    top: max(7px, env(safe-area-inset-top)) !important;
+    right: 6px !important;
+    padding: 5px 8px !important;
+    font-size: .53rem !important;
+    max-width: 56vw !important;
+  }
+}
+
+@media (orientation: landscape) {
+  .topbar .kicker::before,
+  .feuch-header em::before,
+  .config-screen > .config-hero::after,
+  .config-screen > .config-panel::after,
+  .feuch-build-marker,
+  .feuch-build-footer,
+  .deployment-marker,
+  .build-marker,
+  [class*='deployment-marker'],
+  [class*='build-marker'] {
+    display: none !important;
+    content: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+  }
+
+  .undo-button,
+  .end-turn-button {
+    bottom: 118px !important;
+  }
+}
