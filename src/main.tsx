@@ -22,6 +22,7 @@ import './mobile-017-native-solo.css';
 import './mobile-018-overlap-fix.css';
 import './mobile-019-polish-final.css';
 import './mobile-020-home-return.css';
+import './mobile-090-ai-seats-layout.css';
 import './home-return';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
