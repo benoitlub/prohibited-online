@@ -1,0 +1,47 @@
+/* v0.8.16 — visible solo IA marker, loaded last. */
+
+body::before {
+  content: 'v0.8.16 • SOLO VS IA • FEUCH BOT' !important;
+  position: fixed !important;
+  top: max(8px, env(safe-area-inset-top)) !important;
+  right: 8px !important;
+  z-index: 30000 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 6px 10px !important;
+  border-radius: 999px !important;
+  border: 1px solid rgba(129, 255, 84, .62) !important;
+  background: rgba(3, 8, 5, .82) !important;
+  color: #dfffbd !important;
+  font-size: .62rem !important;
+  font-weight: 950 !important;
+  letter-spacing: .08em !important;
+  text-transform: uppercase !important;
+  pointer-events: none !important;
+  box-shadow:
+    0 0 0 1px rgba(129, 255, 84, .12) inset,
+    0 0 18px rgba(129, 255, 84, .22),
+    0 0 32px rgba(0, 0, 0, .78) !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+.topbar .kicker::before,
+.feuch-header em::before {
+  content: 'v0.8.16 SOLO VS IA / FEUCH BOT' !important;
+}
+
+.solo-ai-button {
+  display: inline-flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+@media (max-width: 720px) and (orientation: portrait) {
+  body::before {
+    top: max(6px, env(safe-area-inset-top)) !important;
+    right: 6px !important;
+    padding: 5px 8px !important;
+    font-size: .56rem !important;
+  }
+}
