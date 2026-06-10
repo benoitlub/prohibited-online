@@ -1,0 +1,186 @@
+/* v0.9.0 — AI seats + portrait/landscape table layouts. */
+
+body::before {
+  content: 'v0.9.0 • AI SEATS • TABLE LAYOUTS' !important;
+}
+
+.solo-ai-mode .table-hud span:first-child {
+  border-color: rgba(129,255,84,.45) !important;
+  color: #dfffbd !important;
+}
+
+.solo-ai-mode .player-seat .player-panel .player-heading h3::after {
+  content: '';
+}
+
+.solo-ai-mode .player-seat:not(.seat-bottom) .player-heading h3::after {
+  content: ' IA';
+  display: inline-flex;
+  margin-left: 6px;
+  padding: 2px 5px;
+  border-radius: 999px;
+  border: 1px solid rgba(129,255,84,.42);
+  color: #dfffbd;
+  font-size: .52rem;
+  letter-spacing: .08em;
+  vertical-align: middle;
+}
+
+@media (max-width: 720px) and (orientation: portrait) {
+  .solo-ai-mode .table-surface {
+    width: min(95vw, 430px) !important;
+    height: min(68vh, 610px) !important;
+    top: 47.5% !important;
+    border-radius: 36px !important;
+  }
+
+  .solo-ai-mode .table-hud {
+    top: 10px !important;
+    gap: 5px !important;
+    transform: translateX(-50%) scale(.9) !important;
+  }
+
+  .solo-ai-mode .table-callout {
+    top: 54.5% !important;
+    max-width: 52vw !important;
+    padding: 7px 9px !important;
+    font-size: .62rem !important;
+  }
+
+  .solo-ai-mode .table-decks {
+    top: 43.4% !important;
+    left: 50% !important;
+    width: min(80vw, 350px) !important;
+  }
+
+  .solo-ai-mode .player-seat {
+    z-index: 22 !important;
+  }
+
+  .solo-ai-mode .seat-bottom {
+    left: 50% !important;
+    bottom: 22.8% !important;
+    transform: translateX(-50%) scale(.98) !important;
+  }
+
+  .solo-ai-mode .seat-top {
+    left: 50% !important;
+    top: 21.8% !important;
+    transform: translateX(-50%) scale(.9) !important;
+  }
+
+  .solo-ai-mode .seat-top-left {
+    left: 25.2% !important;
+    top: 27.6% !important;
+    transform: translateX(-50%) scale(.82) !important;
+  }
+
+  .solo-ai-mode .seat-top-right {
+    left: 74.8% !important;
+    top: 27.6% !important;
+    transform: translateX(-50%) scale(.82) !important;
+  }
+
+  .solo-ai-mode .seat-left {
+    left: 15.2% !important;
+    top: 49.2% !important;
+    transform: translate(-50%, -50%) scale(.76) !important;
+  }
+
+  .solo-ai-mode .seat-right {
+    left: 84.8% !important;
+    top: 49.2% !important;
+    transform: translate(-50%, -50%) scale(.76) !important;
+  }
+
+  .solo-ai-mode .seat-left .player-panel,
+  .solo-ai-mode .seat-right .player-panel {
+    width: 132px !important;
+  }
+
+  .solo-ai-mode .seat-top-left .player-panel,
+  .solo-ai-mode .seat-top-right .player-panel {
+    width: 142px !important;
+  }
+
+  .solo-ai-mode .player-panel {
+    max-width: 168px !important;
+  }
+
+  .solo-ai-mode .sets-grid {
+    gap: 5px !important;
+  }
+
+  .solo-ai-mode .set-slot {
+    min-height: 40px !important;
+    padding: 4px !important;
+  }
+}
+
+@media (orientation: landscape) {
+  .solo-ai-mode .table-surface {
+    width: min(78vw, 950px) !important;
+    height: min(72vh, 520px) !important;
+    top: 51% !important;
+    border-radius: 42px !important;
+  }
+
+  .solo-ai-mode .table-hud {
+    top: 12px !important;
+  }
+
+  .solo-ai-mode .table-decks {
+    top: 47% !important;
+    width: min(44vw, 470px) !important;
+  }
+
+  .solo-ai-mode .table-callout {
+    top: 57% !important;
+    max-width: 34vw !important;
+  }
+
+  .solo-ai-mode .seat-bottom {
+    left: 50% !important;
+    bottom: 8.8% !important;
+    transform: translateX(-50%) scale(.9) !important;
+  }
+
+  .solo-ai-mode .seat-top {
+    left: 50% !important;
+    top: 9.8% !important;
+    transform: translateX(-50%) scale(.84) !important;
+  }
+
+  .solo-ai-mode .seat-top-left {
+    left: 31% !important;
+    top: 14.6% !important;
+    transform: translateX(-50%) scale(.78) !important;
+  }
+
+  .solo-ai-mode .seat-top-right {
+    left: 69% !important;
+    top: 14.6% !important;
+    transform: translateX(-50%) scale(.78) !important;
+  }
+
+  .solo-ai-mode .seat-left {
+    left: 10.5% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) scale(.76) !important;
+  }
+
+  .solo-ai-mode .seat-right {
+    left: 89.5% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) scale(.76) !important;
+  }
+
+  .solo-ai-mode .player-panel {
+    max-width: 170px !important;
+  }
+
+  .solo-ai-mode .seat-left .player-panel,
+  .solo-ai-mode .seat-right .player-panel {
+    width: 150px !important;
+  }
+}
