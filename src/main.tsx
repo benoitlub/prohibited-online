@@ -17,6 +17,8 @@ import './mobile-polish-final.css';
 import './mobile-final-pass.css';
 import './mobile-014-tweaks.css';
 import './mobile-015-tweaks.css';
+import './solo-ai-dom.css';
+import './solo-ai-dom';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
