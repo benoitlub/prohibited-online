@@ -1,0 +1,128 @@
+/* v0.8.14 — small placement tweaks: player 2 lower, decks higher, new game restored. */
+
+.config-screen > .config-hero::after {
+  content: 'FEUCH INSTITUT • PRO.HIBITED ONLINE • TABLE BUILD v0.8.14 — MICRO CALAGE' !important;
+}
+
+.config-screen > .config-panel::after {
+  content: 'Feuch Institut • Mobile UX Final Pass • Player 2 Lower • Decks Higher • New Game Restored • BUILD v0.8.14' !important;
+}
+
+.feuch-header em::before {
+  content: 'TABLE BUILD v0.8.14 — MICRO CALAGE' !important;
+}
+
+.topbar .kicker::before {
+  content: 'FEUCH INSTITUT // PRO.HIBITED ONLINE // v0.8.14 MICRO CALAGE' !important;
+}
+
+@media (max-width: 720px) and (orientation: portrait) {
+  /* Joueur 2 : un cran plus bas, sans toucher au joueur actif. */
+  .seat-top {
+    top: 23.4% !important;
+  }
+
+  .seat-top-left,
+  .seat-top-right {
+    top: 26.4% !important;
+  }
+
+  /* Draw / Discard : un peu plus haut. */
+  .table-decks {
+    top: 44.8% !important;
+    height: 92px !important;
+  }
+
+  .draw-deck {
+    left: 19% !important;
+    transform: translateX(-50%) !important;
+  }
+
+  .discard-deck {
+    right: 19% !important;
+    transform: translateX(50%) !important;
+  }
+
+  /* Nouvelle partie : visible, au-dessus de la feuille néon. */
+  .topbar .score-strip,
+  .score-strip {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: fixed !important;
+    left: 12px !important;
+    right: auto !important;
+    top: 148px !important;
+    width: auto !important;
+    max-width: 132px !important;
+    z-index: 10020 !important;
+    pointer-events: auto !important;
+  }
+
+  .score-strip span {
+    display: none !important;
+  }
+
+  .score-strip button {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-width: 0 !important;
+    width: 124px !important;
+    min-height: 38px !important;
+    padding: 8px 10px !important;
+    border-radius: 999px !important;
+    border: 1px solid rgba(244, 200, 92, .62) !important;
+    background: rgba(5, 10, 6, .82) !important;
+    color: #ffe8a7 !important;
+    font-size: .72rem !important;
+    font-weight: 900 !important;
+    letter-spacing: .04em !important;
+    text-transform: uppercase !important;
+    box-shadow:
+      0 0 0 1px rgba(244, 200, 92, .14) inset,
+      0 0 18px rgba(244, 200, 92, .22),
+      0 0 30px rgba(0, 0, 0, .76) !important;
+    backdrop-filter: blur(9px) !important;
+    pointer-events: auto !important;
+  }
+}
+
+@media (orientation: landscape) {
+  .seat-top {
+    top: 22% !important;
+  }
+
+  .seat-top-left,
+  .seat-top-right {
+    top: 25% !important;
+  }
+
+  .table-decks {
+    top: 48% !important;
+  }
+
+  .score-strip {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: fixed !important;
+    left: 12px !important;
+    right: auto !important;
+    top: 58px !important;
+    width: auto !important;
+    z-index: 10020 !important;
+    pointer-events: auto !important;
+  }
+
+  .score-strip span {
+    display: none !important;
+  }
+
+  .score-strip button {
+    width: 124px !important;
+    min-height: 36px !important;
+    border-radius: 999px !important;
+    font-size: .72rem !important;
+  }
+}
