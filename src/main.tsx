@@ -11,6 +11,7 @@ import './mobile-final-tune.css';
 import './mobile-hand-controls.css';
 import './mobile-table-shift.css';
 import './mobile-title-next.css';
+import './mobile-turn-buttons.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
