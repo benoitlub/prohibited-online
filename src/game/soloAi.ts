@@ -55,7 +55,7 @@ function findPlayableCard(state: GameState, ai: Player): { card: CardInstance; t
 }
 
 function discardFallback(state: GameState, ai: Player): GameState {
-  const discard = ai.hand.find(card => card.family === 'attack') ?? ai.hand.at(-1);
+  const discard = ai.hand.find(card => card.family === 'attack') ?? ai.hand[ai.hand.length - 1];
   if (!discard) return state;
   return dispatchGameAction(state, { type: 'discard_card', cardInstanceId: discard.instanceId });
 }
