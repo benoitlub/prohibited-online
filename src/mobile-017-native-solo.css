@@ -1,0 +1,101 @@
+/* v0.8.17 — native Solo vs IA: fixed seats, hidden AI hand, auto return to player 1. */
+
+body::before {
+  content: 'v0.8.17 • SOLO IA NATIVE • FEUCH BOT' !important;
+  position: fixed !important;
+  top: max(8px, env(safe-area-inset-top)) !important;
+  right: 8px !important;
+  z-index: 30000 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 6px 10px !important;
+  border-radius: 999px !important;
+  border: 1px solid rgba(129, 255, 84, .68) !important;
+  background: rgba(3, 8, 5, .86) !important;
+  color: #dfffbd !important;
+  font-size: .62rem !important;
+  font-weight: 950 !important;
+  letter-spacing: .08em !important;
+  text-transform: uppercase !important;
+  pointer-events: none !important;
+  box-shadow: 0 0 0 1px rgba(129,255,84,.12) inset, 0 0 18px rgba(129,255,84,.24), 0 0 32px rgba(0,0,0,.78) !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+.topbar .kicker::before,
+.feuch-header em::before {
+  content: 'v0.8.17 SOLO IA NATIVE / FEUCH BOT' !important;
+}
+
+.solo-ai-native-button {
+  margin-top: 10px !important;
+  border-color: rgba(129, 255, 84, .75) !important;
+  color: #dfffbd !important;
+  box-shadow: 0 0 20px rgba(129,255,84,.2), 0 0 34px rgba(0,0,0,.55) !important;
+}
+
+.solo-ai-mode .seat-bottom {
+  bottom: 22.4% !important;
+}
+
+.solo-ai-mode .seat-top {
+  top: 24.2% !important;
+}
+
+.solo-ai-thinking .player-panel.active {
+  box-shadow: none !important;
+}
+
+.ai-hidden-hand {
+  position: fixed !important;
+  left: 50% !important;
+  bottom: calc(22px + env(safe-area-inset-bottom)) !important;
+  transform: translateX(-50%) !important;
+  z-index: 9998 !important;
+  width: min(86vw, 420px) !important;
+  min-height: 78px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  padding: 14px 18px !important;
+  border-radius: 22px !important;
+  border: 1px solid rgba(129,255,84,.45) !important;
+  background: rgba(4, 8, 5, .78) !important;
+  color: #dfffbd !important;
+  text-align: center !important;
+  box-shadow: 0 0 0 1px rgba(129,255,84,.1) inset, 0 0 20px rgba(129,255,84,.22), 0 0 38px rgba(0,0,0,.78) !important;
+  backdrop-filter: blur(12px) !important;
+}
+
+.ai-hidden-hand strong {
+  font-size: .95rem !important;
+  letter-spacing: .08em !important;
+  text-transform: uppercase !important;
+}
+
+.ai-hidden-hand span {
+  font-size: .74rem !important;
+  color: rgba(223,255,189,.82) !important;
+}
+
+.solo-ai-thinking .undo-button,
+.solo-ai-thinking .end-turn-button,
+.solo-ai-thinking .hand-grid {
+  display: none !important;
+}
+
+@media (max-width: 720px) and (orientation: portrait) {
+  body::before {
+    top: max(6px, env(safe-area-inset-top)) !important;
+    right: 6px !important;
+    padding: 5px 8px !important;
+    font-size: .56rem !important;
+  }
+
+  .ai-hidden-hand {
+    bottom: calc(20px + env(safe-area-inset-bottom)) !important;
+  }
+}
