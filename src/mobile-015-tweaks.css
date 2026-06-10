@@ -1,0 +1,145 @@
+/* v0.8.15 — micro-pass: player 2 lower, decks higher, square card controls, hide bottom marker. */
+
+.config-screen > .config-hero::after {
+  content: 'FEUCH INSTITUT • PRO.HIBITED ONLINE • TABLE BUILD v0.8.15 — CARTES + CAPSULE OFF' !important;
+}
+
+.config-screen > .config-panel::after {
+  content: 'Feuch Institut • Mobile UX Final Pass • Square Card Controls • Bottom Marker Hidden • BUILD v0.8.15' !important;
+}
+
+.feuch-header em::before {
+  content: 'TABLE BUILD v0.8.15 — CARTES + CAPSULE OFF' !important;
+}
+
+.topbar .kicker::before {
+  content: 'FEUCH INSTITUT // PRO.HIBITED ONLINE // v0.8.15 CARTES + CAPSULE OFF' !important;
+}
+
+@media (max-width: 720px) and (orientation: portrait) {
+  /* Joueur 2 encore un peu plus bas. */
+  .seat-top {
+    top: 24.2% !important;
+  }
+
+  .seat-top-left,
+  .seat-top-right {
+    top: 27.2% !important;
+  }
+
+  /* Draw / Discard encore un peu plus hauts. */
+  .table-decks {
+    top: 43.6% !important;
+    height: 90px !important;
+  }
+
+  .draw-deck {
+    left: 19% !important;
+    transform: translateX(-50%) !important;
+  }
+
+  .discard-deck {
+    right: 19% !important;
+    transform: translateX(50%) !important;
+  }
+
+  /* Boutons au-dessus des cartes : plus gros et carrés. */
+  .card-actions {
+    top: -30px !important;
+    gap: 8px !important;
+    z-index: 42 !important;
+  }
+
+  .icon-action,
+  .play-action,
+  .discard-action {
+    width: 36px !important;
+    min-width: 36px !important;
+    height: 36px !important;
+    border-radius: 8px !important;
+    border: 1px solid rgba(244, 200, 92, .48) !important;
+    background: rgba(8, 10, 8, .94) !important;
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,.05) inset,
+      0 0 12px rgba(0,0,0,.58),
+      0 0 10px rgba(244, 200, 92, .18) !important;
+    font-size: 1.06rem !important;
+  }
+
+  .play-action {
+    color: #d8c36a !important;
+  }
+
+  .discard-action {
+    color: #ff6688 !important;
+  }
+
+  /* Enlève la capsule qui masque le bas de la main. */
+  .deployment-marker,
+  .build-marker,
+  [class*='deployment-marker'],
+  [class*='build-marker'] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+  }
+
+  .game-screen::after,
+  .hand-panel::after,
+  .config-screen > .config-hero::after,
+  .config-screen > .config-panel::after {
+    display: none !important;
+    content: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+  }
+}
+
+@media (orientation: landscape) {
+  .seat-top {
+    top: 22.8% !important;
+  }
+
+  .seat-top-left,
+  .seat-top-right {
+    top: 25.8% !important;
+  }
+
+  .table-decks {
+    top: 46.8% !important;
+  }
+
+  .card-actions {
+    top: -26px !important;
+    gap: 8px !important;
+  }
+
+  .icon-action,
+  .play-action,
+  .discard-action {
+    width: 34px !important;
+    min-width: 34px !important;
+    height: 34px !important;
+    border-radius: 8px !important;
+    font-size: 1rem !important;
+  }
+
+  .deployment-marker,
+  .build-marker,
+  [class*='deployment-marker'],
+  [class*='build-marker'] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+  }
+
+  .game-screen::after,
+  .hand-panel::after,
+  .config-screen > .config-hero::after,
+  .config-screen > .config-panel::after {
+    display: none !important;
+    content: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+  }
+}
