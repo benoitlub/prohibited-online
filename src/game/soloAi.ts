@@ -60,6 +60,14 @@ function discardFallback(state: GameState, ai: Player): GameState {
   return dispatchGameAction(state, { type: 'discard_card', cardInstanceId: discard.instanceId });
 }
 
+function getSelectedAiSeatCount(): number {
+  if (typeof document === 'undefined') return 2;
+  const options = Array.from(document.querySelectorAll<HTMLElement>('.players-grid .table-option'));
+  const selectedIndex = options.findIndex(option => option.classList.contains('selected'));
+  const count = selectedIndex >= 0 ? selectedIndex + 2 : 2;
+  return Math.min(5, Math.max(2, count));
+}
+
 export function runSoloAiTurn(state: GameState): GameState {
   if (state.status !== 'playing') return state;
 
@@ -100,5 +108,5 @@ export function createAiTableGame(playerCount: number, mode: GameMode, targetSco
 }
 
 export function createSoloAiGame(mode: GameMode, targetScore: number): GameState {
-  return createAiTableGame(2, mode, targetScore);
+  return createAiTableGame(getSelectedAiSeatCount(), mode, targetScore);
 }
