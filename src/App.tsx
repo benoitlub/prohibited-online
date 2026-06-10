@@ -36,6 +36,13 @@ function setLabel(set: SetCard[], index: number): string {
   return set.length === 0 ? `Slot ${index + 1}` : `Slot ${index + 1} / ${set.length}`;
 }
 
+function getPreferredOwnSetIndex(player: Player, currentIndex: number, card?: CardInstance): number {
+  if (!card || card.family !== 'product') return currentIndex;
+  if (player.sets[currentIndex]?.length === 0) return currentIndex;
+  const freeIndex = player.sets.findIndex(set => set.length === 0);
+  return freeIndex >= 0 ? freeIndex : currentIndex;
+}
+
 function getPlayableTargets(state: GameState, card: CardInstance): SlotTarget[] {
   return state.players.flatMap(player => player.sets
     .map((_, setIndex) => ({ playerId: player.id, setIndex }))
@@ -75,13 +82,17 @@ function getSeatedPlayers(players: Player[], activePlayerIndex: number): SeatedP
   return [activeSeat, ...opponents];
 }
 
-function CardButton({ card, disabled, pending, targetMode, onPlay, onDiscard }: {
+function CardButton({ card, disabled, pending, targetMode, canMoveLeft, canMoveRight, onPlay, onDiscard, onMoveLeft, onMoveRight }: {
   card: CardInstance;
   disabled: boolean;
   pending?: boolean;
   targetMode?: boolean;
+  canMoveLeft?: boolean;
+  canMoveRight?: boolean;
   onPlay: () => void;
   onDiscard: () => void;
+  onMoveLeft?: () => void;
+  onMoveRight?: () => void;
 }) {
   const playLabel = targetMode ? 'Cibler' : 'Jouer';
   const playIcon = targetMode ? '◎' : '▶';
@@ -102,16 +113,21 @@ function CardButton({ card, disabled, pending, targetMode, onPlay, onDiscard }: 
           <span aria-hidden="true">×</span>
         </button>
       </div>
+      <div className="card-reorder" aria-label="Reorganiser la main">
+        <button type="button" onClick={onMoveLeft} disabled={!canMoveLeft} aria-label={`Deplacer ${card.name} vers la gauche`}>←</button>
+        <button type="button" onClick={onMoveRight} disabled={!canMoveRight} aria-label={`Deplacer ${card.name} vers la droite`}>→</button>
+      </div>
     </article>
   );
 }
 
-function SetSlotView({ set, index, selected, selectable, attackable, onSelect }: {
+function SetSlotView({ set, index, selected, selectable, attackable, autoSelected, onSelect }: {
   set: SetCard[];
   index: number;
   selected?: boolean;
   selectable?: boolean;
   attackable?: boolean;
+  autoSelected?: boolean;
   onSelect?: () => void;
 }) {
   const content = (
@@ -134,21 +150,24 @@ function SetSlotView({ set, index, selected, selectable, attackable, onSelect }:
     </>
   );
 
+  const slotClass = `set-slot ${selected ? 'selected' : ''} ${attackable ? 'attackable' : ''} ${autoSelected ? 'auto-selected-slot' : ''}`;
+
   if (!selectable) {
-    return <div className={`set-slot ${attackable ? 'attackable' : ''}`}>{content}</div>;
+    return <div className={slotClass}>{content}</div>;
   }
 
   return (
-    <button type="button" className={`set-slot selectable ${selected ? 'selected' : ''} ${attackable ? 'attackable' : ''}`} onClick={onSelect}>
+    <button type="button" className={`selectable ${slotClass}`} onClick={onSelect}>
       {content}
     </button>
   );
 }
 
-function PlayerPanel({ player, active, selectedOwnSetIndex, onSelectOwnSet, targetingCard, validTargets, onTargetSlot }: {
+function PlayerPanel({ player, active, selectedOwnSetIndex, autoSelectedSetIndex, onSelectOwnSet, targetingCard, validTargets, onTargetSlot }: {
   player: Player;
   active: boolean;
   selectedOwnSetIndex: number;
+  autoSelectedSetIndex?: number | null;
   onSelectOwnSet: (setIndex: number) => void;
   targetingCard: CardInstance | null;
   validTargets: SlotTarget[];
@@ -171,6 +190,7 @@ function PlayerPanel({ player, active, selectedOwnSetIndex, onSelectOwnSet, targ
               index={index}
               selectable={(active && !isTargeting) || canTarget}
               selected={active && !isTargeting && selectedOwnSetIndex === index}
+              autoSelected={active && !isTargeting && autoSelectedSetIndex === index}
               attackable={canTarget}
               onSelect={() => canTarget ? onTargetSlot(player.id, index) : onSelectOwnSet(index)}
             />
@@ -282,6 +302,7 @@ export default function App() {
   const [game, setGame] = useState<GameState | null>(null);
   const [history, setHistory] = useState<GameState[]>([]);
   const [selectedOwnSetIndex, setSelectedOwnSetIndex] = useState(0);
+  const [autoSelectedSetIndex, setAutoSelectedSetIndex] = useState<number | null>(null);
   const [targetingCard, setTargetingCard] = useState<CardInstance | null>(null);
 
   const activePlayer = game?.players[game.currentPlayerIndex];
@@ -292,6 +313,7 @@ export default function App() {
       const nextGame = createGame({ playerCount, mode, targetScore });
       setHistory([]);
       setSelectedOwnSetIndex(0);
+      setAutoSelectedSetIndex(null);
       setTargetingCard(null);
       setGame(nextGame);
     }} />;
@@ -300,6 +322,7 @@ export default function App() {
   const commitGameAction = (next: GameState) => {
     setHistory(previous => [game, ...previous].slice(0, 12));
     setSelectedOwnSetIndex(current => Math.min(current, next.players[next.currentPlayerIndex].sets.length - 1));
+    setAutoSelectedSetIndex(null);
     setTargetingCard(null);
     setGame(next);
   };
@@ -309,6 +332,7 @@ export default function App() {
     if (!previousGame) return;
     setGame(previousGame);
     setSelectedOwnSetIndex(current => Math.min(current, previousGame.players[previousGame.currentPlayerIndex].sets.length - 1));
+    setAutoSelectedSetIndex(null);
     setTargetingCard(null);
     setHistory(history.slice(1));
   };
@@ -317,7 +341,30 @@ export default function App() {
     setGame(createGame(game.config));
     setHistory([]);
     setSelectedOwnSetIndex(0);
+    setAutoSelectedSetIndex(null);
     setTargetingCard(null);
+  };
+
+  const selectOwnSet = (setIndex: number) => {
+    setSelectedOwnSetIndex(setIndex);
+    setAutoSelectedSetIndex(null);
+  };
+
+  const moveHandCard = (cardIndex: number, direction: -1 | 1) => {
+    const targetIndex = cardIndex + direction;
+    if (targetIndex < 0 || targetIndex >= activePlayer.hand.length) return;
+    setGame(current => {
+      if (!current) return current;
+      return {
+        ...current,
+        players: current.players.map((player, playerIndex) => {
+          if (playerIndex !== current.currentPlayerIndex) return player;
+          const nextHand = [...player.hand];
+          [nextHand[cardIndex], nextHand[targetIndex]] = [nextHand[targetIndex], nextHand[cardIndex]];
+          return { ...player, hand: nextHand };
+        }),
+      };
+    });
   };
 
   const targetSlot = (targetPlayerId: string, targetSetIndex: number) => {
@@ -382,6 +429,11 @@ export default function App() {
       <section className="board-grid">
         <div className="players-area table-layout">
           <div className="table-surface" aria-label="Table de jeu">
+            {targetingCard && activePlayer.isJunky && (
+              <svg className="junky-target-curve" viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true">
+                <path d="M 500 940 C 420 720, 610 580, 720 380" />
+              </svg>
+            )}
             <div className="table-hud" aria-label="Infos de partie">
               <span>
                 <small>Mode</small>
@@ -421,7 +473,8 @@ export default function App() {
                   player={player}
                   active={playerIndex === game.currentPlayerIndex}
                   selectedOwnSetIndex={selectedOwnSetIndex}
-                  onSelectOwnSet={setSelectedOwnSetIndex}
+                  autoSelectedSetIndex={playerIndex === game.currentPlayerIndex ? autoSelectedSetIndex : null}
+                  onSelectOwnSet={selectOwnSet}
                   targetingCard={targetingCard}
                   validTargets={validTargets}
                   onTargetSlot={targetSlot}
@@ -466,12 +519,13 @@ export default function App() {
         </div>
 
         <div className="hand-grid">
-          {activePlayer.hand.map(card => {
+          {activePlayer.hand.map((card, index) => {
             const targetMode = shouldUseTargetMode(activePlayer, card);
             const targetCount = getPlayableTargets(game, card).length;
+            const preferredSetIndex = getPreferredOwnSetIndex(activePlayer, selectedOwnSetIndex, card);
             const disabled = targetMode
               ? targetCount === 0 || Boolean(targetingCard && targetingCard.instanceId !== card.instanceId)
-              : Boolean(targetingCard) || !canPlayCard(game, card, activePlayer.id, selectedOwnSetIndex);
+              : Boolean(targetingCard) || !canPlayCard(game, card, activePlayer.id, preferredSetIndex);
             return (
               <CardButton
                 key={card.instanceId}
@@ -479,14 +533,24 @@ export default function App() {
                 targetMode={targetMode}
                 pending={targetingCard?.instanceId === card.instanceId}
                 disabled={disabled}
-                onPlay={() => targetMode
-                  ? setTargetingCard(card)
-                  : commitGameAction(dispatchGameAction(game, {
+                canMoveLeft={index > 0}
+                canMoveRight={index < activePlayer.hand.length - 1}
+                onMoveLeft={() => moveHandCard(index, -1)}
+                onMoveRight={() => moveHandCard(index, 1)}
+                onPlay={() => {
+                  if (targetMode) {
+                    setTargetingCard(card);
+                    return;
+                  }
+                  setSelectedOwnSetIndex(preferredSetIndex);
+                  setAutoSelectedSetIndex(card.family === 'product' && preferredSetIndex !== selectedOwnSetIndex ? preferredSetIndex : null);
+                  commitGameAction(dispatchGameAction(game, {
                     type: 'play_card',
                     cardInstanceId: card.instanceId,
                     targetPlayerId: activePlayer.id,
-                    targetSetIndex: selectedOwnSetIndex,
-                  }))}
+                    targetSetIndex: preferredSetIndex,
+                  }));
+                }}
                 onDiscard={() => commitGameAction(dispatchGameAction(game, { type: 'discard_card', cardInstanceId: card.instanceId }))}
               />
             );
