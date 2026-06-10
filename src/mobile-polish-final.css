@@ -1,0 +1,157 @@
+/* v0.8.12 — final polish: decks slightly higher on side edges + prettier controls. */
+
+.config-screen > .config-hero::after {
+  content: 'FEUCH INSTITUT • PRO.HIBITED ONLINE • TABLE BUILD v0.8.12 — FINITIONS MOBILES' !important;
+}
+
+.config-screen > .config-panel::after {
+  content: 'Feuch Institut • Mobile Decor Background • Edge Deck Piles • Polished Controls • BUILD v0.8.12' !important;
+}
+
+.feuch-header em::before {
+  content: 'TABLE BUILD v0.8.12 — FINITIONS MOBILES' !important;
+}
+
+.topbar .kicker::before {
+  content: 'FEUCH INSTITUT // PRO.HIBITED ONLINE // v0.8.12 FINITIONS MOBILES' !important;
+}
+
+@media (max-width: 720px) and (orientation: portrait) {
+  .table-decks {
+    display: block !important;
+    position: absolute !important;
+    left: 0 !important;
+    right: 0 !important;
+    top: 50.8% !important;
+    width: 100% !important;
+    height: 92px !important;
+    transform: none !important;
+    pointer-events: none !important;
+    z-index: 70 !important;
+  }
+
+  .table-deck {
+    position: absolute !important;
+    top: 0 !important;
+    width: 58px !important;
+    min-width: 58px !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 3px !important;
+    pointer-events: none !important;
+  }
+
+  .draw-deck {
+    left: 15.5% !important;
+    transform: translateX(-50%) !important;
+  }
+
+  .discard-deck {
+    right: 15.5% !important;
+    transform: translateX(50%) !important;
+  }
+
+  .table-deck span {
+    font-size: .62rem !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
+    letter-spacing: .03em !important;
+  }
+
+  .table-deck small {
+    font-size: .66rem !important;
+    line-height: 1 !important;
+  }
+
+  .table-deck img,
+  .card-back,
+  .discard-empty {
+    width: 40px !important;
+  }
+
+  .undo-button,
+  .end-turn-button {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 60px !important;
+    min-width: 60px !important;
+    height: 60px !important;
+    border-radius: 999px !important;
+    border: 2px solid rgba(244, 200, 92, .58) !important;
+    background:
+      radial-gradient(circle at 35% 30%, rgba(255,255,255,.14), rgba(255,255,255,0) 35%),
+      linear-gradient(180deg, rgba(16,18,12,.94), rgba(8,10,8,.97)) !important;
+    box-shadow:
+      0 0 0 1px rgba(244, 200, 92, .18) inset,
+      0 0 20px rgba(244, 200, 92, .22),
+      0 0 38px rgba(0, 0, 0, .76) !important;
+    backdrop-filter: blur(8px) !important;
+    color: #f2e2a0 !important;
+  }
+
+  .undo-button {
+    left: 12px !important;
+    bottom: calc(112px + env(safe-area-inset-bottom)) !important;
+  }
+
+  .end-turn-button {
+    right: 12px !important;
+    bottom: calc(112px + env(safe-area-inset-bottom)) !important;
+    color: #9eff6b !important;
+    border-color: rgba(129, 255, 84, .58) !important;
+    box-shadow:
+      0 0 0 1px rgba(129, 255, 84, .18) inset,
+      0 0 20px rgba(129, 255, 84, .22),
+      0 0 38px rgba(0, 0, 0, .76) !important;
+  }
+
+  .undo-button:active,
+  .end-turn-button:active {
+    transform: scale(.96) !important;
+  }
+}
+
+@media (orientation: landscape) {
+  .table-decks {
+    top: 50% !important;
+    height: 86px !important;
+  }
+
+  .draw-deck {
+    left: 21% !important;
+    transform: translateX(-50%) !important;
+  }
+
+  .discard-deck {
+    right: 21% !important;
+    transform: translateX(50%) !important;
+  }
+
+  .table-deck img,
+  .card-back,
+  .discard-empty {
+    width: 36px !important;
+  }
+
+  .undo-button,
+  .end-turn-button {
+    width: 54px !important;
+    min-width: 54px !important;
+    height: 54px !important;
+    border-radius: 999px !important;
+    border: 2px solid rgba(244, 200, 92, .58) !important;
+    background:
+      radial-gradient(circle at 35% 30%, rgba(255,255,255,.14), rgba(255,255,255,0) 35%),
+      linear-gradient(180deg, rgba(16,18,12,.94), rgba(8,10,8,.97)) !important;
+    box-shadow:
+      0 0 0 1px rgba(244, 200, 92, .18) inset,
+      0 0 20px rgba(244, 200, 92, .22),
+      0 0 38px rgba(0, 0, 0, .76) !important;
+  }
+
+  .end-turn-button {
+    color: #9eff6b !important;
+    border-color: rgba(129, 255, 84, .58) !important;
+  }
+}
