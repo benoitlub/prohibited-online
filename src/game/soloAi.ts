@@ -1,5 +1,5 @@
-import { canPlayCard, dispatchGameAction } from './engine';
-import type { CardInstance, GameState, Player } from './types';
+import { canPlayCard, createGame, dispatchGameAction } from './engine';
+import type { CardInstance, GameMode, GameState, Player } from './types';
 
 function preferredOwnSetIndex(player: Player, card?: CardInstance): number {
   if (!card || card.family !== 'product') return 0;
@@ -85,16 +85,15 @@ export function runSoloAiTurn(state: GameState): GameState {
   return dispatchGameAction(next, { type: 'end_turn' });
 }
 
-export function makeSoloAiGame(mode: 'quick' | 'long', targetScore: number): GameState {
-  const game = createSoloBase(mode, targetScore);
+export function createSoloAiGame(mode: GameMode, targetScore: number): GameState {
+  const game = createGame({ playerCount: 2, mode, targetScore: mode === 'quick' ? 3 : targetScore });
   return {
     ...game,
-    tableMessage: 'Mode solo IA actif. Joueur 2 est piloté par le Feuch Bot.',
-    eventLog: ['Mode solo IA actif. Le Feuch Bot prend la chaise adverse.', ...game.eventLog].slice(0, 12),
+    config: { ...game.config, playerCount: 2 },
+    players: game.players.map((player, index) => index === 1
+      ? { ...player, id: 'ai-player-2', name: 'Feuch Bot' }
+      : { ...player, name: 'Joueur 1' }),
+    tableMessage: 'Mode solo IA actif. Feuch Bot prend la chaise adverse.',
+    eventLog: ['Mode solo IA actif. Feuch Bot prend la chaise adverse.', ...game.eventLog].slice(0, 12),
   };
-}
-
-function createSoloBase(mode: 'quick' | 'long', targetScore: number): GameState {
-  const game = dispatchGameAction({} as GameState, { type: 'end_turn' });
-  return game;
 }
