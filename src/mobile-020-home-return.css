@@ -1,0 +1,72 @@
+/* v0.8.20 — home return: clickable title plus home icon next to Nouvelle partie. */
+
+body::before {
+  content: 'v0.8.20 • HOME RETURN • SOLO IA' !important;
+}
+
+.home-title-return {
+  cursor: pointer !important;
+  transition: filter .18s ease, transform .18s ease !important;
+}
+
+.home-title-return:active {
+  transform: scale(.985) !important;
+}
+
+.home-title-return:hover,
+.home-title-return:focus-visible {
+  filter: drop-shadow(0 0 12px rgba(129,255,84,.32)) !important;
+  outline: none !important;
+}
+
+.home-return-button {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 38px !important;
+  min-width: 38px !important;
+  height: 38px !important;
+  margin-right: 7px !important;
+  padding: 0 !important;
+  border-radius: 999px !important;
+  border: 1px solid rgba(129,255,84,.62) !important;
+  background: rgba(3, 10, 5, .86) !important;
+  color: #dfffbd !important;
+  font-size: 1.05rem !important;
+  font-weight: 950 !important;
+  line-height: 1 !important;
+  box-shadow: 0 0 0 1px rgba(129,255,84,.12) inset, 0 0 14px rgba(129,255,84,.2), 0 0 28px rgba(0,0,0,.72) !important;
+  backdrop-filter: blur(9px) !important;
+  pointer-events: auto !important;
+}
+
+.home-return-button:active {
+  transform: scale(.94) !important;
+}
+
+.score-strip {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0 !important;
+}
+
+@media (max-width: 720px) and (orientation: portrait) {
+  .score-strip {
+    top: 148px !important;
+    left: 12px !important;
+    max-width: 174px !important;
+  }
+
+  .home-return-button {
+    width: 36px !important;
+    min-width: 36px !important;
+    height: 36px !important;
+    margin-right: 6px !important;
+    font-size: 1rem !important;
+  }
+
+  .score-strip button:not(.home-return-button) {
+    width: 116px !important;
+    min-width: 116px !important;
+  }
+}
