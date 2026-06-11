@@ -1,0 +1,128 @@
+/* v0.9.3 — day/night table mood + overhead spotlight. Positions untouched. */
+
+body::before {
+  content: 'v0.9.3 • DAY / NIGHT • SPOT TABLE' !important;
+}
+
+.day-night-toggle {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 38px !important;
+  min-width: 38px !important;
+  height: 38px !important;
+  margin-right: 7px !important;
+  padding: 0 !important;
+  border-radius: 999px !important;
+  border: 1px solid rgba(255, 226, 152, .58) !important;
+  background: rgba(8, 7, 4, .86) !important;
+  color: #ffeac1 !important;
+  font-size: 1.05rem !important;
+  font-weight: 950 !important;
+  line-height: 1 !important;
+  box-shadow: 0 0 0 1px rgba(255,226,152,.1) inset, 0 0 14px rgba(255,226,152,.18), 0 0 28px rgba(0,0,0,.72) !important;
+  backdrop-filter: blur(9px) !important;
+  pointer-events: auto !important;
+}
+
+.day-night-toggle:active {
+  transform: scale(.94) !important;
+}
+
+.table-overhead-spot {
+  position: absolute !important;
+  inset: -18% -12% -6% -12% !important;
+  z-index: 1 !important;
+  pointer-events: none !important;
+  border-radius: inherit !important;
+  opacity: .78 !important;
+  mix-blend-mode: screen !important;
+  background:
+    radial-gradient(ellipse at 50% 18%, rgba(255, 236, 184, .36) 0%, rgba(255, 221, 142, .22) 20%, rgba(129, 255, 84, .08) 42%, transparent 72%),
+    radial-gradient(circle at 50% 42%, rgba(255, 248, 211, .18), transparent 48%) !important;
+  filter: blur(.2px) !important;
+}
+
+.table-overhead-spot::before {
+  content: '' !important;
+  position: absolute !important;
+  left: 50% !important;
+  top: 2% !important;
+  width: 120px !important;
+  height: 26px !important;
+  transform: translateX(-50%) !important;
+  border-radius: 50% !important;
+  background: rgba(255, 238, 178, .36) !important;
+  box-shadow: 0 0 26px rgba(255, 226, 152, .38), 0 0 58px rgba(129, 255, 84, .12) !important;
+}
+
+.table-surface > *:not(.table-overhead-spot) {
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+body.theme-night .game-screen,
+body.theme-night .config-screen {
+  background:
+    radial-gradient(circle at 50% 18%, rgba(19, 38, 21, .58), transparent 34%),
+    radial-gradient(circle at 50% 72%, rgba(0, 0, 0, .52), transparent 36%),
+    linear-gradient(180deg, #040604 0%, #070b07 46%, #020302 100%) !important;
+}
+
+body.theme-night .table-surface {
+  box-shadow:
+    0 0 0 1px rgba(129,255,84,.16) inset,
+    0 0 34px rgba(129,255,84,.16),
+    0 34px 80px rgba(0,0,0,.86) !important;
+}
+
+body.theme-night .player-panel {
+  background: rgba(4, 9, 5, .76) !important;
+}
+
+body.theme-day .game-screen,
+body.theme-day .config-screen {
+  background:
+    radial-gradient(circle at 50% 18%, rgba(244, 222, 164, .18), transparent 34%),
+    radial-gradient(circle at 24% 76%, rgba(129,255,84,.10), transparent 28%),
+    linear-gradient(180deg, #151b12 0%, #23210f 45%, #101309 100%) !important;
+}
+
+body.theme-day .table-surface {
+  filter: saturate(1.08) brightness(1.09) !important;
+  box-shadow:
+    0 0 0 1px rgba(255,235,170,.22) inset,
+    0 0 28px rgba(255,226,152,.16),
+    0 26px 70px rgba(0,0,0,.58) !important;
+}
+
+body.theme-day .table-overhead-spot {
+  opacity: .36 !important;
+  background:
+    radial-gradient(ellipse at 50% 18%, rgba(255, 246, 210, .24) 0%, rgba(255, 221, 142, .12) 28%, transparent 70%) !important;
+}
+
+body.theme-day .player-panel {
+  background: rgba(17, 24, 12, .68) !important;
+}
+
+body.theme-day .day-night-toggle {
+  border-color: rgba(129,255,84,.48) !important;
+  background: rgba(18, 35, 14, .86) !important;
+  color: #e6ffd2 !important;
+}
+
+@media (max-width: 720px) and (orientation: portrait) {
+  .day-night-toggle {
+    width: 36px !important;
+    min-width: 36px !important;
+    height: 36px !important;
+    margin-right: 6px !important;
+    font-size: 1rem !important;
+  }
+
+  .table-overhead-spot::before {
+    width: 92px !important;
+    height: 22px !important;
+  }
+}
