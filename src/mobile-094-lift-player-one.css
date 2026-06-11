@@ -1,0 +1,95 @@
+/* v0.9.4 — lift table + player 1 slots. Keep day/night and current seat geometry. */
+
+body::before {
+  content: 'v0.9.4 • J1 SLOTS HIGHER • TABLE LIFT' !important;
+}
+
+@media (max-width: 720px) and (orientation: portrait) {
+  .solo-ai-mode .table-surface {
+    top: 30.8% !important;
+    height: min(44vh, 410px) !important;
+  }
+
+  .solo-ai-mode .seat-bottom {
+    bottom: 51.5% !important;
+    transform: translateX(-50%) scale(.76) !important;
+    z-index: 28 !important;
+  }
+
+  .solo-ai-mode .seat-bottom .player-panel {
+    width: 156px !important;
+    max-width: 156px !important;
+    padding: 7px !important;
+  }
+
+  .solo-ai-mode .seat-bottom .sets-grid {
+    transform: translateY(-10px) !important;
+    gap: 4px !important;
+  }
+
+  .solo-ai-mode .seat-bottom .player-heading {
+    transform: translateY(-8px) !important;
+    margin-bottom: -4px !important;
+  }
+
+  .solo-ai-mode .seat-bottom .set-slot {
+    min-height: 32px !important;
+    padding: 3px !important;
+  }
+
+  .solo-ai-mode .table-decks {
+    top: 30.5% !important;
+    transform: translate(-50%, -50%) scale(.86) !important;
+  }
+
+  .solo-ai-mode .table-callout {
+    top: 38.5% !important;
+    transform: translate(-50%, -50%) scale(.78) !important;
+  }
+
+  .solo-ai-mode .seat-top {
+    top: 9.5% !important;
+    transform: translateX(-50%) scale(.72) !important;
+  }
+
+  .solo-ai-mode .seat-top-left,
+  .solo-ai-mode .seat-top-right {
+    top: 15.8% !important;
+    transform: translateX(-50%) scale(.66) !important;
+  }
+
+  .solo-ai-mode .seat-left,
+  .solo-ai-mode .seat-right {
+    top: 33.5% !important;
+    transform: translate(-50%, -50%) scale(.6) !important;
+  }
+
+  .hand-panel {
+    height: 148px !important;
+    min-height: 148px !important;
+  }
+}
+
+@media (orientation: landscape) {
+  .solo-ai-mode .table-surface {
+    top: 40.5% !important;
+    height: min(54vh, 400px) !important;
+  }
+
+  .solo-ai-mode .seat-bottom {
+    bottom: 26% !important;
+    transform: translateX(-50%) scale(.72) !important;
+  }
+
+  .solo-ai-mode .seat-bottom .sets-grid {
+    transform: translateY(-8px) !important;
+  }
+
+  .solo-ai-mode .table-decks {
+    top: 36.5% !important;
+  }
+
+  .solo-ai-mode .table-callout {
+    top: 47.5% !important;
+  }
+}
