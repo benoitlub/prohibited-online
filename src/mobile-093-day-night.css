@@ -1,7 +1,7 @@
-/* v0.9.5 — day/night toggle kept, spotlight geometry regression neutralized. */
+/* v0.9.6 — table raised and player 1 slots centered. */
 
 body::before {
-  content: 'v0.9.5 • GEOMETRY RESTORED • NIGHT TOGGLE' !important;
+  content: 'v0.9.6 • TABLE UP • J1 CENTERED' !important;
 }
 
 .day-night-toggle {
@@ -29,7 +29,6 @@ body::before {
   transform: scale(.94) !important;
 }
 
-/* Disable the experimental overhead spot: it caused absolute seats to render in the wrong place. */
 .table-overhead-spot,
 .table-overhead-spot::before {
   display: none !important;
@@ -39,7 +38,6 @@ body::before {
   content: none !important;
 }
 
-/* Restore absolute geometry for table children. */
 .table-surface > .table-hud,
 .table-surface > .table-callout,
 .table-surface > .table-decks,
@@ -100,7 +98,7 @@ body.theme-day .day-night-toggle {
   }
 
   .solo-ai-mode .table-surface {
-    top: 34.5% !important;
+    top: 28.8% !important;
     height: min(48vh, 450px) !important;
     width: min(94vw, 414px) !important;
     border-radius: 32px !important;
@@ -113,14 +111,14 @@ body.theme-day .day-night-toggle {
   }
 
   .solo-ai-mode .table-callout {
-    top: 43% !important;
+    top: 37.5% !important;
     left: 50% !important;
     max-width: 49vw !important;
     transform: translate(-50%, -50%) scale(.82) !important;
   }
 
   .solo-ai-mode .table-decks {
-    top: 34% !important;
+    top: 29.8% !important;
     left: 50% !important;
     width: min(76vw, 328px) !important;
     transform: translate(-50%, -50%) scale(.9) !important;
@@ -128,9 +126,38 @@ body.theme-day .day-night-toggle {
 
   .solo-ai-mode .seat-bottom {
     left: 50% !important;
-    bottom: 43.6% !important;
+    bottom: 47.8% !important;
     transform: translateX(-50%) scale(.8) !important;
     z-index: 25 !important;
+  }
+
+  .solo-ai-mode .seat-bottom .player-panel {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+  }
+
+  .solo-ai-mode .seat-bottom .player-heading {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+    text-align: center !important;
+  }
+
+  .solo-ai-mode .seat-bottom .sets-grid {
+    width: fit-content !important;
+    margin: 0 auto !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 6px !important;
+  }
+
+  .solo-ai-mode .seat-bottom .set-slot:nth-child(1),
+  .solo-ai-mode .seat-bottom .set-slot:nth-child(2),
+  .solo-ai-mode .seat-bottom .set-slot:nth-child(3) {
+    justify-self: center !important;
   }
 
   .solo-ai-mode .seat-top {
@@ -166,20 +193,20 @@ body.theme-day .day-night-toggle {
 
 @media (orientation: landscape) {
   .solo-ai-mode .table-surface {
-    top: 43.5% !important;
+    top: 40.5% !important;
     height: min(58vh, 430px) !important;
   }
 
   .solo-ai-mode .table-decks {
-    top: 39.5% !important;
+    top: 37% !important;
   }
 
   .solo-ai-mode .table-callout {
-    top: 51% !important;
+    top: 48% !important;
   }
 
   .solo-ai-mode .seat-bottom {
-    bottom: 20% !important;
+    bottom: 23% !important;
     transform: translateX(-50%) scale(.76) !important;
   }
 }
