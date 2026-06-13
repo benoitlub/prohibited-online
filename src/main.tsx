@@ -26,6 +26,7 @@ import './mobile-090-ai-seats-layout.css';
 import './mobile-091-lift-table.css';
 import './mobile-092-lift-table-more.css';
 import './mobile-093-day-night.css';
+import './mobile-098-table-background-up.css';
 import './home-return';
 import './day-night-table';
 
