@@ -1,0 +1,70 @@
+/* v0.9.8 — background table up, J2 and decks slightly down. Do not touch J1 slots. */
+
+body::before {
+  content: 'v0.9.8 • TABLE BACK UP • J2 DOWN' !important;
+}
+
+.table-overhead-spot,
+.table-overhead-spot::before {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  content: none !important;
+}
+
+@media (max-width: 720px) and (orientation: portrait) {
+  /* Move only the painted table/background upward inside the same layout box. */
+  .solo-ai-mode .table-surface {
+    background-position: center -52px !important;
+    background-size: 100% calc(100% + 52px) !important;
+  }
+
+  /* Lower only player 2 / top seat a little after the background lift. */
+  .solo-ai-mode .seat-top {
+    top: 15.4% !important;
+  }
+
+  /* Lower draw/discard slightly. */
+  .solo-ai-mode .table-decks {
+    top: 32.4% !important;
+  }
+
+  /* Make side controls less bulky over the table. */
+  .home-return-button,
+  .day-night-toggle {
+    width: 32px !important;
+    min-width: 32px !important;
+    height: 32px !important;
+    margin-right: 5px !important;
+    font-size: .88rem !important;
+  }
+
+  .score-strip button:not(.home-return-button):not(.day-night-toggle) {
+    width: 98px !important;
+    min-width: 98px !important;
+    min-height: 42px !important;
+    padding: 7px 10px !important;
+    font-size: .75rem !important;
+    line-height: 1.05 !important;
+  }
+
+  .score-strip {
+    max-width: 148px !important;
+  }
+}
+
+@media (orientation: landscape) {
+  .solo-ai-mode .table-surface {
+    background-position: center -38px !important;
+    background-size: 100% calc(100% + 38px) !important;
+  }
+
+  .solo-ai-mode .seat-top {
+    top: 14.5% !important;
+  }
+
+  .solo-ai-mode .table-decks {
+    top: 39.5% !important;
+  }
+}
