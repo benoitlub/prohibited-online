@@ -1,7 +1,7 @@
-/* v0.9.6 — table raised and player 1 slots centered. */
+/* v0.9.7 — move the table up without shrinking player 1 slots. */
 
 body::before {
-  content: 'v0.9.6 • TABLE UP • J1 CENTERED' !important;
+  content: 'v0.9.7 • TABLE MOVED UP • SLOTS NORMAL' !important;
 }
 
 .day-night-toggle {
@@ -97,8 +97,9 @@ body.theme-day .day-night-toggle {
     font-size: 1rem !important;
   }
 
+  /* This is the actual fix: move the whole table up. Do not shrink it. */
   .solo-ai-mode .table-surface {
-    top: 28.8% !important;
+    top: 22.8% !important;
     height: min(48vh, 450px) !important;
     width: min(94vw, 414px) !important;
     border-radius: 32px !important;
@@ -124,10 +125,12 @@ body.theme-day .day-night-toggle {
     transform: translate(-50%, -50%) scale(.9) !important;
   }
 
+  /* Keep player 1 slots normal-sized and centered. */
   .solo-ai-mode .seat-bottom {
     left: 50% !important;
-    bottom: 47.8% !important;
-    transform: translateX(-50%) scale(.8) !important;
+    bottom: 31% !important;
+    width: 182px !important;
+    transform: translateX(-50%) scale(1) !important;
     z-index: 25 !important;
   }
 
@@ -137,6 +140,8 @@ body.theme-day .day-night-toggle {
     align-items: center !important;
     justify-content: center !important;
     text-align: center !important;
+    width: 182px !important;
+    max-width: 182px !important;
   }
 
   .solo-ai-mode .seat-bottom .player-heading {
@@ -147,17 +152,18 @@ body.theme-day .day-night-toggle {
   }
 
   .solo-ai-mode .seat-bottom .sets-grid {
-    width: fit-content !important;
+    width: 100% !important;
     margin: 0 auto !important;
     justify-content: center !important;
     align-items: center !important;
-    gap: 6px !important;
+    gap: 7px !important;
+    transform: none !important;
   }
 
-  .solo-ai-mode .seat-bottom .set-slot:nth-child(1),
-  .solo-ai-mode .seat-bottom .set-slot:nth-child(2),
-  .solo-ai-mode .seat-bottom .set-slot:nth-child(3) {
-    justify-self: center !important;
+  .solo-ai-mode .seat-bottom .set-slot {
+    min-height: 43px !important;
+    min-width: 43px !important;
+    border-radius: 8px !important;
   }
 
   .solo-ai-mode .seat-top {
@@ -193,7 +199,7 @@ body.theme-day .day-night-toggle {
 
 @media (orientation: landscape) {
   .solo-ai-mode .table-surface {
-    top: 40.5% !important;
+    top: 36% !important;
     height: min(58vh, 430px) !important;
   }
 
@@ -206,7 +212,8 @@ body.theme-day .day-night-toggle {
   }
 
   .solo-ai-mode .seat-bottom {
-    bottom: 23% !important;
-    transform: translateX(-50%) scale(.76) !important;
+    bottom: 16% !important;
+    width: 182px !important;
+    transform: translateX(-50%) scale(1) !important;
   }
 }
