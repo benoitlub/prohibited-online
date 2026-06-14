@@ -1,0 +1,79 @@
+/* v0.10.2 — multi-table deck polish only.
+   Tables 3/4/5: lower draw/discard and keep them centered away from bot slots. */
+
+body::before {
+  content: 'v0.10.2 • MULTI DECKS • CENTERED' !important;
+}
+
+@media (max-width: 720px) and (orientation: portrait) {
+  /* Multi tables only. Duel/1vIA is intentionally untouched. */
+  .solo-ai-mode .table-surface:has(.seat-top-left) .table-decks,
+  .solo-ai-mode .table-surface:has(.seat-left) .table-decks {
+    left: 50% !important;
+    top: 42.8% !important;
+    width: min(42vw, 232px) !important;
+    max-width: 232px !important;
+    min-width: 188px !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    gap: 0 !important;
+    transform: translate(-50%, -50%) scale(.9) !important;
+    z-index: 4 !important;
+  }
+
+  .solo-ai-mode .table-surface:has(.seat-top-left) .table-deck,
+  .solo-ai-mode .table-surface:has(.seat-left) .table-deck {
+    min-width: 52px !important;
+    align-items: center !important;
+    text-align: center !important;
+  }
+
+  .solo-ai-mode .table-surface:has(.seat-top-left) .table-deck span,
+  .solo-ai-mode .table-surface:has(.seat-left) .table-deck span {
+    font-size: .66rem !important;
+    letter-spacing: .04em !important;
+    text-shadow: 0 1px 8px rgba(0,0,0,.82) !important;
+  }
+
+  .solo-ai-mode .table-surface:has(.seat-top-left) .table-deck small,
+  .solo-ai-mode .table-surface:has(.seat-left) .table-deck small {
+    margin-top: 2px !important;
+    font-size: .72rem !important;
+  }
+
+  .solo-ai-mode .table-surface:has(.seat-top-left) .table-deck img,
+  .solo-ai-mode .table-surface:has(.seat-top-left) .card-back,
+  .solo-ai-mode .table-surface:has(.seat-top-left) .discard-empty,
+  .solo-ai-mode .table-surface:has(.seat-left) .table-deck img,
+  .solo-ai-mode .table-surface:has(.seat-left) .card-back,
+  .solo-ai-mode .table-surface:has(.seat-left) .discard-empty {
+    width: 34px !important;
+  }
+
+  /* Table 3: a touch wider so draw/discard do not crowd the two upper bots. */
+  .solo-ai-mode .table-surface:has(.seat-top-left):has(.seat-top-right):not(:has(.seat-left)):not(:has(.seat-right)) .table-decks {
+    top: 41.8% !important;
+    width: min(46vw, 246px) !important;
+    max-width: 246px !important;
+  }
+
+  /* Table 5: slightly lower because four bots occupy the upper sides. */
+  .solo-ai-mode .table-surface:has(.seat-left):has(.seat-top-left):has(.seat-top-right):has(.seat-right) .table-decks {
+    top: 44.4% !important;
+    width: min(40vw, 222px) !important;
+    max-width: 222px !important;
+  }
+}
+
+@media (orientation: landscape) {
+  .solo-ai-mode .table-surface:has(.seat-top-left) .table-decks,
+  .solo-ai-mode .table-surface:has(.seat-left) .table-decks {
+    left: 50% !important;
+    top: 45% !important;
+    width: min(34vw, 340px) !important;
+    justify-content: space-between !important;
+    gap: 0 !important;
+    transform: translate(-50%, -50%) scale(.94) !important;
+  }
+}
