@@ -27,8 +27,10 @@ import './mobile-091-lift-table.css';
 import './mobile-092-lift-table-more.css';
 import './mobile-093-day-night.css';
 import './mobile-098-table-background-up.css';
+import './mobile-100-ai-opponents-lock.css';
 import './home-return';
 import './day-night-table';
+import './ai-table-default';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
