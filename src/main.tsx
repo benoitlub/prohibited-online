@@ -28,6 +28,7 @@ import './mobile-092-lift-table-more.css';
 import './mobile-093-day-night.css';
 import './mobile-098-table-background-up.css';
 import './mobile-100-ai-opponents-lock.css';
+import './mobile-101-multitable-seat-fix.css';
 import './home-return';
 import './day-night-table';
 import './ai-table-default';
