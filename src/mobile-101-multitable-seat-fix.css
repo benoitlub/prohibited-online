@@ -1,0 +1,89 @@
+/* v0.10.1 — tables 3/4/5 seat polish before online.
+   1vIA geometry is intentionally not touched here. */
+
+body::before {
+  content: 'v0.10.1 • MULTI IA TABLES • SEATS TUNED' !important;
+}
+
+@media (max-width: 720px) and (orientation: portrait) {
+  /* Tables 3, 4, 5 only: tighten the deck pair so the draw pile sits nearer the center. */
+  .solo-ai-mode .table-surface:has(.seat-top-left) .table-decks,
+  .solo-ai-mode .table-surface:has(.seat-left) .table-decks {
+    left: 50% !important;
+    width: min(58vw, 270px) !important;
+    justify-content: space-between !important;
+    gap: 0 !important;
+    transform: translate(-50%, -50%) scale(.9) !important;
+  }
+
+  /* Table 3: two top bots lower and closer to the middle. */
+  .solo-ai-mode .table-surface:has(.seat-top-left):has(.seat-top-right):not(:has(.seat-left)):not(:has(.seat-right)) .seat-top-left {
+    left: 30.2% !important;
+    top: 21.4% !important;
+    transform: translateX(-50%) scale(.7) !important;
+  }
+
+  .solo-ai-mode .table-surface:has(.seat-top-left):has(.seat-top-right):not(:has(.seat-left)):not(:has(.seat-right)) .seat-top-right {
+    left: 69.8% !important;
+    top: 21.4% !important;
+    right: auto !important;
+    transform: translateX(-50%) scale(.7) !important;
+  }
+
+  /* Table 4: top bot centered, right bot pulled inward. */
+  .solo-ai-mode .table-surface:has(.seat-left):has(.seat-top):has(.seat-right):not(:has(.seat-top-left)):not(:has(.seat-top-right)) .seat-top {
+    left: 50% !important;
+    top: 17.2% !important;
+    transform: translateX(-50%) scale(.76) !important;
+  }
+
+  .solo-ai-mode .table-surface:has(.seat-left):has(.seat-top):has(.seat-right):not(:has(.seat-top-left)):not(:has(.seat-top-right)) .seat-right {
+    left: 79.6% !important;
+    right: auto !important;
+    top: 37.6% !important;
+    transform: translate(-50%, -50%) scale(.64) !important;
+  }
+
+  /* Table 5: all bot seats lower, J1 untouched. */
+  .solo-ai-mode .table-surface:has(.seat-left):has(.seat-top-left):has(.seat-top-right):has(.seat-right) .seat-left {
+    left: 16.8% !important;
+    top: 40.4% !important;
+    transform: translate(-50%, -50%) scale(.64) !important;
+  }
+
+  .solo-ai-mode .table-surface:has(.seat-left):has(.seat-top-left):has(.seat-top-right):has(.seat-right) .seat-top-left {
+    left: 26.8% !important;
+    top: 21.8% !important;
+    transform: translateX(-50%) scale(.7) !important;
+  }
+
+  .solo-ai-mode .table-surface:has(.seat-left):has(.seat-top-left):has(.seat-top-right):has(.seat-right) .seat-top-right {
+    left: 73.2% !important;
+    right: auto !important;
+    top: 21.8% !important;
+    transform: translateX(-50%) scale(.7) !important;
+  }
+
+  .solo-ai-mode .table-surface:has(.seat-left):has(.seat-top-left):has(.seat-top-right):has(.seat-right) .seat-right {
+    left: 83.2% !important;
+    right: auto !important;
+    top: 40.4% !important;
+    transform: translate(-50%, -50%) scale(.64) !important;
+  }
+}
+
+@media (orientation: landscape) {
+  .solo-ai-mode .table-surface:has(.seat-top-left) .table-decks,
+  .solo-ai-mode .table-surface:has(.seat-left) .table-decks {
+    left: 50% !important;
+    width: min(42vw, 360px) !important;
+    justify-content: space-between !important;
+    gap: 0 !important;
+    transform: translate(-50%, -50%) scale(.96) !important;
+  }
+
+  .solo-ai-mode .table-surface:has(.seat-left):has(.seat-top-left):has(.seat-top-right):has(.seat-right) .seat-left,
+  .solo-ai-mode .table-surface:has(.seat-left):has(.seat-top-left):has(.seat-top-right):has(.seat-right) .seat-right {
+    top: 52% !important;
+  }
+}
