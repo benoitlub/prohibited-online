@@ -1,0 +1,25 @@
+/* v0.10.3 — only move DRAW inward on table 4 and table 5. */
+
+body::before {
+  content: 'v0.10.3 • MULTI DECKS • DRAW IN' !important;
+}
+
+@media (max-width: 720px) and (orientation: portrait) {
+  .solo-ai-mode .table-surface:has(.seat-left):has(.seat-top):has(.seat-right):not(:has(.seat-top-left)):not(:has(.seat-top-right)) .draw-deck {
+    margin-left: 28px !important;
+  }
+
+  .solo-ai-mode .table-surface:has(.seat-left):has(.seat-top-left):has(.seat-top-right):has(.seat-right) .draw-deck {
+    margin-left: 38px !important;
+  }
+}
+
+@media (orientation: landscape) {
+  .solo-ai-mode .table-surface:has(.seat-left):has(.seat-top):has(.seat-right):not(:has(.seat-top-left)):not(:has(.seat-top-right)) .draw-deck {
+    margin-left: 24px !important;
+  }
+
+  .solo-ai-mode .table-surface:has(.seat-left):has(.seat-top-left):has(.seat-top-right):has(.seat-right) .draw-deck {
+    margin-left: 32px !important;
+  }
+}
