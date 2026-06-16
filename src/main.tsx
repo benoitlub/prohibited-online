@@ -31,9 +31,12 @@ import './mobile-100-ai-opponents-lock.css';
 import './mobile-101-multitable-seat-fix.css';
 import './mobile-102-multitable-decks.css';
 import './mobile-103-draw-in.css';
+import './mobile-110-landscape-fullscreen.css';
+import './mobile-110-online-stub.css';
 import './home-return';
 import './day-night-table';
 import './ai-table-default';
+import './online-stub';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
