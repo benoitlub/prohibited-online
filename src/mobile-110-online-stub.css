@@ -1,0 +1,58 @@
+/* v0.11.0 — Online placeholder, no server yet. */
+
+.online-stub-panel {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+  margin-top: 14px !important;
+  padding: 12px 14px !important;
+  border-radius: 20px !important;
+  border: 1px solid rgba(129,255,84,.28) !important;
+  background: rgba(3, 8, 5, .68) !important;
+  box-shadow: 0 0 0 1px rgba(129,255,84,.08) inset, 0 0 24px rgba(0,0,0,.48) !important;
+}
+
+.online-stub-panel div {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 4px !important;
+}
+
+.online-stub-panel strong {
+  color: #dfffbd !important;
+  font-size: .86rem !important;
+  letter-spacing: .08em !important;
+  text-transform: uppercase !important;
+}
+
+.online-stub-panel span {
+  color: rgba(255,255,235,.74) !important;
+  font-size: .72rem !important;
+}
+
+.online-stub-panel button {
+  padding: 8px 12px !important;
+  border-radius: 999px !important;
+  border: 1px solid rgba(255,220,88,.38) !important;
+  background: rgba(0,0,0,.36) !important;
+  color: rgba(255,236,190,.72) !important;
+  font-weight: 900 !important;
+  letter-spacing: .05em !important;
+}
+
+@media (orientation: landscape) {
+  .online-stub-panel {
+    position: fixed !important;
+    right: max(14px, env(safe-area-inset-right)) !important;
+    bottom: max(12px, env(safe-area-inset-bottom)) !important;
+    z-index: 12020 !important;
+    width: min(30vw, 260px) !important;
+    margin: 0 !important;
+    padding: 9px 11px !important;
+  }
+
+  .online-stub-panel span {
+    display: none !important;
+  }
+}
