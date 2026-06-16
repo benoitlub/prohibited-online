@@ -1,0 +1,324 @@
+/* v0.11.0 — landscape fullscreen tables.
+   Portrait rules are intentionally untouched. */
+
+@media (orientation: landscape) {
+  body::before {
+    content: 'v0.11.0 • LANDSCAPE FULLSCREEN • AI TABLES' !important;
+    top: max(6px, env(safe-area-inset-top)) !important;
+    right: max(8px, env(safe-area-inset-right)) !important;
+    max-width: 40vw !important;
+    font-size: .48rem !important;
+    padding: 4px 8px !important;
+  }
+
+  html,
+  body,
+  #root {
+    width: 100vw !important;
+    min-width: 100vw !important;
+    height: 100dvh !important;
+    min-height: 100dvh !important;
+    overflow: hidden !important;
+    overscroll-behavior: none !important;
+  }
+
+  .game-screen {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    height: 100dvh !important;
+    min-height: 100dvh !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+  }
+
+  .game-screen .topbar {
+    position: fixed !important;
+    top: max(8px, env(safe-area-inset-top)) !important;
+    left: max(12px, env(safe-area-inset-left)) !important;
+    right: max(12px, env(safe-area-inset-right)) !important;
+    z-index: 12000 !important;
+    height: 42px !important;
+    min-height: 42px !important;
+    padding: 0 !important;
+    pointer-events: none !important;
+  }
+
+  .game-screen .topbar h1 {
+    max-width: 38vw !important;
+    margin: 0 !important;
+    font-size: clamp(1.05rem, 3.3vw, 2rem) !important;
+    line-height: .82 !important;
+    text-align: left !important;
+    pointer-events: auto !important;
+  }
+
+  .game-screen .topbar .kicker,
+  .game-screen .topbar .score-strip > span,
+  .game-screen .topbar .score-strip > button:not(.home-return-button):not(.day-night-toggle) {
+    display: none !important;
+  }
+
+  .game-screen .score-strip {
+    position: fixed !important;
+    top: max(8px, env(safe-area-inset-top)) !important;
+    left: auto !important;
+    right: max(66px, calc(76px + env(safe-area-inset-right))) !important;
+    z-index: 12005 !important;
+    display: flex !important;
+    gap: 6px !important;
+    width: auto !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    pointer-events: auto !important;
+  }
+
+  .home-return-button,
+  .day-night-toggle {
+    width: 34px !important;
+    min-width: 34px !important;
+    height: 34px !important;
+    margin: 0 !important;
+    font-size: .88rem !important;
+  }
+
+  .table-message,
+  .side-panel,
+  .hand-status,
+  .hand-heading > div:first-child,
+  .hand-panel .turn-actions > span {
+    display: none !important;
+  }
+
+  .board-grid,
+  .players-area,
+  .table-layout {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    height: 100dvh !important;
+    display: block !important;
+    overflow: visible !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .table-surface,
+  .solo-ai-mode .table-surface {
+    position: absolute !important;
+    left: 50% !important;
+    top: 49% !important;
+    width: min(82vw, 136dvh) !important;
+    height: min(78dvh, 54vw) !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    transform: translate(-50%, -50%) !important;
+    border-radius: clamp(26px, 4.4vw, 52px) !important;
+    background-position: center top !important;
+    background-size: 100% 100% !important;
+  }
+
+  .solo-ai-mode .table-hud,
+  .table-hud {
+    display: none !important;
+  }
+
+  .solo-ai-mode .table-callout,
+  .table-callout {
+    display: none !important;
+  }
+
+  .solo-ai-mode .table-decks,
+  .table-decks {
+    top: 46% !important;
+    left: 50% !important;
+    width: min(34vw, 390px) !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    gap: 0 !important;
+    transform: translate(-50%, -50%) scale(.92) !important;
+    z-index: 4 !important;
+  }
+
+  .table-deck img,
+  .card-back,
+  .discard-empty {
+    width: clamp(28px, 4.6dvh, 42px) !important;
+  }
+
+  .table-deck span,
+  .table-deck small {
+    font-size: clamp(.5rem, 1.55dvh, .68rem) !important;
+  }
+
+  .player-seat .player-panel {
+    max-width: 158px !important;
+  }
+
+  .player-seat .player-heading {
+    padding: 4px 9px !important;
+    max-width: 136px !important;
+  }
+
+  .player-seat .player-heading h3 {
+    font-size: clamp(.54rem, 1.35dvh, .7rem) !important;
+  }
+
+  .player-seat .player-heading span {
+    font-size: clamp(.62rem, 1.55dvh, .78rem) !important;
+  }
+
+  .sets-grid {
+    gap: 5px !important;
+  }
+
+  .set-slot {
+    min-height: clamp(32px, 6.2dvh, 48px) !important;
+    min-width: clamp(36px, 7.2dvh, 54px) !important;
+  }
+
+  .solo-ai-mode .seat-bottom,
+  .seat-bottom {
+    left: 50% !important;
+    bottom: 12.5% !important;
+    width: 178px !important;
+    transform: translateX(-50%) scale(.9) !important;
+  }
+
+  .solo-ai-mode .seat-top,
+  .seat-top {
+    left: 50% !important;
+    top: 12% !important;
+    transform: translateX(-50%) scale(.82) !important;
+  }
+
+  .solo-ai-mode .seat-top-left,
+  .seat-top-left {
+    left: 31% !important;
+    top: 15.5% !important;
+    right: auto !important;
+    transform: translateX(-50%) scale(.76) !important;
+  }
+
+  .solo-ai-mode .seat-top-right,
+  .seat-top-right {
+    left: 69% !important;
+    top: 15.5% !important;
+    right: auto !important;
+    transform: translateX(-50%) scale(.76) !important;
+  }
+
+  .solo-ai-mode .seat-left,
+  .seat-left {
+    left: 11.5% !important;
+    top: 49.5% !important;
+    right: auto !important;
+    transform: translate(-50%, -50%) scale(.72) !important;
+  }
+
+  .solo-ai-mode .seat-right,
+  .seat-right {
+    left: 88.5% !important;
+    top: 49.5% !important;
+    right: auto !important;
+    transform: translate(-50%, -50%) scale(.72) !important;
+  }
+
+  .hand-panel {
+    position: fixed !important;
+    left: 50% !important;
+    bottom: calc(-8px + env(safe-area-inset-bottom)) !important;
+    transform: translateX(-50%) !important;
+    width: min(78vw, 740px) !important;
+    height: min(25dvh, 150px) !important;
+    min-height: 108px !important;
+    z-index: 10000 !important;
+    overflow: visible !important;
+    background: transparent !important;
+    pointer-events: none !important;
+  }
+
+  .hand-grid {
+    position: absolute !important;
+    left: 50% !important;
+    bottom: 4px !important;
+    transform: translateX(-50%) scale(.82) !important;
+    transform-origin: 50% 100% !important;
+    width: min(86vw, 780px) !important;
+    height: min(25dvh, 150px) !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    pointer-events: auto !important;
+  }
+
+  .card {
+    --hand-card-w: clamp(74px, 12vw, 112px) !important;
+    margin-left: clamp(-28px, -4.8vw, -16px) !important;
+  }
+
+  .card-actions {
+    top: -30px !important;
+    gap: 7px !important;
+  }
+
+  .icon-action,
+  .play-action,
+  .discard-action {
+    width: 30px !important;
+    min-width: 30px !important;
+    height: 30px !important;
+    border-radius: 7px !important;
+  }
+
+  .card-reorder {
+    bottom: 8px !important;
+  }
+
+  .undo-button,
+  .end-turn-button {
+    position: fixed !important;
+    top: auto !important;
+    bottom: calc(32px + env(safe-area-inset-bottom)) !important;
+    width: 50px !important;
+    min-width: 50px !important;
+    height: 50px !important;
+    z-index: 12010 !important;
+    opacity: .9 !important;
+    pointer-events: auto !important;
+  }
+
+  .undo-button {
+    left: max(10px, env(safe-area-inset-left)) !important;
+    transform: none !important;
+  }
+
+  .end-turn-button {
+    right: max(10px, env(safe-area-inset-right)) !important;
+    transform: none !important;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 430px) {
+  .table-surface,
+  .solo-ai-mode .table-surface {
+    top: 50% !important;
+    width: min(78vw, 146dvh) !important;
+    height: min(80dvh, 50vw) !important;
+  }
+
+  .hand-grid {
+    transform: translateX(-50%) scale(.72) !important;
+  }
+
+  .card {
+    --hand-card-w: clamp(66px, 10vw, 96px) !important;
+  }
+
+  .undo-button,
+  .end-turn-button {
+    width: 44px !important;
+    min-width: 44px !important;
+    height: 44px !important;
+    bottom: calc(18px + env(safe-area-inset-bottom)) !important;
+  }
+}
