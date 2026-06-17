@@ -1,157 +1,299 @@
-/* v0.11.1 — desktop controls fix + mobile landscape paused.
-   v0.11.0 landscape fullscreen was too aggressive. Keep portrait playable. */
+/* v0.11.2 — desktop game view restored + mobile landscape paused.
+   The fullscreen landscape experiment must not apply to desktop/laptop screens. */
 
 body::before {
-  content: 'v0.11.1 • DESKTOP FIX • LANDSCAPE PAUSED' !important;
+  content: 'v0.11.2 • DESKTOP GAME FIX • LANDSCAPE PAUSED' !important;
 }
 
-/* Desktop / large screens: make the setup controls visible and scrollable again. */
-@media (min-width: 900px) and (min-height: 620px) {
+/* Desktop / laptop: normal scrollable app. */
+@media (min-width: 900px) and (min-height: 560px) {
+  body::before {
+    top: 10px !important;
+    right: 12px !important;
+    max-width: 380px !important;
+  }
+
   html,
   body,
   #root {
+    position: static !important;
     width: 100% !important;
     min-width: 0 !important;
     height: auto !important;
     min-height: 100vh !important;
     overflow-x: hidden !important;
     overflow-y: auto !important;
+    overscroll-behavior: auto !important;
   }
 
-  .config-screen {
+  .config-screen,
+  .game-screen {
     position: relative !important;
     inset: auto !important;
     width: 100% !important;
-    min-height: 100vh !important;
     height: auto !important;
+    min-height: 100vh !important;
     overflow-x: hidden !important;
     overflow-y: auto !important;
+  }
+
+  .config-screen {
     display: grid !important;
     grid-template-columns: minmax(380px, 1fr) minmax(360px, 560px) !important;
-    grid-template-areas:
-      'header panel'
-      'hero panel'
-      'footer panel' !important;
+    grid-template-areas: 'header panel' 'hero panel' 'footer panel' !important;
     align-items: center !important;
     gap: clamp(24px, 4vw, 72px) !important;
     padding: clamp(28px, 5vh, 56px) clamp(28px, 5vw, 80px) !important;
   }
 
-  .config-screen .feuch-header {
-    grid-area: header !important;
-    position: relative !important;
-    top: auto !important;
-    left: auto !important;
-    right: auto !important;
-    bottom: auto !important;
-    width: fit-content !important;
-    max-width: 100% !important;
-    transform: none !important;
-    z-index: 5 !important;
-  }
-
-  .config-screen .config-hero {
-    grid-area: hero !important;
+  .config-screen .feuch-header,
+  .config-screen .config-hero,
+  .config-screen .config-panel,
+  .config-screen .feuch-footer {
     position: relative !important;
     inset: auto !important;
-    width: min(720px, 100%) !important;
-    max-width: 100% !important;
-    height: auto !important;
-    max-height: none !important;
     transform: none !important;
-    overflow: visible !important;
-    z-index: 4 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
   }
 
-  .config-screen .config-hero h1 {
-    max-width: 100% !important;
-    font-size: clamp(4rem, 8vw, 7.2rem) !important;
-    line-height: .82 !important;
-    white-space: normal !important;
-    overflow: visible !important;
-  }
-
-  .config-screen .config-hero p {
-    max-width: 620px !important;
-  }
+  .config-screen .feuch-header { grid-area: header !important; }
+  .config-screen .config-hero { grid-area: hero !important; width: min(720px, 100%) !important; }
+  .config-screen .feuch-footer { grid-area: footer !important; }
 
   .config-screen .config-panel {
     grid-area: panel !important;
-    position: relative !important;
-    inset: auto !important;
-    align-self: center !important;
     justify-self: end !important;
     width: min(560px, 100%) !important;
     max-width: 560px !important;
     max-height: calc(100vh - 72px) !important;
-    height: auto !important;
-    transform: none !important;
     overflow-y: auto !important;
-    overflow-x: hidden !important;
     z-index: 20 !important;
-    padding: clamp(18px, 2.2vw, 30px) !important;
   }
 
-  .config-screen .feuch-footer {
-    grid-area: footer !important;
+  .game-screen {
+    display: block !important;
+    padding: 24px 32px 210px !important;
+  }
+
+  .game-screen .topbar {
     position: relative !important;
     inset: auto !important;
-    width: fit-content !important;
-    max-width: 100% !important;
-    transform: none !important;
-    z-index: 4 !important;
+    width: min(1180px, 100%) !important;
+    height: auto !important;
+    margin: 0 auto 14px !important;
+    display: flex !important;
+    align-items: flex-start !important;
+    justify-content: space-between !important;
+    pointer-events: auto !important;
+    z-index: 20 !important;
   }
 
-  .config-panel .option-grid {
-    max-width: 100% !important;
+  .game-screen .topbar h1 {
+    max-width: none !important;
+    margin: 0 !important;
+    font-size: clamp(2.5rem, 4.4vw, 4.6rem) !important;
+    line-height: .82 !important;
+    text-align: left !important;
+    white-space: normal !important;
   }
 
-  .config-panel .start-button,
-  .config-panel .solo-ai-native-button,
-  .online-stub-panel {
+  .game-screen .topbar .kicker,
+  .game-screen .topbar .score-strip > span,
+  .game-screen .topbar .score-strip > button:not(.home-return-button):not(.day-night-toggle) {
+    display: initial !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  .game-screen .score-strip {
+    position: relative !important;
+    inset: auto !important;
+    width: auto !important;
+    max-width: none !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 8px !important;
+    pointer-events: auto !important;
+  }
+
+  .home-return-button,
+  .day-night-toggle {
+    width: 38px !important;
+    min-width: 38px !important;
+    height: 38px !important;
+    margin: 0 !important;
+    font-size: 1rem !important;
+  }
+
+  .table-message {
+    display: block !important;
+    visibility: visible !important;
+    width: min(1180px, 100%) !important;
+    margin: 0 auto 12px !important;
+  }
+
+  .board-grid {
+    position: relative !important;
+    inset: auto !important;
+    width: min(1180px, 100%) !important;
+    height: auto !important;
+    margin: 0 auto !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) minmax(230px, 300px) !important;
+    gap: 18px !important;
+    overflow: visible !important;
+    padding: 0 !important;
+  }
+
+  .players-area,
+  .table-layout {
     position: relative !important;
     inset: auto !important;
     width: 100% !important;
-    max-width: 100% !important;
-    transform: none !important;
+    height: auto !important;
+    overflow: visible !important;
+    display: block !important;
   }
+
+  .table-surface,
+  .solo-ai-mode .table-surface {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    width: 100% !important;
+    max-width: 960px !important;
+    height: min(62vh, 620px) !important;
+    min-height: 500px !important;
+    margin: 0 auto !important;
+    transform: none !important;
+    border-radius: 34px !important;
+    overflow: visible !important;
+  }
+
+  .table-decks,
+  .solo-ai-mode .table-decks {
+    top: 44% !important;
+    left: 50% !important;
+    width: min(300px, 38%) !important;
+    transform: translate(-50%, -50%) scale(.96) !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    z-index: 4 !important;
+  }
+
+  .side-panel {
+    display: block !important;
+    position: relative !important;
+    width: auto !important;
+    max-height: min(62vh, 620px) !important;
+    overflow-y: auto !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+  }
+
+  .solo-ai-mode .seat-bottom,
+  .seat-bottom {
+    left: 50% !important;
+    bottom: 10.5% !important;
+    width: 190px !important;
+    transform: translateX(-50%) scale(.94) !important;
+  }
+
+  .solo-ai-mode .seat-top,
+  .seat-top {
+    left: 50% !important;
+    top: 7.5% !important;
+    transform: translateX(-50%) scale(.86) !important;
+  }
+
+  .solo-ai-mode .seat-top-left,
+  .seat-top-left {
+    left: 30% !important;
+    top: 12% !important;
+    right: auto !important;
+    transform: translateX(-50%) scale(.82) !important;
+  }
+
+  .solo-ai-mode .seat-top-right,
+  .seat-top-right {
+    left: 70% !important;
+    top: 12% !important;
+    right: auto !important;
+    transform: translateX(-50%) scale(.82) !important;
+  }
+
+  .solo-ai-mode .seat-left,
+  .seat-left {
+    left: 10.5% !important;
+    top: 50% !important;
+    right: auto !important;
+    transform: translate(-50%, -50%) scale(.78) !important;
+  }
+
+  .solo-ai-mode .seat-right,
+  .seat-right {
+    left: 89.5% !important;
+    top: 50% !important;
+    right: auto !important;
+    transform: translate(-50%, -50%) scale(.78) !important;
+  }
+
+  .hand-panel {
+    position: fixed !important;
+    left: 50% !important;
+    bottom: 0 !important;
+    transform: translateX(-50%) !important;
+    width: min(920px, 88vw) !important;
+    height: 180px !important;
+    min-height: 180px !important;
+    z-index: 10000 !important;
+    overflow: visible !important;
+    background: linear-gradient(180deg, transparent, rgba(0,0,0,.62)) !important;
+    pointer-events: none !important;
+  }
+
+  .hand-grid {
+    position: absolute !important;
+    left: 50% !important;
+    bottom: 18px !important;
+    transform: translateX(-50%) scale(.92) !important;
+    transform-origin: 50% 100% !important;
+    width: min(920px, 88vw) !important;
+    height: 160px !important;
+    pointer-events: auto !important;
+    overflow: visible !important;
+  }
+
+  .card {
+    --hand-card-w: clamp(96px, 8.5vw, 124px) !important;
+    margin-left: clamp(-30px, -2.2vw, -18px) !important;
+  }
+
+  .hand-status,
+  .hand-heading {
+    display: none !important;
+  }
+
+  .undo-button,
+  .end-turn-button {
+    position: fixed !important;
+    top: auto !important;
+    bottom: 46px !important;
+    width: 56px !important;
+    min-width: 56px !important;
+    height: 56px !important;
+    z-index: 12010 !important;
+    pointer-events: auto !important;
+  }
+
+  .undo-button { left: 26px !important; transform: none !important; }
+  .end-turn-button { right: 26px !important; transform: none !important; }
 }
 
-/* Medium desktop / tablet landscape: stack the controls instead of clipping them. */
-@media (min-width: 900px) and (max-height: 619px) {
-  html,
-  body,
-  #root {
-    height: auto !important;
-    min-height: 100vh !important;
-    overflow-y: auto !important;
-  }
-
-  .config-screen {
-    position: relative !important;
-    min-height: 100vh !important;
-    height: auto !important;
-    overflow-y: auto !important;
-    display: grid !important;
-    grid-template-columns: 1fr minmax(340px, 480px) !important;
-    gap: 28px !important;
-    padding: 24px 36px !important;
-  }
-
-  .config-screen .config-panel {
-    position: relative !important;
-    max-height: calc(100vh - 48px) !important;
-    overflow-y: auto !important;
-    transform: none !important;
-  }
-
-  .config-screen .config-hero h1 {
-    font-size: clamp(3rem, 7vw, 5.4rem) !important;
-  }
-}
-
-/* Mobile landscape: pause the broken fullscreen mode instead of showing an unplayable table. */
-@media (orientation: landscape) and (max-height: 520px) {
+/* Mobile landscape remains paused until rebuilt properly. */
+@media (orientation: landscape) and (max-height: 520px) and (max-width: 899px) {
   html,
   body,
   #root {
@@ -194,25 +336,8 @@ body::before {
     font-weight: 900 !important;
     line-height: 1.35 !important;
     text-align: center !important;
-    letter-spacing: .03em !important;
     box-shadow: 0 0 0 1px rgba(129,255,84,.12) inset, 0 0 28px rgba(129,255,84,.24), 0 0 80px rgba(0,0,0,.92) !important;
     backdrop-filter: blur(14px) !important;
     visibility: visible !important;
-    pointer-events: none !important;
-  }
-
-  .game-screen .topbar,
-  .config-screen .feuch-header {
-    visibility: visible !important;
-    pointer-events: auto !important;
-    opacity: .72 !important;
-  }
-
-  .hand-panel,
-  .board-grid,
-  .score-strip,
-  .side-panel,
-  .online-stub-panel {
-    display: none !important;
   }
 }
