@@ -33,6 +33,7 @@ import './mobile-102-multitable-decks.css';
 import './mobile-103-draw-in.css';
 import './mobile-110-landscape-fullscreen.css';
 import './mobile-110-online-stub.css';
+import './mobile-111-desktop-landscape-fix.css';
 import './home-return';
 import './day-night-table';
 import './ai-table-default';
