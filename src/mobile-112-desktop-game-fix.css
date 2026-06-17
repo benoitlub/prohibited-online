@@ -1,0 +1,282 @@
+/* v0.11.2 — desktop game view restored.
+   The landscape fullscreen experiment must not apply to desktop/laptop screens. */
+
+@media (min-width: 900px) and (min-height: 560px) {
+  body::before {
+    content: 'v0.11.2 • DESKTOP GAME FIX • MOBILE LANDSCAPE PAUSED' !important;
+    top: 10px !important;
+    right: 12px !important;
+    max-width: 360px !important;
+  }
+
+  html,
+  body,
+  #root {
+    position: static !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    min-height: 100vh !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    overscroll-behavior: auto !important;
+  }
+
+  .game-screen {
+    position: relative !important;
+    inset: auto !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    padding: 24px 32px 210px !important;
+    display: block !important;
+  }
+
+  .game-screen .topbar {
+    position: relative !important;
+    inset: auto !important;
+    width: min(1180px, 100%) !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 0 auto 14px !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: flex-start !important;
+    justify-content: space-between !important;
+    gap: 20px !important;
+    pointer-events: auto !important;
+    z-index: 20 !important;
+  }
+
+  .game-screen .topbar h1 {
+    max-width: none !important;
+    margin: 0 !important;
+    font-size: clamp(2.5rem, 4.4vw, 4.6rem) !important;
+    line-height: .82 !important;
+    text-align: left !important;
+    white-space: normal !important;
+  }
+
+  .game-screen .topbar .kicker,
+  .game-screen .topbar .score-strip > span,
+  .game-screen .topbar .score-strip > button:not(.home-return-button):not(.day-night-toggle) {
+    display: initial !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  .game-screen .score-strip {
+    position: relative !important;
+    inset: auto !important;
+    left: auto !important;
+    right: auto !important;
+    top: auto !important;
+    width: auto !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 8px !important;
+    pointer-events: auto !important;
+    z-index: 40 !important;
+  }
+
+  .home-return-button,
+  .day-night-toggle {
+    width: 38px !important;
+    min-width: 38px !important;
+    height: 38px !important;
+    margin: 0 !important;
+    font-size: 1rem !important;
+  }
+
+  .table-message {
+    display: block !important;
+    visibility: visible !important;
+    width: min(1180px, 100%) !important;
+    margin: 0 auto 12px !important;
+  }
+
+  .board-grid {
+    position: relative !important;
+    inset: auto !important;
+    width: min(1180px, 100%) !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 0 auto !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) minmax(230px, 300px) !important;
+    gap: 18px !important;
+    overflow: visible !important;
+    padding: 0 !important;
+  }
+
+  .players-area,
+  .table-layout {
+    position: relative !important;
+    inset: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    display: block !important;
+  }
+
+  .table-surface,
+  .solo-ai-mode .table-surface {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    width: 100% !important;
+    max-width: 960px !important;
+    height: min(62vh, 620px) !important;
+    min-height: 500px !important;
+    margin: 0 auto !important;
+    transform: none !important;
+    border-radius: 34px !important;
+    background-position: center top !important;
+    background-size: 100% 100% !important;
+    overflow: visible !important;
+  }
+
+  .table-hud,
+  .solo-ai-mode .table-hud,
+  .table-callout,
+  .solo-ai-mode .table-callout {
+    display: flex !important;
+    visibility: visible !important;
+  }
+
+  .table-decks,
+  .solo-ai-mode .table-decks {
+    top: 44% !important;
+    left: 50% !important;
+    width: min(300px, 38%) !important;
+    transform: translate(-50%, -50%) scale(.96) !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    z-index: 4 !important;
+  }
+
+  .side-panel {
+    display: block !important;
+    position: relative !important;
+    width: auto !important;
+    max-height: min(62vh, 620px) !important;
+    overflow-y: auto !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+  }
+
+  .player-seat .player-panel {
+    max-width: 180px !important;
+  }
+
+  .solo-ai-mode .seat-bottom,
+  .seat-bottom {
+    left: 50% !important;
+    bottom: 10.5% !important;
+    width: 190px !important;
+    transform: translateX(-50%) scale(.94) !important;
+  }
+
+  .solo-ai-mode .seat-top,
+  .seat-top {
+    left: 50% !important;
+    top: 7.5% !important;
+    transform: translateX(-50%) scale(.86) !important;
+  }
+
+  .solo-ai-mode .seat-top-left,
+  .seat-top-left {
+    left: 30% !important;
+    top: 12% !important;
+    right: auto !important;
+    transform: translateX(-50%) scale(.82) !important;
+  }
+
+  .solo-ai-mode .seat-top-right,
+  .seat-top-right {
+    left: 70% !important;
+    top: 12% !important;
+    right: auto !important;
+    transform: translateX(-50%) scale(.82) !important;
+  }
+
+  .solo-ai-mode .seat-left,
+  .seat-left {
+    left: 10.5% !important;
+    top: 50% !important;
+    right: auto !important;
+    transform: translate(-50%, -50%) scale(.78) !important;
+  }
+
+  .solo-ai-mode .seat-right,
+  .seat-right {
+    left: 89.5% !important;
+    top: 50% !important;
+    right: auto !important;
+    transform: translate(-50%, -50%) scale(.78) !important;
+  }
+
+  .hand-panel {
+    position: fixed !important;
+    left: 50% !important;
+    bottom: 0 !important;
+    transform: translateX(-50%) !important;
+    width: min(920px, 88vw) !important;
+    height: 180px !important;
+    min-height: 180px !important;
+    z-index: 10000 !important;
+    overflow: visible !important;
+    background: linear-gradient(180deg, transparent, rgba(0,0,0,.62)) !important;
+    pointer-events: none !important;
+  }
+
+  .hand-grid {
+    position: absolute !important;
+    left: 50% !important;
+    bottom: 18px !important;
+    transform: translateX(-50%) scale(.92) !important;
+    transform-origin: 50% 100% !important;
+    width: min(920px, 88vw) !important;
+    height: 160px !important;
+    pointer-events: auto !important;
+    overflow: visible !important;
+  }
+
+  .card {
+    --hand-card-w: clamp(96px, 8.5vw, 124px) !important;
+    margin-left: clamp(-30px, -2.2vw, -18px) !important;
+  }
+
+  .hand-status,
+  .hand-heading {
+    display: none !important;
+  }
+
+  .undo-button,
+  .end-turn-button {
+    position: fixed !important;
+    top: auto !important;
+    bottom: 46px !important;
+    width: 56px !important;
+    min-width: 56px !important;
+    height: 56px !important;
+    z-index: 12010 !important;
+    pointer-events: auto !important;
+  }
+
+  .undo-button {
+    left: 26px !important;
+    transform: none !important;
+  }
+
+  .end-turn-button {
+    right: 26px !important;
+    transform: none !important;
+  }
+}
