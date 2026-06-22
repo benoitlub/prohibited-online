@@ -34,6 +34,7 @@ import './mobile-103-draw-in.css';
 import './mobile-110-landscape-fullscreen.css';
 import './mobile-110-online-stub.css';
 import './mobile-111-desktop-landscape-fix.css';
+import './mobile-113-desktop-board.css';
 import './home-return';
 import './day-night-table';
 import './ai-table-default';
