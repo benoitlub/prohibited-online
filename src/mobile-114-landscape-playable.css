@@ -1,0 +1,184 @@
+/* v0.11.4 — mobile landscape playable again.
+   Overrides the temporary pause from v0.11.2 without touching portrait or desktop. */
+
+@media (orientation: landscape) and (max-height: 520px) and (max-width: 899px) {
+  body::before {
+    content: 'v0.11.4 • MOBILE LANDSCAPE PLAYABLE' !important;
+    top: max(4px, env(safe-area-inset-top)) !important;
+    right: max(6px, env(safe-area-inset-right)) !important;
+    max-width: 42vw !important;
+    padding: 3px 7px !important;
+    font-size: .42rem !important;
+  }
+
+  .game-screen::after,
+  .config-screen::after {
+    content: none !important;
+    display: none !important;
+  }
+
+  .game-screen > *,
+  .config-screen > * {
+    visibility: visible !important;
+    pointer-events: auto !important;
+  }
+
+  .game-screen {
+    padding: 0 !important;
+    background: #020603 !important;
+  }
+
+  .game-screen .topbar {
+    top: max(4px, env(safe-area-inset-top)) !important;
+    left: max(8px, env(safe-area-inset-left)) !important;
+    right: max(8px, env(safe-area-inset-right)) !important;
+    height: 34px !important;
+    min-height: 34px !important;
+  }
+
+  .game-screen .topbar h1 {
+    max-width: 28vw !important;
+    font-size: clamp(.8rem, 3.5dvh, 1.2rem) !important;
+    line-height: .86 !important;
+  }
+
+  .game-screen .score-strip {
+    top: max(4px, env(safe-area-inset-top)) !important;
+    right: max(58px, calc(64px + env(safe-area-inset-right))) !important;
+    gap: 4px !important;
+  }
+
+  .home-return-button,
+  .day-night-toggle {
+    width: 30px !important;
+    min-width: 30px !important;
+    height: 30px !important;
+  }
+
+  .board-grid,
+  .players-area,
+  .table-layout {
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+
+  .table-surface,
+  .solo-ai-mode .table-surface {
+    top: 50% !important;
+    width: min(94vw, 168dvh) !important;
+    height: min(94dvh, 58vw) !important;
+    border-radius: clamp(18px, 3vw, 34px) !important;
+    overflow: visible !important;
+  }
+
+  .table-decks,
+  .solo-ai-mode .table-decks {
+    top: 46% !important;
+    width: min(31vw, 260px) !important;
+    transform: translate(-50%, -50%) scale(.78) !important;
+  }
+
+  .player-seat .player-panel {
+    max-width: 132px !important;
+  }
+
+  .player-seat .player-heading {
+    max-width: 116px !important;
+    padding: 3px 7px !important;
+  }
+
+  .sets-grid {
+    gap: 3px !important;
+  }
+
+  .set-slot {
+    min-width: clamp(28px, 7dvh, 42px) !important;
+    min-height: clamp(25px, 6dvh, 38px) !important;
+  }
+
+  .seat-bottom {
+    bottom: 11% !important;
+    transform: translateX(-50%) scale(.72) !important;
+  }
+
+  .seat-top {
+    top: 9% !important;
+    transform: translateX(-50%) scale(.68) !important;
+  }
+
+  .seat-top-left {
+    left: 30% !important;
+    top: 12% !important;
+    transform: translateX(-50%) scale(.64) !important;
+  }
+
+  .seat-top-right {
+    left: 70% !important;
+    top: 12% !important;
+    transform: translateX(-50%) scale(.64) !important;
+  }
+
+  .seat-left {
+    left: 9% !important;
+    top: 49% !important;
+    transform: translate(-50%, -50%) scale(.58) !important;
+  }
+
+  .seat-right {
+    left: 91% !important;
+    top: 49% !important;
+    transform: translate(-50%, -50%) scale(.58) !important;
+  }
+
+  .hand-panel {
+    bottom: calc(-14px + env(safe-area-inset-bottom)) !important;
+    width: min(76vw, 640px) !important;
+    height: min(27dvh, 118px) !important;
+    min-height: 84px !important;
+    visibility: visible !important;
+    pointer-events: none !important;
+  }
+
+  .hand-grid {
+    bottom: 0 !important;
+    width: min(82vw, 690px) !important;
+    height: min(27dvh, 118px) !important;
+    transform: translateX(-50%) scale(.62) !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+  }
+
+  .card {
+    --hand-card-w: clamp(68px, 11vw, 92px) !important;
+    margin-left: clamp(-25px, -4vw, -14px) !important;
+  }
+
+  .card-actions {
+    top: -28px !important;
+  }
+
+  .icon-action,
+  .play-action,
+  .discard-action {
+    width: 28px !important;
+    min-width: 28px !important;
+    height: 28px !important;
+  }
+
+  .undo-button,
+  .end-turn-button {
+    bottom: calc(14px + env(safe-area-inset-bottom)) !important;
+    width: 42px !important;
+    min-width: 42px !important;
+    height: 42px !important;
+  }
+
+  .undo-button {
+    left: max(7px, env(safe-area-inset-left)) !important;
+  }
+
+  .end-turn-button {
+    right: max(7px, env(safe-area-inset-right)) !important;
+  }
+}
