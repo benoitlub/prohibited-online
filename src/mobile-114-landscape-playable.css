@@ -1,9 +1,9 @@
-/* v0.11.6 — dedicated mobile landscape polish.
-   Keeps portrait and desktop untouched while making the board readable and balanced. */
+/* v0.11.7 — two-player landscape rebalance.
+   Keeps portrait and desktop untouched while aligning decks, seats and controls. */
 
 @media (orientation: landscape) and (max-height: 520px) and (max-width: 899px) {
   body::before {
-    content: 'v0.11.6 • MOBILE LANDSCAPE POLISH' !important;
+    content: 'v0.11.7 • TWO PLAYER LANDSCAPE FIX' !important;
     top: max(3px, env(safe-area-inset-top)) !important;
     right: max(5px, env(safe-area-inset-right)) !important;
     max-width: 34vw !important;
@@ -95,10 +95,10 @@
 
   .table-surface,
   .solo-ai-mode .table-surface {
-    top: 45.5% !important;
-    width: min(97vw, 174dvh) !important;
-    height: min(92dvh, 60vw) !important;
-    border-radius: clamp(16px, 2.6vw, 30px) !important;
+    top: 46% !important;
+    width: min(99vw, 182dvh) !important;
+    height: min(92dvh, 61vw) !important;
+    border-radius: clamp(14px, 2.2vw, 28px) !important;
     overflow: visible !important;
     background-position: center center !important;
     background-size: 100% 100% !important;
@@ -106,9 +106,9 @@
 
   .table-decks,
   .solo-ai-mode .table-decks {
-    top: 42% !important;
-    width: min(29vw, 248px) !important;
-    transform: translate(-50%, -50%) scale(.74) !important;
+    top: 47% !important;
+    width: min(28vw, 240px) !important;
+    transform: translate(-50%, -50%) scale(.72) !important;
   }
 
   .player-seat {
@@ -143,26 +143,28 @@
 
   .seat-bottom,
   .solo-ai-mode .seat-bottom {
-    bottom: 25% !important;
+    left: 50% !important;
+    bottom: 24% !important;
     z-index: 24 !important;
     transform: translateX(-50%) scale(.64) !important;
   }
 
   .seat-top,
   .solo-ai-mode .seat-top {
-    top: 5.5% !important;
+    left: 50% !important;
+    top: 11.5% !important;
     transform: translateX(-50%) scale(.62) !important;
   }
 
   .seat-top-left {
     left: 29% !important;
-    top: 8% !important;
+    top: 10% !important;
     transform: translateX(-50%) scale(.6) !important;
   }
 
   .seat-top-right {
     left: 71% !important;
-    top: 8% !important;
+    top: 10% !important;
     transform: translateX(-50%) scale(.6) !important;
   }
 
@@ -179,7 +181,7 @@
   }
 
   .hand-panel {
-    bottom: calc(-25px + env(safe-area-inset-bottom)) !important;
+    bottom: calc(-22px + env(safe-area-inset-bottom)) !important;
     width: min(72vw, 600px) !important;
     height: min(25dvh, 108px) !important;
     min-height: 78px !important;
@@ -189,10 +191,10 @@
   }
 
   .hand-grid {
-    bottom: 4px !important;
+    bottom: 7px !important;
     width: min(76vw, 632px) !important;
     height: min(25dvh, 108px) !important;
-    transform: translateX(-50%) scale(.56) !important;
+    transform: translateX(-50%) scale(.54) !important;
     transform-origin: 50% 100% !important;
     visibility: visible !important;
     pointer-events: auto !important;
@@ -226,13 +228,13 @@
   .undo-button,
   .end-turn-button {
     position: fixed !important;
-    top: auto !important;
-    bottom: calc(10px + env(safe-area-inset-bottom)) !important;
+    top: 50% !important;
+    bottom: auto !important;
     width: 42px !important;
     min-width: 42px !important;
     height: 42px !important;
     margin: 0 !important;
-    transform: none !important;
+    transform: translateY(-50%) !important;
     z-index: 30000 !important;
     pointer-events: auto !important;
   }
