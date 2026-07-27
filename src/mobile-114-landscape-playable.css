@@ -1,14 +1,14 @@
-/* v0.11.5 — mobile landscape controls and player slots fixed.
-   Overrides the temporary pause from v0.11.2 without touching portrait or desktop. */
+/* v0.11.6 — dedicated mobile landscape polish.
+   Keeps portrait and desktop untouched while making the board readable and balanced. */
 
 @media (orientation: landscape) and (max-height: 520px) and (max-width: 899px) {
   body::before {
-    content: 'v0.11.5 • LANDSCAPE CONTROLS FIXED' !important;
-    top: max(4px, env(safe-area-inset-top)) !important;
-    right: max(6px, env(safe-area-inset-right)) !important;
-    max-width: 42vw !important;
-    padding: 3px 7px !important;
-    font-size: .42rem !important;
+    content: 'v0.11.6 • MOBILE LANDSCAPE POLISH' !important;
+    top: max(3px, env(safe-area-inset-top)) !important;
+    right: max(5px, env(safe-area-inset-right)) !important;
+    max-width: 34vw !important;
+    padding: 2px 6px !important;
+    font-size: .38rem !important;
   }
 
   .game-screen::after,
@@ -29,30 +29,50 @@
   }
 
   .game-screen .topbar {
-    top: max(4px, env(safe-area-inset-top)) !important;
-    left: max(8px, env(safe-area-inset-left)) !important;
-    right: max(8px, env(safe-area-inset-right)) !important;
-    height: 34px !important;
-    min-height: 34px !important;
+    top: max(3px, env(safe-area-inset-top)) !important;
+    left: max(6px, env(safe-area-inset-left)) !important;
+    right: max(6px, env(safe-area-inset-right)) !important;
+    height: 28px !important;
+    min-height: 28px !important;
+    align-items: flex-start !important;
+  }
+
+  .game-screen .topbar > div:first-child {
+    width: auto !important;
+    max-width: 22vw !important;
+  }
+
+  .game-screen .topbar .kicker {
+    display: none !important;
   }
 
   .game-screen .topbar h1 {
-    max-width: 28vw !important;
-    font-size: clamp(.8rem, 3.5dvh, 1.2rem) !important;
-    line-height: .86 !important;
+    max-width: 22vw !important;
+    margin: 0 !important;
+    font-size: clamp(.64rem, 2.8dvh, .94rem) !important;
+    line-height: .82 !important;
+    letter-spacing: -.03em !important;
   }
 
   .game-screen .score-strip {
-    top: max(4px, env(safe-area-inset-top)) !important;
-    right: max(58px, calc(64px + env(safe-area-inset-right))) !important;
+    top: max(3px, env(safe-area-inset-top)) !important;
+    right: max(48px, calc(54px + env(safe-area-inset-right))) !important;
     gap: 4px !important;
+  }
+
+  .game-screen .score-strip > span,
+  .game-screen .score-strip > button:not(.home-return-button):not(.day-night-toggle) {
+    display: none !important;
   }
 
   .home-return-button,
   .day-night-toggle {
-    width: 30px !important;
-    min-width: 30px !important;
-    height: 30px !important;
+    width: 32px !important;
+    min-width: 32px !important;
+    height: 32px !important;
+    padding: 0 !important;
+    border-radius: 10px !important;
+    font-size: .78rem !important;
   }
 
   .board-grid,
@@ -63,29 +83,53 @@
     pointer-events: auto !important;
   }
 
+  .table-message,
+  .side-panel,
+  .table-hud,
+  .table-callout,
+  .hand-status,
+  .hand-heading > div:first-child,
+  .hand-panel .turn-actions > span {
+    display: none !important;
+  }
+
   .table-surface,
   .solo-ai-mode .table-surface {
-    top: 47% !important;
-    width: min(94vw, 168dvh) !important;
-    height: min(90dvh, 58vw) !important;
-    border-radius: clamp(18px, 3vw, 34px) !important;
+    top: 45.5% !important;
+    width: min(97vw, 174dvh) !important;
+    height: min(92dvh, 60vw) !important;
+    border-radius: clamp(16px, 2.6vw, 30px) !important;
     overflow: visible !important;
+    background-position: center center !important;
+    background-size: 100% 100% !important;
   }
 
   .table-decks,
   .solo-ai-mode .table-decks {
-    top: 43% !important;
-    width: min(31vw, 260px) !important;
-    transform: translate(-50%, -50%) scale(.78) !important;
+    top: 42% !important;
+    width: min(29vw, 248px) !important;
+    transform: translate(-50%, -50%) scale(.74) !important;
+  }
+
+  .player-seat {
+    z-index: 12 !important;
   }
 
   .player-seat .player-panel {
-    max-width: 132px !important;
+    max-width: 124px !important;
   }
 
   .player-seat .player-heading {
-    max-width: 116px !important;
-    padding: 3px 7px !important;
+    max-width: 106px !important;
+    padding: 2px 6px !important;
+  }
+
+  .player-seat .player-heading h3 {
+    font-size: clamp(.48rem, 1.45dvh, .62rem) !important;
+  }
+
+  .player-seat .player-heading span {
+    font-size: clamp(.54rem, 1.6dvh, .68rem) !important;
   }
 
   .sets-grid {
@@ -93,60 +137,61 @@
   }
 
   .set-slot {
-    min-width: clamp(28px, 7dvh, 42px) !important;
-    min-height: clamp(25px, 6dvh, 38px) !important;
+    min-width: clamp(27px, 6.6dvh, 39px) !important;
+    min-height: clamp(23px, 5.6dvh, 34px) !important;
   }
 
   .seat-bottom,
   .solo-ai-mode .seat-bottom {
-    bottom: 21% !important;
-    z-index: 18 !important;
-    transform: translateX(-50%) scale(.68) !important;
+    bottom: 25% !important;
+    z-index: 24 !important;
+    transform: translateX(-50%) scale(.64) !important;
   }
 
-  .seat-top {
-    top: 9% !important;
-    transform: translateX(-50%) scale(.68) !important;
+  .seat-top,
+  .solo-ai-mode .seat-top {
+    top: 5.5% !important;
+    transform: translateX(-50%) scale(.62) !important;
   }
 
   .seat-top-left {
-    left: 30% !important;
-    top: 12% !important;
-    transform: translateX(-50%) scale(.64) !important;
+    left: 29% !important;
+    top: 8% !important;
+    transform: translateX(-50%) scale(.6) !important;
   }
 
   .seat-top-right {
-    left: 70% !important;
-    top: 12% !important;
-    transform: translateX(-50%) scale(.64) !important;
+    left: 71% !important;
+    top: 8% !important;
+    transform: translateX(-50%) scale(.6) !important;
   }
 
   .seat-left {
-    left: 9% !important;
-    top: 49% !important;
-    transform: translate(-50%, -50%) scale(.58) !important;
+    left: 8.5% !important;
+    top: 48% !important;
+    transform: translate(-50%, -50%) scale(.56) !important;
   }
 
   .seat-right {
-    left: 91% !important;
-    top: 49% !important;
-    transform: translate(-50%, -50%) scale(.58) !important;
+    left: 91.5% !important;
+    top: 48% !important;
+    transform: translate(-50%, -50%) scale(.56) !important;
   }
 
   .hand-panel {
-    bottom: calc(-38px + env(safe-area-inset-bottom)) !important;
-    width: min(72vw, 610px) !important;
-    height: min(23dvh, 100px) !important;
-    min-height: 72px !important;
+    bottom: calc(-25px + env(safe-area-inset-bottom)) !important;
+    width: min(72vw, 600px) !important;
+    height: min(25dvh, 108px) !important;
+    min-height: 78px !important;
     visibility: visible !important;
     pointer-events: none !important;
     z-index: 10000 !important;
   }
 
   .hand-grid {
-    bottom: -5px !important;
-    width: min(76vw, 640px) !important;
-    height: min(23dvh, 100px) !important;
+    bottom: 4px !important;
+    width: min(76vw, 632px) !important;
+    height: min(25dvh, 108px) !important;
     transform: translateX(-50%) scale(.56) !important;
     transform-origin: 50% 100% !important;
     visibility: visible !important;
@@ -154,20 +199,26 @@
   }
 
   .card {
-    --hand-card-w: clamp(68px, 11vw, 92px) !important;
-    margin-left: clamp(-25px, -4vw, -14px) !important;
+    --hand-card-w: clamp(66px, 10.6vw, 90px) !important;
+    margin-left: clamp(-24px, -3.8vw, -13px) !important;
   }
 
   .card-actions {
-    top: -28px !important;
+    top: -22px !important;
+    gap: 5px !important;
   }
 
   .icon-action,
   .play-action,
   .discard-action {
-    width: 28px !important;
-    min-width: 28px !important;
-    height: 28px !important;
+    width: 26px !important;
+    min-width: 26px !important;
+    height: 26px !important;
+    border-radius: 7px !important;
+  }
+
+  .card-reorder {
+    bottom: 6px !important;
   }
 
   .hand-panel .turn-actions .undo-button,
@@ -176,7 +227,7 @@
   .end-turn-button {
     position: fixed !important;
     top: auto !important;
-    bottom: calc(12px + env(safe-area-inset-bottom)) !important;
+    bottom: calc(10px + env(safe-area-inset-bottom)) !important;
     width: 42px !important;
     min-width: 42px !important;
     height: 42px !important;
@@ -188,13 +239,13 @@
 
   .hand-panel .turn-actions .undo-button,
   .undo-button {
-    left: max(12px, calc(12px + env(safe-area-inset-left))) !important;
+    left: max(10px, calc(10px + env(safe-area-inset-left))) !important;
     right: auto !important;
   }
 
   .hand-panel .turn-actions .end-turn-button,
   .end-turn-button {
-    right: max(12px, calc(12px + env(safe-area-inset-right))) !important;
+    right: max(10px, calc(10px + env(safe-area-inset-right))) !important;
     left: auto !important;
   }
 }
