@@ -1,9 +1,9 @@
-/* v0.11.4 — mobile landscape playable again.
+/* v0.11.5 — mobile landscape controls and player slots fixed.
    Overrides the temporary pause from v0.11.2 without touching portrait or desktop. */
 
 @media (orientation: landscape) and (max-height: 520px) and (max-width: 899px) {
   body::before {
-    content: 'v0.11.4 • MOBILE LANDSCAPE PLAYABLE' !important;
+    content: 'v0.11.5 • LANDSCAPE CONTROLS FIXED' !important;
     top: max(4px, env(safe-area-inset-top)) !important;
     right: max(6px, env(safe-area-inset-right)) !important;
     max-width: 42vw !important;
@@ -65,16 +65,16 @@
 
   .table-surface,
   .solo-ai-mode .table-surface {
-    top: 50% !important;
+    top: 47% !important;
     width: min(94vw, 168dvh) !important;
-    height: min(94dvh, 58vw) !important;
+    height: min(90dvh, 58vw) !important;
     border-radius: clamp(18px, 3vw, 34px) !important;
     overflow: visible !important;
   }
 
   .table-decks,
   .solo-ai-mode .table-decks {
-    top: 46% !important;
+    top: 43% !important;
     width: min(31vw, 260px) !important;
     transform: translate(-50%, -50%) scale(.78) !important;
   }
@@ -97,9 +97,11 @@
     min-height: clamp(25px, 6dvh, 38px) !important;
   }
 
-  .seat-bottom {
-    bottom: 11% !important;
-    transform: translateX(-50%) scale(.72) !important;
+  .seat-bottom,
+  .solo-ai-mode .seat-bottom {
+    bottom: 21% !important;
+    z-index: 18 !important;
+    transform: translateX(-50%) scale(.68) !important;
   }
 
   .seat-top {
@@ -132,19 +134,21 @@
   }
 
   .hand-panel {
-    bottom: calc(-14px + env(safe-area-inset-bottom)) !important;
-    width: min(76vw, 640px) !important;
-    height: min(27dvh, 118px) !important;
-    min-height: 84px !important;
+    bottom: calc(-38px + env(safe-area-inset-bottom)) !important;
+    width: min(72vw, 610px) !important;
+    height: min(23dvh, 100px) !important;
+    min-height: 72px !important;
     visibility: visible !important;
     pointer-events: none !important;
+    z-index: 10000 !important;
   }
 
   .hand-grid {
-    bottom: 0 !important;
-    width: min(82vw, 690px) !important;
-    height: min(27dvh, 118px) !important;
-    transform: translateX(-50%) scale(.62) !important;
+    bottom: -5px !important;
+    width: min(76vw, 640px) !important;
+    height: min(23dvh, 100px) !important;
+    transform: translateX(-50%) scale(.56) !important;
+    transform-origin: 50% 100% !important;
     visibility: visible !important;
     pointer-events: auto !important;
   }
@@ -166,19 +170,31 @@
     height: 28px !important;
   }
 
+  .hand-panel .turn-actions .undo-button,
+  .hand-panel .turn-actions .end-turn-button,
   .undo-button,
   .end-turn-button {
-    bottom: calc(14px + env(safe-area-inset-bottom)) !important;
+    position: fixed !important;
+    top: auto !important;
+    bottom: calc(12px + env(safe-area-inset-bottom)) !important;
     width: 42px !important;
     min-width: 42px !important;
     height: 42px !important;
+    margin: 0 !important;
+    transform: none !important;
+    z-index: 30000 !important;
+    pointer-events: auto !important;
   }
 
+  .hand-panel .turn-actions .undo-button,
   .undo-button {
-    left: max(7px, env(safe-area-inset-left)) !important;
+    left: max(12px, calc(12px + env(safe-area-inset-left))) !important;
+    right: auto !important;
   }
 
+  .hand-panel .turn-actions .end-turn-button,
   .end-turn-button {
-    right: max(7px, env(safe-area-inset-right)) !important;
+    right: max(12px, calc(12px + env(safe-area-inset-right))) !important;
+    left: auto !important;
   }
 }
