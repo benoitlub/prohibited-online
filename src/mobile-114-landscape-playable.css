@@ -1,7 +1,7 @@
 /* v0.11.7 — two-player landscape rebalance.
    Keeps portrait and desktop untouched while aligning decks, seats and controls. */
 
-@media (orientation: landscape) and (max-height: 520px) and (max-width: 899px) {
+@media (orientation: landscape) and (max-height: 559px) and (max-width: 899px) {
   body::before {
     content: 'v0.11.7 • TWO PLAYER LANDSCAPE FIX' !important;
     top: max(3px, env(safe-area-inset-top)) !important;
