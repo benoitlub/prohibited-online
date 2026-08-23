@@ -181,29 +181,35 @@
   }
 
   .hand-panel {
-    bottom: calc(-22px + env(safe-area-inset-bottom)) !important;
-    width: min(72vw, 600px) !important;
-    height: min(25dvh, 108px) !important;
-    min-height: 78px !important;
+    bottom: calc(-14px + env(safe-area-inset-bottom)) !important;
+    width: min(86vw, 700px) !important;
+    height: min(34dvh, 150px) !important;
+    min-height: 100px !important;
     visibility: visible !important;
     pointer-events: none !important;
     z-index: 10000 !important;
   }
 
   .hand-grid {
-    bottom: 7px !important;
-    width: min(76vw, 632px) !important;
-    height: min(25dvh, 108px) !important;
-    transform: translateX(-50%) scale(.54) !important;
+    bottom: 2px !important;
+    width: min(90vw, 760px) !important;
+    height: min(34dvh, 150px) !important;
+    transform: translateX(-50%) scale(.86) !important;
     transform-origin: 50% 100% !important;
     visibility: visible !important;
     pointer-events: auto !important;
   }
 
   .card {
-    --hand-card-w: clamp(66px, 10.6vw, 90px) !important;
-    margin-left: clamp(-24px, -3.8vw, -13px) !important;
+    --hand-card-w: clamp(84px, 13vw, 116px) !important;
+    margin-left: clamp(-18px, -2.4vw, -9px) !important;
   }
+
+  .hand-grid .card:nth-child(1) { transform: rotate(-5deg) translateY(6px) !important; }
+  .hand-grid .card:nth-child(2) { transform: rotate(-2.5deg) translateY(2px) !important; }
+  .hand-grid .card:nth-child(3) { transform: rotate(0deg) translateY(0) !important; }
+  .hand-grid .card:nth-child(4) { transform: rotate(2.5deg) translateY(2px) !important; }
+  .hand-grid .card:nth-child(5) { transform: rotate(5deg) translateY(6px) !important; }
 
   .card-actions {
     top: -22px !important;
