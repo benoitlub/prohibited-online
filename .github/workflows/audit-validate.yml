@@ -1,0 +1,44 @@
+name: Validate application
+on:
+  push:
+    branches: [main, fix/audit-reproducible-build]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  bootstrap-lock:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/fix/audit-reproducible-build'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/audit-reproducible-build
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --package-lock-only --ignore-scripts --legacy-peer-deps --no-audit --no-fund
+      - name: Commit the generated dependency lock on this repair branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package-lock.json
+          if ! git diff --cached --quiet; then
+            git commit -m "build: record resolved dependency lock"
+            git push origin HEAD:fix/audit-reproducible-build
+          fi
+  validate:
+    needs: bootstrap-lock
+    if: always() && (needs.bootstrap-lock.result == 'success' || needs.bootstrap-lock.result == 'skipped')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'push' && github.ref == 'refs/heads/fix/audit-reproducible-build' && 'fix/audit-reproducible-build' || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm ci --ignore-scripts --legacy-peer-deps --no-audit --no-fund
+      - run: npx tsc --noEmit -p tsconfig.json
+      - run: npm run build
